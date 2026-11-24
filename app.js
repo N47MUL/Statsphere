@@ -157,15 +157,15 @@ function showSyllabus(i, semCode) {
   const fmtC = t => t.split(/(?<=[.;])\s+(?=[A-Z][A-Za-z0-9&,\/\-–() ]{2,80}:\s)/).map(x => { const m = x.match(/^([^:]{2,80}):\s+([\s\S]*)$/); return m ? `<p><b>${esc(m[1])}.</b> ${esc(m[2])}</p>` : `<p>${esc(x)}</p>`; }).join("");
   const prev = document.activeElement;
   const ov = document.createElement("div"); ov.className = "modal-ov";
-  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(c[0])}"><button class="mclose" aria-label="Close">✕</button>
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(c[0])}"><button class="modal-x" aria-label="Close">✕</button>
     <div class="mhead"><span class="tag">Semester ${s.code}</span> <span class="ty ${cls}">${c[1]}</span> <span class="tag">${fc(c[2])} credit${c[2]===1?"":"s"}</span>${c[3]?' <span class="tag">Optional</span>':""}</div>
     <h2>${esc(c[0])}</h2>${d ? `<div class="mcode">Course code: ${esc(d.code)}</div><h3>Course contents</h3><div class="mbody">${fmtC(d.contents)}</div>` + (d.books ? `<details class="mbooks"><summary>Recommended books</summary><div>${esc(d.books).replace(/\n/g,"<br>")}</div></details>` : "") : "<p>Syllabus not available.</p>"}</div>`;
   const close = () => { ov.remove(); document.body.classList.remove("noscroll"); document.removeEventListener("keydown", onKey); if (prev && prev.focus) prev.focus(); };
   const onKey = e => { if (e.key === "Escape") close(); };
   ov.onclick = e => { if (e.target === ov) close(); };
-  ov.querySelector(".mclose").onclick = close;
+  ov.querySelector(".modal-x").onclick = close;
   document.addEventListener("keydown", onKey);
-  document.body.classList.add("noscroll"); document.body.appendChild(ov); ov.querySelector(".mclose").focus();
+  document.body.classList.add("noscroll"); document.body.appendChild(ov); ov.querySelector(".modal-x").focus();
 }
 
 /* ---------- TOPICS ---------- */

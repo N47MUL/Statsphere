@@ -13,6 +13,15 @@ const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Mat
   const rank = id => first.includes(id) ? first.indexOf(id) - 100 : last.includes(id) ? 100 + last.indexOf(id) : 0;
   [TOPICS, QUIZZES, MOCKS].forEach(a => { const o = a.slice(); o.sort((x, y) => rank(x.id) - rank(y.id) || o.indexOf(x) - o.indexOf(y)); a.splice(0, a.length, ...o); });
 })();
+/* Merge practice entries that share an id, and list practice courses year by year */
+(function () {
+  const m = [];
+  PRACTICE.forEach(e => { const f = m.find(x => x.id === e.id); if (f) f.items = f.items.concat(e.items); else m.push({ id: e.id, name: e.name, items: e.items.slice() }); });
+  const order = ["pos","alg","ip","st1","spss","calc1","la","eng","aw","hist","pd","tos","stata","calc","micro","reg","nm","real","macro","db","doe","inf","sim","lp","stoch","dem","sas","reg2","es","as","doe2","st2","mva","bio","glm","rm"];
+  const r = id => order.includes(id) ? order.indexOf(id) : 99;
+  m.sort((a, b) => r(a.id) - r(b.id));
+  PRACTICE.splice(0, PRACTICE.length, ...m);
+})();
 let timerHandle = null;
 $("#themeBtn").onclick = () => { const r = document.documentElement, t = r.dataset.theme === "light" ? "dark" : "light"; r.dataset.theme = t; try { localStorage.setItem("ss-theme", t); } catch(e){} };
 
@@ -68,16 +77,16 @@ function home() {
     ${chartSVG()}
   </section>
   <div class="stats">
-    <div class="stat"><i>n =</i><b>${c.courses}</b><span>Courses &amp; folders</span></div>
-    <div class="stat"><i>k =</i><b>${c.sems}</b><span>Semesters</span></div>
-    <div class="stat"><i>Σ =</i><b>${c.topics}</b><span>Topic explanations</span></div>
-    <div class="stat"><i>N =</i><b>${c.qs}</b><span>Quiz &amp; mock questions</span></div>
+    <div class="stat"><b>${c.courses}</b><span>Courses &amp; folders</span></div>
+    <div class="stat"><b>${c.sems}</b><span>Semesters</span></div>
+    <div class="stat"><b>${c.topics}</b><span>Topic explanations</span></div>
+    <div class="stat"><b>${c.qs}</b><span>Quiz &amp; mock questions</span></div>
   </div>
   <div class="grid">
     <a class="card" href="#/library"><div class="ico">📚</div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>
-    <a class="card" href="#/curriculum"><div class="ico">🎓</div><h3>Curriculum</h3><p>All 8 semesters: every course with its type and credit, plus semester totals.</p></a>
+    <a class="card" href="#/curriculum"><div class="ico">📋</div><h3>Curriculum</h3><p>All 8 semesters: every course with its type and credit, plus semester totals.</p></a>
     <a class="card" href="#/topics"><div class="ico">💡</div><h3>Topic Explanations</h3><p>Clear, exam-focused explanations with formulas and examples.</p></a>
-    <a class="card" href="#/quizzes"><div class="ico">✅</div><h3>Quizzes &amp; MCQs</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
+    <a class="card" href="#/quizzes"><div class="ico">🧠</div><h3>Quizzes &amp; MCQs</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
     <a class="card" href="#/practice"><div class="ico">📝</div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
     <a class="card" href="#/about"><div class="ico">👤</div><h3>About &amp; Feedback</h3><p>Who made this, and how to send suggestions.</p></a>
   </div>`;
@@ -119,24 +128,44 @@ function curriculum(p) {
   const sel = p[0] || "all";
   let all = 0, sumT = {}, n = 0;
   CURRICULUM.forEach(y => y.semesters.forEach(s => { all += s.total; n++; s.courses.forEach(c => { if (!c[3]) sumT[c[1]] = (sumT[c[1]]||0) + c[2]; }); }));
-  let h = `<h1>🎓 Curriculum</h1><p>Every course of the 4-year B.Sc. (Hons.) in Statistics, year by year: course type and credit, with the credit total of each semester.</p>
-   <div class="stats cur-sum"><div class="stat"><i>k =</i><b>${n}</b><span>Semesters</span></div><div class="stat"><i>Σ =</i><b>${fc(all)}</b><span>Total credits (sum of semester totals)</span></div>
-   <div class="stat"><i>Th =</i><b>${fc(sumT["Theory"])}</b><span>Theory credits</span></div><div class="stat"><i>Lab =</i><b>${fc(sumT["Lab"])}</b><span>Lab credits</span></div></div>
+  let h = `<h1>📋 Curriculum</h1><p>Every course of the 4-year B.Sc. (Hons.) in Statistics, year by year: course type and credit, with the credit total of each semester.</p>
+   <div class="stats cur-sum"><div class="stat"><b>${n}</b><span>Semesters</span></div><div class="stat"><b>${fc(all)}</b><span>Total credits (sum of semester totals)</span></div>
+   <div class="stat"><b>${fc(sumT["Theory"])}</b><span>Theory credits</span></div><div class="stat"><b>${fc(sumT["Lab"])}</b><span>Lab credits</span></div></div>
    <div class="tabs">${["all"].concat(CURRICULUM.map(y=>y.year)).map(v=>`<a class="tab ${sel===v?"on":""}" href="#/curriculum/${v==="all"?"all":encodeURIComponent(v)}">${v==="all"?"All years":v}</a>`).join("")}</div>
    <div class="legend">${types.map(t=>`<span class="ty ${cls(t)}">${t}</span>`).join("")}</div>`;
   const dsel = decodeURIComponent(sel);
+  let gi = 0; const startIdx = new Map();
+  CURRICULUM.forEach(y => y.semesters.forEach(s => { startIdx.set(s, gi); gi += s.courses.length; }));
   CURRICULUM.filter(y => sel === "all" || y.year === dsel).forEach(y => {
     h += `<h2>${y.year}</h2><div class="cgrid">`;
     y.semesters.forEach(s => {
       h += `<div class="panel cur"><h3><span class="tag">Semester ${s.code}</span></h3><div class="tblw"><table class="ctab"><thead><tr><th>Course</th><th>Type</th><th class="r">Credit</th></tr></thead><tbody>` +
-        s.courses.map(c => `<tr${c[3]?' class="optrow"':""}><td>${esc(c[0])}</td><td><span class="ty ${cls(c[1])}">${c[1]}</span></td><td class="r">${fc(c[2])}</td></tr>`).join("") +
+        s.courses.map((c, k) => `<tr class="crow${c[3]?' optrow':''}" tabindex="0" role="button" data-i="${startIdx.get(s)+k}" data-sem="${s.code}" title="Open course content"><td>${esc(c[0])} <span class="sy">Syllabus ›</span></td><td><span class="ty ${cls(c[1])}">${c[1]}</span></td><td class="r">${fc(c[2])}</td></tr>`).join("") +
         `</tbody><tfoot><tr><td colspan="2">${s.totalOpt?"Total (without optional)":"Total"}</td><td class="r">${fc(s.total)}</td></tr>` +
         (s.totalOpt ? `<tr><td colspan="2">Total (with optional Comprehensive)</td><td class="r">${fc(s.totalOpt)}</td></tr>` : "") + `</tfoot></table></div></div>`;
     });
     h += `</div>`;
   });
-  h += `<div class="note">${CURRICULUM_NOTE}</div><p class="src">Source: ${CURRICULUM_SOURCE}</p>`;
   app.innerHTML = h;
+  const open = el => showSyllabus(+el.dataset.i, el.dataset.sem);
+  app.querySelectorAll("tr.crow").forEach(r => { r.onclick = () => open(r); r.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(r); } }; });
+}
+function showSyllabus(i, semCode) {
+  const flat = []; CURRICULUM.forEach(y => y.semesters.forEach(s => s.courses.forEach(c => flat.push([c, s]))));
+  const [c, s] = flat[i], d = (typeof SYLLABUS !== "undefined") && SYLLABUS[i];
+  const cls = "ty-" + c[1].toLowerCase().replace(/[^a-z]/g,"");
+  const fmtC = t => t.split(/(?<=[.;])\s+(?=[A-Z][A-Za-z0-9&,\/\-–() ]{2,80}:\s)/).map(x => { const m = x.match(/^([^:]{2,80}):\s+([\s\S]*)$/); return m ? `<p><b>${esc(m[1])}.</b> ${esc(m[2])}</p>` : `<p>${esc(x)}</p>`; }).join("");
+  const prev = document.activeElement;
+  const ov = document.createElement("div"); ov.className = "modal-ov";
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(c[0])}"><button class="modal-x" aria-label="Close">✕</button>
+    <div class="mhead"><span class="tag">Semester ${s.code}</span> <span class="ty ${cls}">${c[1]}</span> <span class="tag">${fc(c[2])} credit${c[2]===1?"":"s"}</span>${c[3]?' <span class="tag">Optional</span>':""}</div>
+    <h2>${esc(c[0])}</h2>${d ? `<div class="mcode">Course code: ${esc(d.code)}</div><h3>Course contents</h3><div class="mbody">${fmtC(d.contents)}</div>` + (d.books ? `<details class="mbooks"><summary>Recommended books</summary><div>${esc(d.books).replace(/\n/g,"<br>")}</div></details>` : "") : "<p>Syllabus not available.</p>"}</div>`;
+  const close = () => { ov.remove(); document.body.classList.remove("noscroll"); document.removeEventListener("keydown", onKey); if (prev && prev.focus) prev.focus(); };
+  const onKey = e => { if (e.key === "Escape") close(); };
+  ov.onclick = e => { if (e.target === ov) close(); };
+  ov.querySelector(".modal-x").onclick = close;
+  document.addEventListener("keydown", onKey);
+  document.body.classList.add("noscroll"); document.body.appendChild(ov); ov.querySelector(".modal-x").focus();
 }
 
 /* ---------- TOPICS ---------- */
@@ -157,7 +186,7 @@ function topics(p) {
 function quizzes(p) {
   if (p[0] === "mock") return mock(p[1]);
   if (p[0]) return runQuiz(QUIZZES.find(x => x.id === p[0]));
-  app.innerHTML = `<h1>✅ Quizzes &amp; MCQs</h1><p>Choose a subject. You get your score and an explanation for every answer.</p>
+  app.innerHTML = `<h1>🧠 Quizzes &amp; MCQs</h1><p>Choose a subject. You get your score and an explanation for every answer.</p>
     <div class="grid">${QUIZZES.map(s=>`<a class="card" href="#/quizzes/${s.id}"><h3>${s.name}</h3><p>${s.questions.length} questions</p></a>`).join("")}</div>
     <h2>⏱ Mock Tests</h2><p>Real exam practice: 20 questions, timed. Answers and explanations are shown after you submit (or when time is up).</p>
     <div class="grid">${MOCKS.map(s=>`<a class="card" href="#/quizzes/mock/${s.id}"><h3>Mock: ${s.name}</h3><p>${s.questions.length} questions · ${s.minutes} min</p></a>`).join("")}
@@ -203,7 +232,7 @@ function practice(p) {
     const s = PRACTICE.find(x => x.id === p[0]); if (!s) return practice([]);
     app.innerHTML = `<div class="crumb"><a href="#/practice">Practice</a> › ${s.name}</div><h1>${s.name} – Practice</h1><p>Try each problem on paper first, then reveal the answer.</p>
       ${s.items.map((it,i)=>`<div class="q"><p class="t">Q${i+1}. ${it.q}</p><details><summary>Show / hide answer</summary><p>${it.a}</p></details></div>`).join("")}
-      <a class="btn" href="#/quizzes/${s.id}">Take the ${s.name} quiz</a>`;
+      ${QUIZZES.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">Take the ${s.name} quiz</a>`:""}`;
     return;
   }
   app.innerHTML = `<h1>📝 Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>

@@ -7,6 +7,7 @@ const TOPICS = [
 { id:"tos", name:"Theory of Statistics", topics:[
  { title:"Sampling Distributions & CLT", body:`
   <p>A <b>parameter</b> (μ, σ²) is a fixed number describing the population. A <b>statistic</b> (x̄, s²) is computed from the sample and is a random variable, so it has its own <b>sampling distribution</b>.</p>
+  <div class="vis" data-vis="clt"></div>
   <div class="formula">E(x̄) = μ,  Var(x̄) = σ²/n</div>
   <div class="formula">Z = (x̄ − μ)/(σ/√n) → N(0,1) as n → ∞  (CLT)</div>
   <p>CLT: for any population with finite variance, x̄ is approximately normal when n is large (n ≥ 30 is the usual rule). If the population is normal, x̄ is exactly normal for every n.</p>
@@ -14,6 +15,7 @@ const TOPICS = [
   <div class="note">Mistake: using σ instead of σ/√n as the standard deviation of x̄. Also, CLT is about the mean, not about the shape of the data itself.</div>`},
  { title:"Chi-square, t and F Distributions", body:`
   <p>These three are built from normal variables and are the base of all exact tests.</p>
+  <div class="vis" data-vis="dist"></div>
   <div class="formula">χ²ₙ = Z₁² + Z₂² + … + Zₙ²   (mean n, variance 2n)</div>
   <div class="formula">t = Z / √(χ²ᵥ/ν)   (ν df, symmetric about 0)</div>
   <div class="formula">F = (χ²₁/ν₁) / (χ²₂/ν₂)   ;  F(ν₁,ν₂) = 1 / F(ν₂,ν₁)</div>
@@ -30,6 +32,7 @@ const TOPICS = [
   <div class="note">Mistake: saying independence holds for any population. It characterises the normal distribution. Remember the divisor n−1 in s².</div>`},
  { title:"Distribution of Correlation Coefficient", body:`
   <p>For a bivariate normal sample, the distribution of r depends on ρ. When ρ = 0 we can convert r into a t variable. When ρ ≠ 0 the distribution is skewed, so use Fisher's z-transformation.</p>
+  <div class="vis" data-vis="corr"></div>
   <div class="formula">H₀: ρ = 0:  t = r√(n−2) / √(1−r²) ~ t(n−2)</div>
   <div class="formula">z = ½ ln[(1+r)/(1−r)] = tanh⁻¹(r)</div>
   <div class="formula">z ≈ N( ½ ln[(1+ρ)/(1−ρ)] , 1/(n−3) )</div>
@@ -44,6 +47,7 @@ const TOPICS = [
   <div class="note">Mistake: forgetting the factor n!/[(k−1)!(n−k)!]. For the range, the joint density of min and max is needed, f = n(n−1)[F(y)−F(x)]ⁿ⁻² f(x)f(y).</div>`},
  { title:"Tests for Mean, Variance, Proportion", body:`
   <p>Choose the test by the parameter and what is known.</p>
+  <div class="vis" data-vis="power"></div>
   <div class="formula">Mean (σ unknown): t = (x̄ − μ₀)/(s/√n), df = n−1</div>
   <div class="formula">Variance: χ² = (n−1)s²/σ₀², df = n−1</div>
   <div class="formula">Proportion: Z = (p̂ − p₀)/√[p₀(1−p₀)/n]</div>
@@ -69,6 +73,7 @@ const TOPICS = [
 { id:"pd", name:"Probability Distributions", topics:[
  { title:"Binomial and Poisson Distributions", body:`
   <p>Binomial counts successes in n independent trials with success probability p. Poisson counts rare events in a fixed interval with average λ, and is the limit of Binomial when n is large, p small, np = λ.</p>
+  <div class="vis" data-vis="binpois"></div>
   <div class="formula">Binomial: P(X=x) = C(n,x) pˣ qⁿ⁻ˣ ; mean np, var npq</div>
   <div class="formula">Poisson: P(X=x) = e⁻λ λˣ / x! ; mean = var = λ</div>
   <p><b>Example:</b> n = 5, p = 0.4: P(X=2) = 10 × 0.16 × 0.216 = 0.3456. For Poisson λ = 2: P(X=0) = e⁻² = 0.1353, so P(X ≥ 1) = 0.8647.</p>
@@ -90,6 +95,7 @@ const TOPICS = [
   <div class="note">Mistake: using binomial for sampling without replacement from a small lot. The numerator choose-terms must add up: x + (n−x) = n.</div>`},
  { title:"Normal Distribution", body:`
   <p>Bell-shaped, symmetric about μ, completely determined by μ and σ². Standardise Z = (X−μ)/σ to use tables.</p>
+  <div class="vis" data-vis="normal"></div>
   <div class="formula">f(x) = [1/(σ√(2π))] exp[−(x−μ)²/(2σ²)]</div>
   <div class="formula">M(t) = exp(μt + σ²t²/2)</div>
   <p>Linear combinations of independent normals are normal: aX + bY ~ N(aμ₁+bμ₂, a²σ₁²+b²σ₂²). Within 1, 2, 3 SD lies about 68.27%, 95.45%, 99.73%.</p>
@@ -97,6 +103,7 @@ const TOPICS = [
   <div class="note">Mistake: using variance instead of SD when standardising. For differences, variances add: Var(X−Y) = σ₁² + σ₂² for independent X, Y.</div>`},
  { title:"Exponential, Gamma and Beta", body:`
   <p>Exponential: waiting time with rate λ (memoryless). Gamma(α, λ): sum of α independent exponentials. Beta(α, β): a proportion on (0,1).</p>
+  <div class="vis" data-vis="gamma"></div>
   <div class="formula">Exp: f = λe⁻λx ; mean 1/λ, var 1/λ² ; P(X&gt;t) = e⁻λt</div>
   <div class="formula">Gamma: f = λᵅ xᵅ⁻¹ e⁻λx / Γ(α); mean α/λ, var α/λ²</div>
   <div class="formula">Beta: mean α/(α+β), var αβ/[(α+β)²(α+β+1)]</div>
@@ -118,6 +125,7 @@ const TOPICS = [
   <div class="note">Mistake: forgetting the absolute value of the Jacobian or not changing the range of the new variable.</div>`},
  { title:"Joint, Marginal, Conditional and Bivariate Normal", body:`
   <p>Marginal: integrate (or sum) out the other variable. Conditional: f(y|x) = f(x,y)/fₓ(x). X and Y are independent iff f(x,y) = fₓ(x)fᵧ(y).</p>
+  <div class="vis" data-vis="corr"></div>
   <div class="formula">Cov(X,Y) = E(XY) − E(X)E(Y) ;  ρ = Cov/(σₓσᵧ)</div>
   <div class="formula">Bivariate normal: Y|X=x ~ N( μᵧ + ρ(σᵧ/σₓ)(x−μₓ), σᵧ²(1−ρ²) )</div>
   <p><b>Example 1:</b> f(x,y) = x + y on the unit square. fₓ(x) = x + ½, E(X) = 1/3 + 1/4 = 7/12, E(XY) = 1/3, Cov = 1/3 − 49/144 = −1/144, so not independent.</p>
@@ -162,6 +170,7 @@ const TOPICS = [
   <div class="note">Mistake: reading the wrong p-value. STATA shows three: Ha: mean &lt; 50, mean != 50 (two-sided), mean &gt; 50. Use the middle one for a two-sided test.</div>`},
  { title:"Regression and Diagnostics in STATA", body:`
   <p>regress fits OLS. After fitting, check assumptions with post-estimation commands.</p>
+  <div class="vis" data-vis="regfit"></div>
   <div class="formula">regress y x1 x2<br>predict yhat<br>predict e, residuals<br>rvfplot, yline(0)</div>
   <div class="formula">estat hettest    // heteroskedasticity<br>estat vif        // multicollinearity<br>swilk e          // normality of residuals<br>estat dwatson    // after tsset</div>
   <p><b>Example (by hand):</b> x = 1,2,3,4,5; y = 2,4,5,4,5. x̄ = 3, ȳ = 4, Sxy = 6, Sxx = 10. Slope b = 0.6, intercept a = 4 − 0.6×3 = 2.2, so ŷ = 2.2 + 0.6x. STATA's regress y x gives the same coefficients.</p>
@@ -184,6 +193,7 @@ const TOPICS = [
   <div class="note">Mistake: forgetting to check interior singularities, e.g. ∫₋₁¹ dx/x² diverges even though the antiderivative −1/x seems to give −2.</div>`},
  { title:"Taylor and Maclaurin Expansion", body:`
   <p>A smooth function is approximated near x = a by a polynomial built from its derivatives. Maclaurin series is the case a = 0.</p>
+  <div class="vis" data-vis="taylor"></div>
   <div class="formula">f(x) = Σ f⁽ⁿ⁾(a)(x−a)ⁿ / n!</div>
   <div class="formula">eˣ = 1 + x + x²/2! + x³/3! + …</div>
   <div class="formula">sin x = x − x³/3! + x⁵/5! − … ; cos x = 1 − x²/2! + x⁴/4! − …</div>
@@ -192,6 +202,7 @@ const TOPICS = [
   <div class="note">Mistake: forgetting the n! in the denominator and the alternating signs; also using the series outside its radius of convergence.</div>`},
  { title:"Maxima, Minima and Lagrange Multipliers", body:`
   <p>For f(x,y): find critical points where fₓ = fᵧ = 0, then test with D = fₓₓfᵧᵧ − (fₓᵧ)².</p>
+  <div class="vis" data-vis="lagrange"></div>
   <div class="formula">D &gt; 0, fₓₓ &gt; 0: minimum ; D &gt; 0, fₓₓ &lt; 0: maximum</div>
   <div class="formula">D &lt; 0: saddle point ; D = 0: inconclusive</div>
   <div class="formula">Constraint g = 0:  ∇f = λ∇g  (fₓ = λgₓ, fᵧ = λgᵧ)</div>
@@ -215,6 +226,7 @@ const TOPICS = [
   <div class="note">Mistake: forgetting initial-condition terms when transforming derivatives; and skipping partial fractions before inversion.</div>`},
  { title:"Fourier Series", body:`
   <p>A periodic function on (−π, π) is written as sum of sines and cosines.</p>
+  <div class="vis" data-vis="fourier"></div>
   <div class="formula">f(x) = a₀/2 + Σ (aₙ cos nx + bₙ sin nx)</div>
   <div class="formula">aₙ = (1/π)∫ f cos nx dx ; bₙ = (1/π)∫ f sin nx dx</div>
   <p>Even f gives only cosine terms (bₙ = 0); odd f gives only sine terms (aₙ = 0). At a jump the series converges to the average of left and right limits.</p>
@@ -233,17 +245,20 @@ const TOPICS = [
 { id:"micro", name:"Principles of Microeconomics", topics:[
  { title:"Scarcity, Opportunity Cost and PPF", body:`
   <p>Resources are limited but wants are unlimited, so choices must be made. <b>Opportunity cost</b> is the value of the next best alternative given up. The production possibility frontier (PPF) shows the maximum combinations of two goods with given resources and technology.</p>
+  <div class="vis" data-vis="ppf"></div>
   <ul><li>Points on the curve: efficient. Inside: unemployment/inefficiency. Outside: unattainable now.</li><li>Bowed-out (concave) shape: increasing opportunity cost.</li><li>Growth shifts the PPF outward.</li></ul>
   <div class="formula">Opportunity cost of good X = ΔY lost / ΔX gained</div>
   <p><b>Example:</b> Moving from A (100 food, 0 cloth) to B (60 food, 20 cloth): 40 food is sacrificed for 20 cloth, so 1 cloth costs 2 food.</p>
   <div class="note">Mistake: counting all alternatives; only the best forgone one counts. A straight-line PPF means constant opportunity cost.</div>`},
  { title:"Demand, Supply and Equilibrium", body:`
   <p>Demand slopes downward (law of demand); supply slopes upward. Equilibrium is where Qd = Qs. A shift of a curve comes from non-price factors (income, tastes, input cost); a price change moves along the curve.</p>
+  <div class="vis" data-vis="supdem"></div>
   <div class="formula">Equilibrium: Qd(P*) = Qs(P*)</div>
   <p><b>Example:</b> Qd = 100 − 2P, Qs = 20 + 3P. Set equal: 80 = 5P, P* = 16, Q* = 100 − 32 = 68 (check Qs = 20 + 48 = 68 ✓). A price ceiling at 10 gives Qd = 80, Qs = 50, so a shortage of 30.</p>
   <div class="note">Mistake: a price ceiling is binding only if below equilibrium; a price floor only if above. Do not confuse "change in demand" with "change in quantity demanded".</div>`},
  { title:"Elasticities", body:`
   <p>Price elasticity of demand measures the responsiveness of quantity to price.</p>
+  <div class="vis" data-vis="elast"></div>
   <div class="formula">Eₚ = (%ΔQ)/(%ΔP) = (dQ/dP)(P/Q)</div>
   <div class="formula">Midpoint: Eₚ = [ΔQ/(Q₁+Q₂)/2] / [ΔP/(P₁+P₂)/2]</div>
   <div class="formula">Income: (%ΔQ)/(%ΔI) ; Cross: (%ΔQx)/(%ΔPy)</div>
@@ -258,6 +273,7 @@ const TOPICS = [
   <div class="note">Mistake: equating MU instead of MU per taka. Law of diminishing marginal utility: MU falls as consumption rises, but total utility still rises while MU &gt; 0.</div>`},
  { title:"Production and Cost Curves", body:`
   <p>In the short run, with a fixed input, marginal product eventually falls (diminishing returns), so marginal cost eventually rises. MC cuts AVC and ATC at their minimum points.</p>
+  <div class="vis" data-vis="costs"></div>
   <div class="formula">TC = FC + VC ; ATC = TC/q = AFC + AVC</div>
   <div class="formula">MC = dTC/dq ; MP = ΔQ/ΔL ; AP = Q/L</div>
   <p><b>Example:</b> TC = 100 + 10q + q². At q = 10: TC = 300, ATC = 30, AVC = 20, AFC = 10, MC = 10 + 2q = 30. Since ATC = 100/q + 10 + q, its minimum is at q = 10 where MC = ATC = 30 ✓.</p>
@@ -270,6 +286,7 @@ const TOPICS = [
   <div class="note">Mistake: shutting down whenever profit is negative; the short-run rule is P &lt; AVC (loss is then smaller than FC). The firm's supply curve is the MC curve above AVC.</div>`},
  { title:"Monopoly", body:`
   <p>A single seller with barriers to entry faces the downward-sloping market demand, so MR &lt; P. It maximises profit where MR = MC and charges the price on the demand curve at that quantity.</p>
+  <div class="vis" data-vis="monopoly"></div>
   <div class="formula">Linear demand P = a − bq:  MR = a − 2bq</div>
   <div class="formula">Lerner index: (P − MC)/P = 1/|Eₚ|</div>
   <p><b>Example:</b> P = 60 − q, MC = 10. MR = 60 − 2q = 10 gives q = 25, P = 35, profit = (35 − 10) × 25 = 625. Under competition P = MC: q = 50, P = 10. Deadweight loss = ½ × (35 − 10) × (50 − 25) = 312.5.</p>
@@ -284,6 +301,7 @@ const TOPICS = [
 { id:"reg", name:"Regression Analysis I", topics:[
  { title:"Simple Linear Regression", body:`
   <p>Model: yᵢ = β₀ + β₁xᵢ + εᵢ, with εᵢ ~ (0, σ²) independent.</p>
+  <div class="vis" data-vis="regfit"></div>
   <p>Least squares estimates minimise Σ(yᵢ − β₀ − β₁xᵢ)²:</p>
   <div class="formula">β̂₁ = Sxy/Sxx = Σ(xᵢ−x̄)(yᵢ−ȳ)/Σ(xᵢ−x̄)²,&nbsp; β̂₀ = ȳ − β̂₁x̄</div>
   <p>Unbiased estimate of variance: σ̂² = MSE = SSE/(n−2). Var(β̂₁) = σ²/Sxx.</p>
@@ -305,6 +323,8 @@ const TOPICS = [
   <li><b>Outliers / influential points:</b> studentised residuals, leverage hᵢᵢ, Cook's distance.</li></ul>`},
  { title:"Types of Correlation: Point-Biserial, Phi, Intra-class, Spurious", body:`
   <p>Pearson's r needs two continuous variables. When one or both are binary, special forms are used. <b>Point-biserial</b> r is used when one variable is truly dichotomous (pass/fail) and the other continuous. <b>Biserial</b> r is used when the dichotomy is artificial (a continuous normal variable cut into two groups). <b>Fourfold (phi, φ)</b> correlation is for two binary variables in a 2×2 table.</p>
+  <div class="vis" data-vis="resid"></div>
+  <div class="vis" data-vis="corr"></div>
   <div class="formula">r_pb = ((M₁ − M₀)/s) × √(pq)</div>
   <div class="formula">φ = (ad − bc) / √[(a+b)(c+d)(a+c)(b+d)]</div>
   <p><b>Intra-class correlation</b> measures similarity within a group (e.g. siblings, repeated measures) when the variables are of the same kind and cannot be separated as X and Y. <b>Spurious (nonsense) correlation</b> is a high r with no causal link, caused by a common third factor or by chance (e.g. ice-cream sales and drowning, both rise with temperature).</p>
@@ -328,6 +348,7 @@ const TOPICS = [
   <div class="note">R is always between 0 and 1 and R ≥ |r₁₂|, |r₁₃|. A partial correlation can be larger or smaller than the simple correlation and can even change sign. The sign of r₁₂.₃ follows the numerator.</div>`},
  { title:"Polynomial Regression & Lack-of-Fit Test", body:`
   <p>When the relation is curved, add powers of x: y = β₀ + β₁x + β₂x² + ε. It is still a <b>linear</b> model (linear in the β's), so OLS and matrix methods apply. Use low order (usually 2 or 3), centre x (use x − x̄) to reduce multicollinearity between x and x², and test the highest-order term with a t or extra-sum-of-squares F test.</p>
+  <div class="vis" data-vis="poly"></div>
   <p><b>Lack of fit</b> needs repeated observations at the same x. Split SSE into pure error (variation among replicates) and lack of fit.</p>
   <div class="formula">SSE = SS_PE + SS_LOF</div>
   <div class="formula">F = [SS_LOF/(m − p)] / [SS_PE/(n − m)]</div>
@@ -382,6 +403,7 @@ const TOPICS = [
   <div class="note">Differentiation magnifies errors (round-off) so it is less accurate than interpolation. Use a smaller h only until round-off dominates. Central formulas have error O(h²), forward O(h).</div>`},
  { title:"Numerical Integration: Trapezoidal, Simpson, Weddle", body:`
   <p>Divide [a,b] into n equal strips of width h = (b−a)/n and approximate the curve by polynomials.</p>
+  <div class="vis" data-vis="trap"></div>
   <div class="formula">Trapezoidal: (h/2)[y₀ + yₙ + 2(y₁+...+yₙ₋₁)]</div>
   <div class="formula">Simpson 1/3 (n even): (h/3)[y₀ + yₙ + 4(odd y) + 2(even y)]</div>
   <div class="formula">Simpson 3/8 (n mult. of 3): (3h/8)[y₀ + yₙ + 3(y₁+y₂+y₄+y₅..) + 2(y₃+y₆..)]</div>
@@ -392,6 +414,7 @@ const TOPICS = [
   <div class="note">Simpson 1/3 needs an EVEN number of strips (odd number of points). Trapezoidal error is proportional to h², Simpson's to h⁴. Simpson's rules are exact up to cubics.</div>`},
  { title:"Root Finding: Bisection, Regula Falsi, Newton–Raphson", body:`
   <p><b>Bisection:</b> if f(a)f(b) &lt; 0, root lies in [a,b]. Take midpoint, keep the half where the sign changes. Always converges but slowly (linear). Iterations needed: n ≥ log₂((b−a)/ε).</p>
+  <div class="vis" data-vis="newton"></div>
   <p><b>Regula falsi:</b> use the chord's x-intercept, x = (a·f(b) − b·f(a))/(f(b) − f(a)). <b>Secant:</b> same formula but without keeping the bracket.</p>
   <div class="formula">Newton–Raphson: xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)</div>
   <p>Newton has quadratic convergence (order 2) when f′(root) ≠ 0 and the start is close; secant has order ≈ 1.618; bisection and regula falsi order 1.</p>
@@ -412,6 +435,7 @@ const TOPICS = [
   <p><b>Archimedean property:</b> for any x ∈ ℝ there is n ∈ ℕ with n &gt; x. Hence ℚ is dense in ℝ.</p>`},
  { title:"Sequences and Convergence", body:`
   <p>aₙ → L if for every ε &gt; 0 there exists N such that |aₙ − L| &lt; ε for all n ≥ N.</p>
+  <div class="vis" data-vis="seq"></div>
   <ul><li>Convergent sequences are bounded and have unique limits.</li>
   <li><b>Monotone Convergence Theorem:</b> a bounded monotone sequence converges.</li>
   <li><b>Bolzano–Weierstrass:</b> every bounded sequence has a convergent subsequence.</li>
@@ -436,6 +460,7 @@ const TOPICS = [
   <li><b>Mean Value Theorem:</b> f continuous on [a,b], differentiable on (a,b) ⇒ ∃c: f′(c) = (f(b) − f(a))/(b − a).</li></ul>`},
  { title:"Riemann Integration", body:`
   <p>f bounded on [a,b] is Riemann integrable if upper and lower Darboux sums agree: U(f) = L(f), where U(f) = inf over partitions of U(f,P) and L(f) = sup of L(f,P).</p>
+  <div class="vis" data-vis="trap:left"></div>
   <ul><li>Continuous functions are integrable. Monotone functions are integrable.</li>
   <li>A bounded function with finitely many discontinuities is integrable.</li>
   <li><b>Fundamental Theorem of Calculus:</b> if F′ = f continuous, then ∫ₐᵇ f = F(b) − F(a).</li></ul>`},
@@ -466,6 +491,7 @@ const TOPICS = [
   <div class="note">Exam trick: to disprove, find two sequences with xₙ − yₙ → 0 but f(xₙ) − f(yₙ) does not → 0. Bounded derivative on an interval implies uniform continuity (by MVT).</div>`},
  { title:"Rolle's Theorem, Mean Value Theorem & Taylor's Theorem", body:`
   <p><b>Rolle:</b> f continuous on [a,b], differentiable on (a,b), f(a) = f(b) ⟹ there is c in (a,b) with f′(c) = 0.</p>
+  <div class="vis" data-vis="mvt"></div>
   <p><b>MVT (Lagrange):</b> same conditions without f(a) = f(b) ⟹ there is c with</p>
   <div class="formula">f′(c) = [f(b) − f(a)] / (b − a)</div>
   <p><b>Taylor (Lagrange remainder):</b> if f has n+1 derivatives,</p>
@@ -495,6 +521,7 @@ const TOPICS = [
   <div class="note">CPI tends to overstate inflation (substitution bias, quality change). Real interest rate ≈ nominal rate − inflation. Do not confuse a rise in the price level (inflation) with a rise in a single price.</div>`},
  { title:"Consumption Function, Equilibrium Output & Multiplier", body:`
   <p>In the simple Keynesian model (closed economy, no government) planned spending is AE = C + I with C = a + bY, where a is autonomous consumption, b = MPC and 0 &lt; b &lt; 1. Saving S = Y − C, MPS = 1 − b.</p>
+  <div class="vis" data-vis="keynes"></div>
   <div class="formula">Equilibrium: Y = C + I  (or S = I)</div>
   <div class="formula">Y* = (a + I)/(1 − b)</div>
   <div class="formula">Multiplier k = ΔY/ΔI = 1/(1 − b) = 1/MPS</div>
@@ -503,6 +530,7 @@ const TOPICS = [
   <div class="note">The multiplier works through repeated rounds of spending: each round is b times the previous (ΔI + bΔI + b²ΔI + ... = ΔI/(1−b)). Mistake: forgetting that higher MPC means a larger multiplier. Leakages (saving, taxes, imports) reduce it.</div>`},
  { title:"Paradox of Thrift", body:`
   <p>If everyone tries to save more, total saving in the economy may stay the same or even fall. Reason: extra saving means less consumption spending, so income falls through the multiplier, and with lower income people can save less. In equilibrium S = I, and if investment does not change, aggregate saving cannot rise.</p>
+  <div class="vis" data-vis="keynes"></div>
   <div class="formula">S = −a + (1 − b)Y</div>
   <div class="formula">Equilibrium: S = I,  so  Y* = (a + I)/(1 − b)</div>
   <p><b>Example:</b> Start with C = 100 + 0.8Y, I = 100, Y* = 1000, S = −100 + 0.2(1000) = 100. People become thriftier and autonomous consumption falls to 80.</p>
@@ -511,6 +539,7 @@ const TOPICS = [
   <div class="note">The paradox holds only in a Keynesian economy with unemployed resources and fixed investment. If saving lowers interest rates and raises investment (classical view), more saving is good for growth. Do not write that total saving rises.</div>`},
  { title:"Aggregate Demand and Aggregate Supply (AD–AS)", body:`
   <p><b>AD</b> shows total planned spending at each price level; it slopes down (wealth effect, interest-rate effect, exchange-rate effect). It shifts with C, I, G, NX and money supply. <b>Short-run AS</b> slopes up (sticky wages and prices); <b>long-run AS</b> is vertical at potential output. SRAS shifts with input costs, productivity and expectations.</p>
+  <div class="vis" data-vis="adas"></div>
   <ul><li>AD rises: price and output both rise (demand-pull inflation).</li>
   <li>SRAS falls: price rises, output falls (<b>stagflation</b>).</li>
   <li>If output &gt; potential, wages rise and SRAS shifts left until back at LRAS; if output &lt; potential, a recession gap needs AD stimulus or time.</li></ul>
@@ -518,6 +547,7 @@ const TOPICS = [
   <div class="note">AD slopes down for different reasons than a micro demand curve (not just substitution). Move ALONG a curve when price changes; SHIFT the curve for any other factor. In long run, AD changes only change prices, not output.</div>`},
  { title:"Unemployment, Okun's Law & the Phillips Curve", body:`
   <p>The <b>labour force</b> = employed + unemployed (actively seeking work). Those not working and not seeking (students, retired, discouraged) are outside the labour force. Types: frictional (job search), structural (skills mismatch), cyclical (low demand). The <b>natural rate</b> includes frictional and structural unemployment.</p>
+  <div class="vis" data-vis="phillips"></div>
   <div class="formula">Unemployment rate = U/(E + U) × 100</div>
   <div class="formula">LFPR = Labour force / Working-age population × 100</div>
   <div class="formula">Okun: %ΔY ≈ −2 × (change in u)  (rule of thumb)</div>
@@ -591,6 +621,7 @@ const TOPICS = [
   <div class="note">Use IS NULL, never = NULL. Every non-aggregated column in SELECT must appear in GROUP BY. COUNT(*) counts all rows, COUNT(col) ignores NULLs. You cannot use an aggregate in WHERE.</div>`},
  { title:"SQL Joins", body:`
   <p>A join combines rows from two tables based on a related column.</p>
+  <div class="vis" data-vis="joins"></div>
   <ul><li><b>INNER JOIN:</b> only matching rows.</li>
   <li><b>LEFT JOIN:</b> all rows of the left table plus matches (NULL when no match).</li>
   <li><b>RIGHT JOIN:</b> all rows of the right table plus matches.</li>
@@ -647,6 +678,7 @@ const TOPICS = [
   <div class="note">Advantages of CRD: simple, flexible, missing units are easy to handle. Disadvantage: inefficient if units are not homogeneous. Do not confuse replication with repeated measurement on the same unit.</div>`},
  { title:"One-way ANOVA (Equal & Unequal Replicates)", body:`
   <p>We split total variation into between-treatment and within-treatment parts and compare their mean squares by an F-test of H₀: τ₁ = … = τₜ = 0.</p>
+  <div class="vis" data-vis="anova"></div>
   <div class="formula">CF = G²/N , TSS = Σyᵢⱼ² − CF</div>
   <div class="formula">SSTr = Σ Tᵢ²/rᵢ − CF , SSE = TSS − SSTr</div>
   <div class="formula">F = [SSTr/(t−1)] / [SSE/(N−t)]</div>
@@ -683,6 +715,7 @@ const TOPICS = [
   <div class="note">Order of strictness: Tukey is more conservative than Newman–Keuls, which is more conservative than Duncan. Do not use Tukey for unequal r without adjustment (Tukey–Kramer).</div>`},
  { title:"Latin Square, Graeco-Latin & Missing Plot", body:`
   <p>A <b>Latin square</b> (p×p) controls two blockings (rows and columns): each treatment appears once in each row and column. A <b>Graeco-Latin square</b> superimposes a second orthogonal Latin square (Greek letters) to control a third blocking factor; it exists for p ≥ 3 except p = 6.</p>
+  <div class="vis" data-vis="latin"></div>
   <div class="formula">LSD error df = (p−1)(p−2)</div>
   <div class="formula">Graeco-Latin error df = (p−1)(p−3)</div>
   <p>For p = 4: Latin square error df = 6, Graeco-Latin error df = 3 (total 15).</p>
@@ -693,6 +726,7 @@ const TOPICS = [
   <div class="note">Primes mean totals of the observed values only. Treatment SS in presence of a missing plot is biased upward, so use the corrected treatment SS if testing carefully.</div>`},
  { title:"2ᵏ Factorial Designs", body:`
   <p>A 2ᵏ design has k factors each at two levels (low/high). Total 2ᵏ treatment combinations, written (1), a, b, ab, … Main effects and interactions are found by contrasts.</p>
+  <div class="vis" data-vis="factorial"></div>
   <div class="formula">Effect A = [a + ab − b − (1)] / (2n)</div>
   <div class="formula">Effect B = [b + ab − a − (1)] / (2n)</div>
   <div class="formula">Effect AB = [ab + (1) − a − b] / (2n)</div>
@@ -710,6 +744,7 @@ const TOPICS = [
   <p>Mean squared error: MSE(θ̂) = Var(θ̂) + Bias(θ̂)².</p>`},
  { title:"Maximum Likelihood Estimation (MLE)", body:`
   <p>The MLE maximizes the likelihood L(θ) = Πf(xᵢ;θ), usually by solving d ln L/dθ = 0.</p>
+  <div class="vis" data-vis="mle"></div>
   <p><b>Example (Exponential with mean 1/λ):</b> ln L = n ln λ − λΣxᵢ ⇒ λ̂ = n/Σxᵢ = 1/x̄.</p>
   <p><b>Example (Normal):</b> μ̂ = x̄, σ̂² = (1/n)Σ(xᵢ − x̄)² (biased; the unbiased version divides by n−1).</p>
   <div class="note">Invariance: if θ̂ is the MLE of θ then g(θ̂) is the MLE of g(θ). Under regularity conditions the MLE is consistent and asymptotically Normal with variance 1/(nI(θ)).</div>`},
@@ -719,6 +754,7 @@ const TOPICS = [
   <li><b>Power</b> = 1 − β.</li>
   <li><b>p-value:</b> probability, under H₀, of a result at least as extreme as observed. Reject H₀ if p &lt; α.</li></ul>
   <p><b>Neyman–Pearson Lemma:</b> for simple H₀: θ=θ₀ vs H₁: θ=θ₁, the most powerful test of size α rejects when</p>
+  <div class="vis" data-vis="power"></div>
   <div class="formula">L(θ₁)/L(θ₀) &gt; k</div>
   <p><b>Likelihood Ratio Test:</b> Λ = sup_{H₀} L / sup L. Under H₀, −2 ln Λ → χ² with df = difference in number of free parameters.</p>`},
  { title:"Common Tests (z, t, χ², F)", body:`
@@ -731,6 +767,8 @@ const TOPICS = [
   <li><b>χ² goodness of fit:</b> Σ(O−E)²/E, df = k − 1 − (number of estimated parameters).</li></ul>`},
  { title:"Confidence Intervals", body:`
   <p>A 100(1−α)% confidence interval for μ (σ unknown):</p>
+  <div class="vis" data-vis="dist"></div>
+  <div class="vis" data-vis="ci"></div>
   <div class="formula">x̄ ± t(α/2, n−1) · s/√n</div>
   <p>Interpretation: if we repeated the sampling many times, about 100(1−α)% of such intervals would contain the true μ. It is <b>not</b> "the probability that μ is in this particular interval".</p>
   <p>For a proportion: p̂ ± z(α/2)√(p̂(1−p̂)/n). For variance: [(n−1)s²/χ²(α/2), (n−1)s²/χ²(1−α/2)].</p>`},
@@ -775,6 +813,7 @@ const TOPICS = [
   <div class="note">Same seed gives same sequence (use set.seed in R, for reproducibility). Tests of randomness: chi-square uniformity test, runs test, serial correlation.</div>`},
  { title:"Inverse Transform Method", body:`
   <p>If F is the CDF of X and U ~ U(0,1), then X = F⁻¹(U) has CDF F. For discrete X, take the smallest x with F(x) ≥ U.</p>
+  <div class="vis" data-vis="invtr"></div>
   <div class="formula">X = F⁻¹(U)</div>
   <div class="formula">Exponential(λ): X = −ln(U) / λ</div>
   <p>(Using 1−U or U gives the same distribution, since 1−U is also U(0,1).)</p>
@@ -801,6 +840,7 @@ const TOPICS = [
   <div class="note">Use log base e. Angle in radians. Z₁ and Z₂ are independent only if U₁, U₂ independent.</div>`},
  { title:"Monte Carlo Integration", body:`
   <p>To estimate θ = ∫ₐᵇ h(x)dx, write it as an expectation: with U ~ U(a,b), θ = (b−a)·E[h(U)]. Average h at random points.</p>
+  <div class="vis" data-vis="mcpi"></div>
   <div class="formula">θ̂ = (b−a) · (1/n) Σ h(Uᵢ)</div>
   <div class="formula">SE(θ̂) = (b−a) · s / √n , error ∝ 1/√n</div>
   <p><b>Example:</b> θ = ∫₀¹ eˣ dx = e − 1 = 1.71828. Var(e^U) = (e²−1)/2 − (e−1)² = 3.1945 − 2.9525 = 0.2420, so sd = 0.492. With n = 10,000, SE = 0.492/100 ≈ <b>0.0049</b>. To halve the error we need 4 times as many points.</p>
@@ -825,6 +865,7 @@ const TOPICS = [
   <div class="note">Common error: numpy std divides by n by default, R sd divides by n−1. Use plots (histogram, boxplot, scatter, Q-Q plot) along with summary statistics (mean, median, sd, quartiles) before any modelling.</div>`},
  { title:"Simulating Tests: Type I Error, Power & CI Coverage", body:`
   <p>Simulation checks how a statistical procedure behaves in repeated sampling: generate many samples from a known model, apply the procedure each time, and study the results.</p>
+  <div class="vis" data-vis="ci"></div>
   <ul><li><b>Type I error:</b> simulate under H₀, the rejection rate should be about α.</li><li><b>Power:</b> simulate under a specific H₁, rejection rate estimates power.</li><li><b>CI coverage:</b> proportion of intervals containing the true parameter should be about 1−α.</li></ul>
   <div class="formula">set.seed(1); cover &lt;- 0<br>for (i in 1:1000) {<br>&nbsp;x &lt;- rnorm(20, 10, 2)<br>&nbsp;ci &lt;- t.test(x)$conf.int<br>&nbsp;if (ci[1] &lt; 10 &amp;&amp; 10 &lt; ci[2]) cover &lt;- cover + 1<br>}<br>cover/1000   # about 0.95</div>
   <p><b>Example:</b> With 1000 replications and true coverage 0.95, the Monte Carlo SE is √(0.95 × 0.05/1000) = 0.0069. So an observed coverage between about 0.936 and 0.964 (±2 SE) is consistent with 95%. The same loop with t.test(x, mu = 10)$p.value &lt; 0.05 estimates the type I error, again near 0.05.</p>
@@ -833,6 +874,7 @@ const TOPICS = [
 { id:"lp", name:"Linear Programming", topics:[
  { title:"Formulation & Graphical Method", body:`
   <p>An LP has a linear objective, linear constraints and non-negative variables. Steps: (1) define decision variables, (2) write the objective, (3) write constraints, (4) add x ≥ 0.</p>
+  <div class="vis" data-vis="lp"></div>
   <p><b>Example:</b> A firm makes tables (x) with profit 3 and chairs (y) with profit 2 (per unit). Carpentry limit: x + y ≤ 4; finishing limit: x + 3y ≤ 6.</p>
   <div class="formula">Max Z = 3x + 2y</div>
   <div class="formula">s.t. x + y ≤ 4 , x + 3y ≤ 6 , x, y ≥ 0</div>
@@ -872,6 +914,7 @@ const TOPICS = [
   <div class="note">Degeneracy: if allocated cells are fewer than m+n−1, add ε in an independent cell. In the loop, the θ is the smallest allocation at a minus (−) position.</div>`},
  { title:"Integer Programming: Branch & Bound, Cutting Plane", body:`
   <p>If variables must be integers, the LP relaxation may give fractions. Rounding can be wrong, so use <b>branch and bound</b> or <b>cutting planes</b>.</p>
+  <div class="vis" data-vis="lp"></div>
   <p><b>Branch and bound:</b> solve the LP relaxation (its value is an upper bound for max). Choose a fractional variable xⱼ = f and create two subproblems: xⱼ ≤ ⌊f⌋ and xⱼ ≥ ⌈f⌉. Keep the best integer solution found; prune nodes that are infeasible or whose bound is no better than it.</p>
   <p><b>Example:</b> Max 5x + 4y, x + y ≤ 5, 10x + 6y ≤ 45, x, y integer. LP: x = 3.75, y = 1.25, Z = 23.75. Branch x ≤ 3: gives (3,2), Z = 23 (integer, best so far). Branch x ≥ 4: LP gives x = 4, y = 5/6, Z = 23.33; branching y ≥ 1 is infeasible, y ≤ 0 gives Z ≤ 22.5 &lt; 23, so pruned. Optimum <b>(3, 2), Z = 23</b>.</p>
   <p><b>Gomory cutting plane:</b> take a row of the final tableau with fractional RHS, e.g. x + 0.5s₁ + 0.25s₂ = 3.75. Take fractional parts to form the cut:</p>
@@ -905,6 +948,7 @@ const TOPICS = [
   <div class="note">Exam tip: always identify the index set T and state space S first. This classifies the process.</div>`},
  { title:"Markov Chains: basics", body:`
   <p>A discrete-time process {Xₙ} is a <b>Markov chain</b> if the future depends on the past only through the present (Markov property):</p>
+  <div class="vis" data-vis="markov"></div>
   <div class="formula">P(Xₙ₊₁ = j | Xₙ = i, Xₙ₋₁, …, X₀) = P(Xₙ₊₁ = j | Xₙ = i) = pᵢⱼ</div>
   <p>The one-step <b>transition matrix</b> P = [pᵢⱼ] has non-negative entries and every row sums to 1 (a stochastic matrix).</p>
   <p><b>Chapman–Kolmogorov equations:</b></p>
@@ -922,11 +966,13 @@ const TOPICS = [
   <div class="note">Recurrence, transience and period are class properties: all states in one communicating class share them. A finite irreducible chain is always positive recurrent.</div>`},
  { title:"Stationary Distribution", body:`
   <p>A probability vector π is <b>stationary</b> if it does not change after one step:</p>
+  <div class="vis" data-vis="markov"></div>
   <div class="formula">π = πP, &nbsp; Σᵢ πᵢ = 1</div>
   <p>For an irreducible, aperiodic, positive recurrent chain, the stationary distribution is unique and is also the <b>limiting distribution</b>: pᵢⱼ⁽ⁿ⁾ → πⱼ = 1/μⱼ as n → ∞.</p>
   <p><b>Example:</b> P = [[0.7, 0.3],[0.4, 0.6]]. Solve π₁ = 0.7π₁ + 0.4π₂ ⇒ 0.3π₁ = 0.4π₂ ⇒ π₁ : π₂ = 4 : 3. So π = (4/7, 3/7).</p>`},
  { title:"Poisson Process", body:`
   <p>A counting process {N(t), t ≥ 0} is a <b>Poisson process with rate λ</b> if:</p>
+  <div class="vis" data-vis="poisson"></div>
   <ul><li>N(0) = 0;</li><li>it has independent increments;</li><li>the number of events in any interval of length t is Poisson(λt).</li></ul>
   <div class="formula">P(N(t) = n) = e^(−λt) (λt)ⁿ / n!,&nbsp; E[N(t)] = Var[N(t)] = λt</div>
   <p><b>Inter-arrival times</b> are i.i.d. Exponential(λ) with mean 1/λ. The time of the n-th event Sₙ follows Gamma(n, λ).</p>
@@ -941,6 +987,7 @@ const TOPICS = [
   <p>Little's law: L = λW.</p>`},
  { title:"Branching Process & Gambler's Ruin", body:`
   <p><b>Gambler's ruin:</b> start with i units, win 1 w.p. p, lose 1 w.p. q = 1−p, stop at 0 or N. Probability of reaching N:</p>
+  <div class="vis" data-vis="walk"></div>
   <div class="formula">p = ½: Pᵢ = i/N &nbsp;&nbsp; p ≠ ½: Pᵢ = (1 − (q/p)ⁱ) / (1 − (q/p)ᴺ)</div>
   <p><b>Galton–Watson branching process:</b> each individual produces ξ offspring independently with mean m = E[ξ]. The population dies out with probability 1 if m ≤ 1. If m &gt; 1, the extinction probability is the smallest root in [0,1] of s = G(s), where G is the probability generating function of ξ.</p>`},
  { title:"Probability Generating Functions", body:`
@@ -954,6 +1001,7 @@ const TOPICS = [
   <div class="note">Do not forget the "+P′(1) − [P′(1)]²" part of the variance; P″(1) alone is E[X(X−1)], not E[X²]. The sum of a RANDOM number N of iid variables has PGF P_N(P_X(s)).</div>`},
  { title:"Modes of Convergence, LLN & CLT", body:`
   <p>Four modes, from strongest to weakest: almost sure (a.s.) and convergence in r-th mean both imply convergence in probability, which implies convergence in distribution.</p>
+  <div class="vis" data-vis="clt"></div>
   <div class="formula">In probability: P(|Xₙ − X| &gt; ε) → 0 for every ε &gt; 0</div>
   <div class="formula">Chebyshev: P(|X − μ| ≥ kσ) ≤ 1/k²</div>
   <div class="formula">WLLN: X̄ₙ → μ in probability (if σ² finite)</div>
@@ -963,6 +1011,7 @@ const TOPICS = [
   <div class="note">Convergence in distribution does NOT imply convergence in probability (except to a constant). Cauchy distribution has no mean, so LLN fails for it.</div>`},
  { title:"Random Walk with Reflecting Barriers", body:`
   <p>Simple random walk: each step is +1 with probability p and −1 with probability q = 1 − p. Absorbing barriers (gambler's ruin) stop the walk. A <b>reflecting barrier</b> instead pushes the walk back, so the chain stays alive and has a stationary distribution.</p>
+  <div class="vis" data-vis="walk:reflect"></div>
   <div class="formula">Free walk: E(Sₙ) = n(p − q),  Var(Sₙ) = 4npq</div>
   <div class="formula">Reflecting at 0: P(0→1) = 1 (or p, stay with q)</div>
   <div class="formula">Reflecting at a: P(a→a−1) = 1</div>
@@ -982,6 +1031,7 @@ const TOPICS = [
 { id:"dem", name:"Demography", topics:[
  { title:"Sources of Data & Errors: Age Heaping", body:`
   <p>Main sources: census (complete count every 10 years), civil registration (births, deaths, marriages), sample surveys (e.g. BDHS) and population registers. Errors are of two types: <b>coverage errors</b> (omission or double count) and <b>content errors</b> (wrong age, wrong answers). A Post-Enumeration Survey (PES) estimates net undercount.</p>
+  <div class="vis" data-vis="heaping"></div>
   <p>Age heaping (digit preference): people report ages ending in 0 and 5. It is measured by indices.</p>
   <div class="formula">Whipple = 5 × (pop. at ages ending 0 and 5, ages 23–62)</div>
   <div class="formula">          / (total pop. aged 23–62) × 100</div>
@@ -991,6 +1041,7 @@ const TOPICS = [
   <div class="note">Whipple uses ONLY ages 23–62 and multiplies by 5 because 2 out of 10 digits are 0 or 5 (expected 1/5 of the total).</div>`},
  { title:"Population Growth Rates", body:`
   <p>Three models give the growth rate r between two times separated by t years (P₀ = initial, Pₜ = later population).</p>
+  <div class="vis" data-vis="logistic"></div>
   <div class="formula">Arithmetic: Pₜ = P₀(1 + rt),  r = (Pₜ − P₀)/(P₀t)</div>
   <div class="formula">Geometric: Pₜ = P₀(1 + r)ᵗ,  r = (Pₜ/P₀)^{1/t} − 1</div>
   <div class="formula">Exponential: Pₜ = P₀ e^{rt},  r = ln(Pₜ/P₀)/t</div>
@@ -1059,6 +1110,7 @@ const TOPICS = [
   <div class="note">The "15 +" term counts the single years before age 15. Net migration is the residual, so errors in census and births/deaths pile up in it.</div>`},
  { title:"Population Projection & Growth Curves", body:`
   <p>Projection methods: (1) mathematical extrapolation (arithmetic, geometric, exponential); (2) <b>component (cohort-survival) method</b>, which projects each age-sex group with survival ratios, adds births from ASFR and adds migrants; (3) logistic and Gompertz curves.</p>
+  <div class="vis" data-vis="logistic"></div>
   <div class="formula">Component: P(x+5, t+5) = P(x, t) × (L₍ₓ₊₅₎ / Lₓ) ± migrants</div>
   <div class="formula">Logistic: Pₜ = K / (1 + e^{a − bt}),  inflection at K/2</div>
   <div class="formula">Gompertz: Pₜ = K · exp(−e^{a − bt}),  inflection at K/e ≈ 0.368K</div>
@@ -1071,14 +1123,14 @@ const TOPICS = [
 { id:"sas", name:"Data Analysis with SAS", topics:[
  { title:"DATA Step and PROC Step Basics", body:`
   <p>A SAS program is a series of steps. A <b>DATA step</b> creates or changes a dataset (row-by-row processing). A <b>PROC step</b> analyses or prints a dataset. Every statement ends with a semicolon; a step ends with RUN; (or QUIT; for some procs).</p>
-  <div class="formula">libname mylib 'C:sasdata';<br>data mylib.students;<br>&nbsp;&nbsp;input id name $ sex $ score;<br>&nbsp;&nbsp;datalines;<br>1 Rahim M 70<br>2 Nila F 80<br>3 Karim M 90<br>;<br>run;<br>proc print data=mylib.students; run;</div>
+  <div class="formula">libname mylib 'C:\\sasdata';<br>data mylib.students;<br>&nbsp;&nbsp;input id name $ sex $ score;<br>&nbsp;&nbsp;datalines;<br>1 Rahim M 70<br>2 Nila F 80<br>3 Karim M 90<br>;<br>run;<br>proc print data=mylib.students; run;</div>
   <p>The LIBNAME gives a permanent library; without it, data goes to the temporary WORK library. The $ after a variable name means character. The PDV (program data vector) holds one observation at a time while the step loops.</p>
   <p><b>Example:</b> PROC MEANS on the three scores above (70, 80, 90) shows N = 3, Mean = 80, Std Dev = 10, Min = 70, Max = 90.</p>
   <div class="formula">proc means data=mylib.students n mean std min max;<br>&nbsp;&nbsp;var score;<br>run;</div>
   <div class="note">Missing semicolons are the most common error. Remember DATA= names the input dataset, OUT= names the output. Variable names: up to 32 characters, start with a letter or underscore.</div>`},
  { title:"Reading Raw Data: INPUT, INFILE, Informats", body:`
   <p>Use INFILE to point to an external file and INPUT to describe its fields. Three input styles: list (space-separated), column (fixed positions) and formatted (informats).</p>
-  <div class="formula">data emp;<br>&nbsp;&nbsp;infile 'C:dataemp.csv' dlm=',' dsd firstobs=2 missover;<br>&nbsp;&nbsp;input id name :$12. joindate :date9. salary :comma8.;<br>&nbsp;&nbsp;format joindate date9. salary comma10.;<br>run;</div>
+  <div class="formula">data emp;<br>&nbsp;&nbsp;infile 'C:\\data\\emp.csv' dlm=',' dsd firstobs=2 missover;<br>&nbsp;&nbsp;input id name :$12. joindate :date9. salary :comma8.;<br>&nbsp;&nbsp;format joindate date9. salary comma10.;<br>run;</div>
   <ul><li>DLM=',' sets the delimiter; DSD treats consecutive commas as a missing value and strips quotes.</li>
   <li>FIRSTOBS=2 skips the header line; MISSOVER sets missing values for short lines.</li>
   <li>The colon modifier (:) allows informats with list input.</li>
@@ -1117,6 +1169,7 @@ const TOPICS = [
  { title:"PROC TTEST, ANOVA and GLM", body:`
   <div class="formula">proc ttest data=d h0=50;  var score; run;<br>proc ttest data=d;<br>&nbsp;&nbsp;class group; var score;<br>run;<br>proc ttest data=d; paired pre*post; run;</div>
   <p>The two-sample output gives both <b>Pooled</b> (equal variance) and <b>Satterthwaite</b> t-tests, plus a "Folded F" test for equality of variances. Choose by the F-test p-value.</p>
+  <div class="vis" data-vis="anova"></div>
   <div class="formula">proc anova data=d;<br>&nbsp;&nbsp;class trt; model y = trt;<br>&nbsp;&nbsp;means trt / tukey;<br>run;</div>
   <div class="formula">proc glm data=d;<br>&nbsp;&nbsp;class trt block; model y = trt block;<br>&nbsp;&nbsp;lsmeans trt / pdiff adjust=tukey;<br>run; quit;</div>
   <p>PROC ANOVA is only for balanced designs; PROC GLM handles unbalanced data, covariates and interactions (use <b>trt*block</b>).</p>
@@ -1125,9 +1178,10 @@ const TOPICS = [
  { title:"PROC REG and ODS", body:`
   <div class="formula">proc reg data=d;<br>&nbsp;&nbsp;model y = x1 x2 / vif dw clb;<br>&nbsp;&nbsp;output out=res p=yhat r=resid;<br>run; quit;</div>
   <p>Output: ANOVA table (F, R², Adj R²), Parameter Estimates (coefficient, SE, t, p). Useful options: <b>vif</b> (multicollinearity), <b>dw</b> (Durbin-Watson), <b>clb</b> (CI for β), <b>selection=stepwise slentry=0.15 slstay=0.15</b> (variable selection). OUTPUT OUT= saves fitted values and residuals; PLOT residual.*predicted. gives diagnostic plots.</p>
+  <div class="vis" data-vis="regfit"></div>
   <p><b>Example:</b> x = 1,…,5 and y = 2, 4, 5, 4, 5. x̄ = 3, ȳ = 4, Sxy = 6, Sxx = 10. SAS reports slope = 6/10 = 0.6 and Intercept = 4 − 0.6×3 = 2.2. SST = 6, SSR = 0.6²×10 = 3.6, so R² = 0.6.</p>
   <p><b>ODS</b> (Output Delivery System) controls where output goes and in which format:</p>
-  <div class="formula">ods html file='C:outeport.html';<br>ods graphics on;<br>proc reg data=d; model y = x1; run; quit;<br>ods html close;</div>
+  <div class="formula">ods html file='C:\\out\\report.html';<br>ods graphics on;<br>proc reg data=d; model y = x1; run; quit;<br>ods html close;</div>
   <div class="formula">ods trace on;<br>ods output ParameterEstimates=pe;<br>ods rtf file='out.rtf'; ... ods rtf close;</div>
   <div class="note">ODS TRACE ON lists the names of output tables; ODS OUTPUT saves any table as a dataset. Always close the ODS destination, otherwise the file stays locked. PROC REG is interactive, so end it with QUIT;.</div>`}
 ]},
@@ -1148,6 +1202,7 @@ const TOPICS = [
   <div class="note">RSS_R ≥ RSS_U always; if the F value comes out negative you swapped them. Degrees of freedom: q in the numerator (number of restrictions, not number of variables) and n − k (of the unrestricted model) in the denominator.</div>`},
  { title:"Heteroscedasticity: Detection Tests", body:`
   <p>Heteroscedasticity means Var(uᵢ) = σᵢ² is not constant. Consequences: OLS unbiased but inefficient, standard errors biased.</p>
+  <div class="vis" data-vis="resid"></div>
   <p><b>Goldfeld-Quandt:</b> order observations by the suspected variable, drop c central ones, fit separate regressions on the two halves.</p>
   <div class="formula">F = RSS₂ / RSS₁  ~ F((n − c − 2k)/2, (n − c − 2k)/2)</div>
   <p><b>Breusch-Pagan:</b> regress ûᵢ² on suspected variables z (p of them); under H₀ (homoscedasticity)</p>
@@ -1185,6 +1240,7 @@ const TOPICS = [
   <div class="note">DW is invalid when a lagged dependent variable is a regressor (use Durbin's h-test) and the model must have an intercept. The first observation is lost in Cochrane-Orcutt (Prais-Winsten keeps it by scaling with √(1 − ρ²)).</div>`},
  { title:"Dummy Variables", body:`
   <p>Dummy (indicator) variables bring qualitative factors (sex, region, season) into regression. If a factor has g categories, use g − 1 dummies; the omitted one is the base category.</p>
+  <div class="vis" data-vis="dummy"></div>
   <div class="formula">Y = β₀ + β₁D + β₂X + u,  D = 1 (male), 0 (female)</div>
   <div class="formula">With interaction: Y = β₀ + β₁D + β₂X + β₃(D·X) + u</div>
   <p>β₁ is the difference in intercepts relative to the base group; β₃ is the difference in slopes. The Chow test compares pooled with separate regressions; the dummy approach tests the same thing.</p>

@@ -28,7 +28,7 @@ function chartSVG() {
 function siteCounts() {
   let courses=0, sems=0;
   LIBRARY.forEach(y => y.semesters.forEach(s => { sems++; courses += s.courses.length; }));
-  return { courses, sems, topics: TOPICS.reduce((n,s)=>n+s.topics.length,0), qs: QUIZZES.reduce((n,s)=>n+s.questions.length,0) };
+  return { courses, sems, topics: TOPICS.reduce((n,s)=>n+s.topics.length,0), qs: QUIZZES.reduce((n,s)=>n+s.questions.length,0) + MOCKS.reduce((n,s)=>n+s.questions.length,0) };
 }
 
 const routes = {
@@ -64,7 +64,7 @@ function home() {
     <div class="stat"><i>n =</i><b>${c.courses}</b><span>Courses &amp; folders</span></div>
     <div class="stat"><i>k =</i><b>${c.sems}</b><span>Semesters</span></div>
     <div class="stat"><i>Σ =</i><b>${c.topics}</b><span>Topic explanations</span></div>
-    <div class="stat"><i>N =</i><b>${c.qs}</b><span>Quiz questions</span></div>
+    <div class="stat"><i>N =</i><b>${c.qs}</b><span>Quiz &amp; mock questions</span></div>
   </div>
   <div class="grid">
     <a class="card" href="#/library"><div class="ico">📚</div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>
@@ -124,25 +124,27 @@ function quizzes(p) {
   if (p[0]) return runQuiz(QUIZZES.find(x => x.id === p[0]));
   app.innerHTML = `<h1>✅ Quizzes &amp; MCQs</h1><p>Choose a subject. You get your score and an explanation for every answer.</p>
     <div class="grid">${QUIZZES.map(s=>`<a class="card" href="#/quizzes/${s.id}"><h3>${s.name}</h3><p>${s.questions.length} questions</p></a>`).join("")}</div>
-    <h2>⏱ Mock Tests</h2><p>Timed tests with 10 random questions (20 minutes).</p>
-    <div class="grid">${QUIZZES.map(s=>`<a class="card" href="#/quizzes/mock/${s.id}"><h3>Mock: ${s.name}</h3></a>`).join("")}
-    <a class="card" href="#/quizzes/mock/all"><h3>Mock: Mixed</h3><p>Random from all subjects</p></a></div>`;
+    <h2>⏱ Mock Tests</h2><p>Real exam practice: 20 questions, timed. Answers and explanations are shown after you submit (or when time is up).</p>
+    <div class="grid">${MOCKS.map(s=>`<a class="card" href="#/quizzes/mock/${s.id}"><h3>Mock: ${s.name}</h3><p>${s.questions.length} questions · ${s.minutes} min</p></a>`).join("")}
+    <a class="card" href="#/quizzes/mock/all"><h3>Mock: Mixed</h3><p>20 random questions from all courses · 30 min</p></a></div>`;
 }
 function mock(id) {
-  let qs = id === "all" ? QUIZZES.flatMap(s => s.questions) : (QUIZZES.find(x => x.id === id) || {questions:[]}).questions;
-  const name = id === "all" ? "Mixed Mock Test" : "Mock Test";
-  runQuiz({ name, questions: shuffle(qs).slice(0, 10) }, 20 * 60);
+  if (id === "all") return runQuiz({ name: "Mock Test: Mixed", questions: shuffle(MOCKS.flatMap(s => s.questions)).slice(0, 20) }, 30 * 60, true);
+  const m = MOCKS.find(x => x.id === id); if (!m) return quizzes([]);
+  runQuiz({ name: "Mock Test: " + m.name, questions: m.questions }, (m.minutes || 30) * 60, true);
 }
-function runQuiz(s, seconds) {
+function runQuiz(s, seconds, isMock) {
   if (!s) return quizzes([]);
-  const qs = shuffle(s.questions), ans = {};
-  let h = `<div class="crumb"><a href="#/quizzes">Quizzes</a> › ${s.name}</div><h1>${s.name}</h1>${seconds?`<div class="timer" id="tm"></div>`:""}`;
-  qs.forEach((q, i) => { h += `<div class="q" data-i="${i}"><p class="t">${i+1}. ${q.q}</p>${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}<div class="exp"></div></div>`; });
+  const qs = isMock ? shuffle(s.questions) : s.questions.slice(), ans = {};
+  let h = `<div class="crumb"><a href="#/quizzes">Quizzes</a> › ${s.name}</div><h1>${s.name}</h1>${seconds?`<div class="timer" id="tm"></div>`:""}${isMock?`<p>${qs.length} questions · answers are shown after you submit. <span id="ansct"></span></p>`:""}`;
+  let lastT = null;
+  qs.forEach((q, i) => { if (!isMock && q.t && q.t !== lastT) { h += `<h2 class="qtopic">${q.t}</h2>`; lastT = q.t; }
+    h += `<div class="q" data-i="${i}"><p class="t">${i+1}. ${q.q}</p>${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}<div class="exp"></div></div>`; });
   h += `<button class="btn" id="sub">Submit &amp; see score</button><div id="res"></div>`;
   app.innerHTML = h;
   let done = false;
   app.querySelectorAll(".q").forEach(box => box.querySelectorAll(".opt").forEach(b => b.onclick = () => {
-    if (done) return; box.querySelectorAll(".opt").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); ans[box.dataset.i] = +b.dataset.j; }));
+    if (done) return; box.querySelectorAll(".opt").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); ans[box.dataset.i] = +b.dataset.j; const c = $("#ansct"); if (c) c.textContent = "Answered " + Object.keys(ans).length + " / " + qs.length; }));
   const finish = () => {
     if (done) return; done = true; clearInterval(timerHandle); let score = 0;
     app.querySelectorAll(".q").forEach(box => { const i = +box.dataset.i, q = qs[i], opts = box.querySelectorAll(".opt");
@@ -153,6 +155,7 @@ function runQuiz(s, seconds) {
     $("#sub").style.display = "none";
     $("#res").innerHTML = `<div class="score">Your score: <b>${score} / ${qs.length}</b> (${pct}%) — ${pct>=80?"Excellent! 🎉":pct>=50?"Good, keep practising 👍":"Review the topics and try again 📖"}</div>
       <p><button class="btn" onclick="router()">Try again</button><a class="btn alt" href="#/topics">Review topics</a></p>`;
+    $("#tm") && ($("#tm").textContent = "Test finished");
     $("#res").scrollIntoView({behavior:"smooth"});
   };
   $("#sub").onclick = finish;
@@ -170,7 +173,7 @@ function practice(p) {
   }
   app.innerHTML = `<h1>📝 Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>
     <div class="grid">${PRACTICE.map(s=>`<a class="card" href="#/practice/${s.id}"><h3>${s.name}</h3><p>${s.items.length} problems</p></a>`).join("")}</div>
-    <a class="btn" href="#/quizzes">Go to mock tests ⏱</a>`;
+    <a class="btn" href="#/quizzes">Go to quizzes &amp; mock tests ⏱</a>`;
 }
 
 /* ---------- ABOUT ---------- */

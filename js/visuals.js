@@ -739,6 +739,244 @@ reg.heaping = ["Reported single-year ages often pile up on ages ending in 0 and 
 }];
 
 /* ============================================================
+   NEW VISUALS for 1st and 4th year topics
+   ============================================================ */
+
+/* ---- Skewness & kurtosis ---- */
+reg.skew = ["Choose a shape. All curves are standardised to mean 0 and SD 1; the dashed normal curve is for comparison. In a right-skewed curve the order is mode &lt; median &lt; mean; in a left-skewed curve it reverses. A peaked, heavy-tailed curve has β₂ &gt; 3 (leptokurtic) and a flat one β₂ &lt; 3 (platykurtic).", (root) => {
+  const g = (k, z) => { const x = k + z * Math.sqrt(k); return x <= 0 ? 0 : Math.sqrt(k) * Math.exp((k - 1) * Math.log(x) - x - lg(k)); };
+  const D = [z => phi(z), z => g(2.5, z), z => g(2.5, -z), z => Math.exp(-Math.SQRT2 * Math.abs(z)) / Math.SQRT2, z => Math.abs(z) <= Math.sqrt(3) ? 1 / (2 * Math.sqrt(3)) : 0];
+  const info = [[0, 3], [1.26, 5.4], [-1.26, 5.4], [0, 6], [0, 1.8]];
+  ui(root, [{ k: "d", label: "Shape ", opts: ["Symmetric (normal)", "Right-skewed", "Left-skewed", "Peaked, heavy tails", "Flat (uniform)"], v: 1 }], s => {
+    const f = D[s.d], F = frame(-4, 4, 0, .8);
+    let mean = 0, tot = 0, mode = 0, best = -1, med = null, cum = 0;
+    for (let z = -4; z <= 4; z += .01) { const y = f(z); tot += y * .01; mean += z * y * .01; if (y > best + 1e-9) { best = y; mode = z; } }
+    for (let z = -4; z <= 4; z += .01) { cum += f(z) * .01 / tot; if (med === null && cum >= .5) med = z; }
+    let o = F.clip + F.axes([-3, -2, -1, 0, 1, 2, 3], [], "z", "");
+    o += F.g(F.area(f, -4, 4, "v-a1") + F.path(phi, -4, 4, "v-cm v-dash") + F.path(f, -4, 4, "v-c1"));
+    const L = (x, cls, t, y) => F.line(x, 0, x, .7, cls + " v-dash") + F.text(x, y, t, "middle");
+    o += L(mean, "v-c4", "mean", .75) + L(med, "v-c2", "median", .71) + L(mode, "v-c3", "mode", .67);
+    s.msg = `Skewness γ₁ ≈ <b>${info[s.d][0]}</b> · kurtosis β₂ ≈ <b>${info[s.d][1]}</b> · mean ${f2(mean)}, median ${f2(med)}, mode ${f2(mode)}`;
+    return SV(o);
+  });
+}];
+
+/* ---- Box plot / five-number summary ---- */
+reg.boxplot = ["Box-and-whisker plot of the data (dots). The box runs from Q₁ to Q₃ with the median line; whiskers reach the most extreme points inside the fences Q₁ − 1.5·IQR and Q₃ + 1.5·IQR; points beyond are outliers (red). Increase the largest value to create an outlier.", (root) => {
+  const A = [3, 5, 7, 8, 9, 11, 13, 15, 16, 20, 21], B = [2, 3, 3, 4, 4, 5, 6, 8, 12, 19, 31];
+  const med = a => { const n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2; };
+  ui(root, [{ k: "d", label: "Data ", opts: ["Example (n = 11)", "Right-skewed"], v: 0 }, { k: "e", label: "Raise largest value by ", min: 0, max: 40, step: 1, v: 0 }], s => {
+    const x = (s.d ? B : A).slice(); x[x.length - 1] += s.e;
+    const n = x.length, m = med(x), lo = x.slice(0, Math.floor(n / 2)), hi = x.slice(Math.ceil(n / 2)), q1 = med(lo), q3 = med(hi), iqr = q3 - q1, fl = q1 - 1.5 * iqr, fu = q3 + 1.5 * iqr;
+    const inside = x.filter(v => v >= fl && v <= fu), wl = Math.min(...inside), wu = Math.max(...inside), xmax = Math.max(65, Math.max(...x) + 3);
+    const F = frame(0, xmax, 0, 3);
+    let o = F.clip + F.axes(range(0, xmax, 10), [], "value", "");
+    o += F.g((fl > 0 ? F.line(fl, .3, fl, 2.7, "v-cm v-dash") : "") + F.line(fu, .3, fu, 2.7, "v-cm v-dash") + F.poly([[q1, 1], [q3, 1], [q3, 2], [q1, 2]], "v-a1") +
+      F.line(q1, 1, q3, 1, "v-c1") + F.line(q1, 2, q3, 2, "v-c1") + F.line(q1, 1, q1, 2, "v-c1") + F.line(q3, 1, q3, 2, "v-c1") + F.line(m, 1, m, 2, "v-c2") +
+      F.line(wl, 1.5, q1, 1.5, "v-cm") + F.line(q3, 1.5, wu, 1.5, "v-cm") + F.line(wl, 1.25, wl, 1.75, "v-cm") + F.line(wu, 1.25, wu, 1.75, "v-cm"));
+    x.forEach(v => { const out = v < fl || v > fu; o += F.dot(v, out ? 1.5 : .6, out ? "v-s4" : "v-sm", out ? 4.5 : 3.2); });
+    o += (fl > 1 ? F.text(fl, 2.85, "lower fence", "middle") : "") + F.text(fu, 2.85, "upper fence", "middle") + F.text(m, 2.3, "median", "middle");
+    const outs = x.filter(v => v < fl || v > fu);
+    s.msg = `Five-number summary: <b>${x[0]}, ${q1}, ${m}, ${q3}, ${x[n - 1]}</b> · IQR = ${iqr} · fences: ${f2(fl)} and ${f2(fu)}${fl <= 0 ? " (lower fence is below 0, not drawn)" : ""} · ${outs.length ? "outlier(s): <b>" + outs.join(", ") + "</b>" : "no outliers"}`;
+    return SV(o);
+  });
+}];
+
+/* ---- Venn diagram for sets ---- */
+reg.venn = ["Change n(A), n(B) and n(A∩B) in a universe of 60 elements. The counts follow n(A∪B) = n(A) + n(B) − n(A∩B), and the elements outside both sets belong to (A∪B)ᶜ.", (root) => {
+  ui(root, [{ k: "a", label: "n(A) ", min: 5, max: 40, step: 1, v: 30 }, { k: "b", label: "n(B) ", min: 5, max: 40, step: 1, v: 25 }, { k: "i", label: "n(A∩B) ", min: 0, max: 40, step: 1, v: 10 }], s => {
+    const i = Math.min(s.i, s.a, s.b), u = s.a + s.b - i, U = Math.max(60, u), out = U - u;
+    let o = `<rect x="8" y="8" width="424" height="204" rx="10" class="v-box"/><text x="20" y="26">U = ${U}</text>`;
+    o += `<circle cx="170" cy="112" r="72" class="v-a1"/><circle cx="270" cy="112" r="72" class="v-a3"/><circle cx="170" cy="112" r="72" class="v-cm"/><circle cx="270" cy="112" r="72" class="v-cm"/>`;
+    o += `<text class="v-t" x="118" y="60" text-anchor="middle">A</text><text class="v-t" x="322" y="60" text-anchor="middle">B</text>`;
+    o += `<text class="v-t" x="130" y="118" text-anchor="middle" font-size="16">${s.a - i}</text><text class="v-t" x="220" y="118" text-anchor="middle" font-size="16">${i}</text><text class="v-t" x="310" y="118" text-anchor="middle" font-size="16">${s.b - i}</text>`;
+    o += `<text class="v-t" x="405" y="200" text-anchor="end" font-size="15">${out}</text>`;
+    s.msg = `n(A∪B) = ${s.a} + ${s.b} − ${i} = <b>${u}</b> · only A: ${s.a - i} · only B: ${s.b - i} · neither: ${out}` + (s.i > i ? " (n(A∩B) cannot exceed the smaller set)" : "");
+    return SV(o, 440, 220);
+  });
+}];
+
+/* ---- nth roots of a complex number ---- */
+reg.nroots = ["The n-th roots of z = r(cos θ + i sin θ) lie on a circle of radius r^(1/n), equally spaced by 360°/n, starting at angle θ/n. For r = 1 and θ = 0 they are the n-th roots of unity, which add up to zero.", (root) => {
+  ui(root, [{ k: "n", label: "n ", min: 2, max: 12, step: 1, v: 3 }, { k: "r", label: "|z| ", min: 1, max: 8, step: 1, v: 8 }, { k: "t", label: "arg z ", min: 0, max: 345, step: 15, v: 0, fmt: v => v + "°" }], s => {
+    const R = Math.pow(s.r, 1 / s.n), F = frame(-3.4, 3.4, -2.94, 2.94, { x: 90, y: 0, w: 260, h: 220 }), px = F.X(1) - F.X(0);
+    let o = F.clip + F.axes([-2, 0, 2], [-2, 0, 2], "Re", "Im") + `<circle cx="${F.X(0)}" cy="${F.Y(0)}" r="${R * px}" class="v-cm v-dash"/>`;
+    const pts = []; for (let k = 0; k < s.n; k++) { const a = (s.t + 360 * k) / s.n * Math.PI / 180; pts.push([R * Math.cos(a), R * Math.sin(a)]); }
+    o += F.g(F.poly(pts, "v-a1") + pts.map((p, k) => F.line(0, 0, p[0], p[1], "v-cm") + F.dot(p[0], p[1], k ? "v-s1" : "v-s2", 4.5)).join(""));
+    const sr = pts.reduce((a, p) => a + p[0], 0), si = pts.reduce((a, p) => a + p[1], 0);
+    s.msg = `Modulus of each root = ${s.r}^(1/${s.n}) = <b>${f2(R)}</b> · first root at <b>${f2(s.t / s.n)}°</b> (orange), then every ${f2(360 / s.n)}° · sum of roots = ${f2(sr)} + ${f2(si)}i`;
+    return SV(o);
+  });
+}];
+
+/* ---- Bayes / natural frequencies ---- */
+reg.bayes = ["Each square is one of 1000 people. Green = diseased and test positive (true positives), blue = diseased but test negative, red = healthy but test positive (false positives), grey = healthy and negative. When the disease is rare, false positives outnumber true positives, so a positive test is weaker evidence than it seems: P(D | +) = TP/(TP + FP).", (root) => {
+  ui(root, [{ k: "p", label: "Prevalence % ", min: .1, max: 50, step: .1, v: 1 }, { k: "se", label: "Sensitivity % ", min: 50, max: 100, step: 1, v: 95 }, { k: "sp", label: "Specificity % ", min: 50, max: 100, step: 1, v: 95 }], s => {
+    const p = s.p / 100, se = s.se / 100, sp = s.sp / 100, D = Math.round(p * 1000), TP = Math.round(D * se), FN = D - TP, FP = Math.round((1000 - D) * (1 - sp));
+    const cls = []; for (let i = 0; i < 1000; i++) cls.push(i < TP ? "v-s1" : i < D ? "v-s3" : i < D + FP ? "v-s4" : "v-sm");
+    let o = ""; cls.forEach((c, i) => { const col = i % 50, row = Math.floor(i / 50); o += `<rect class="${c}" ${c === "v-sm" ? 'style="opacity:.3"' : ""} x="${20 + col * 8}" y="${6 + row * 8.6}" width="6.6" height="7" rx="1"/>`; });
+    const ppv = p * se / (p * se + (1 - p) * (1 - sp));
+    s.msg = `Of 1000 people: TP = <b>${TP}</b>, FN = ${FN}, FP = <b>${FP}</b> · P(disease | positive) = <b>${(100 * ppv).toFixed(1)}%</b> (exact value ${p * se > 0 ? (p * se).toFixed(4) : 0} / ${(p * se + (1 - p) * (1 - sp)).toFixed(4)})`;
+    return SV(o, 440, 185);
+  });
+}];
+
+/* ---- Sampling methods ---- */
+reg.sampling = ["A population of 144 units (12 × 12 grid). Highlighted squares form a sample of 16 units under each method. SRS: random spread. Stratified: 4 units from each of 4 horizontal strata. Systematic: every 9th unit from a random start. Cluster: two whole clusters (blocks of 8 units). Press Draw again.", (root) => {
+  ui(root, [{ k: "m", label: "Method ", opts: ["Simple random", "Stratified", "Systematic", "Cluster"], v: 0 }, { btn: "Draw again", on: s => { s.seed = Math.random(); } }], s => {
+    const r = seeded(Math.floor((s.seed || .314159) * 1e9)), N = 144, W = 12, pick = new Set(), pool = (a, k) => { a = a.slice(); const o = []; while (o.length < k) o.push(a.splice(Math.floor(r() * a.length), 1)[0]); return o; };
+    const all = range(0, N - 1), blocks = []; for (let br = 0; br < 6; br++) for (let bc = 0; bc < 3; bc++) { const b = []; for (let dr = 0; dr < 2; dr++) for (let dc = 0; dc < 4; dc++) b.push((br * 2 + dr) * W + bc * 4 + dc); blocks.push(b); }
+    let chosen = [];
+    if (s.m === 0) chosen = pool(all, 16);
+    else if (s.m === 1) for (let h = 0; h < 4; h++) chosen = chosen.concat(pool(range(h * 36, h * 36 + 35), 4));
+    else if (s.m === 2) { const st = Math.floor(r() * 9); for (let j = 0; j < 16; j++) chosen.push(st + 9 * j); }
+    else pool(range(0, blocks.length - 1), 2).forEach(b => chosen = chosen.concat(blocks[b]));
+    chosen.forEach(i => pick.add(i));
+    const C = 17, X0 = 100, Y0 = 8; let o = "";
+    for (let i = 0; i < N; i++) { const c = i % W, rw = Math.floor(i / W); o += `<rect class="${pick.has(i) ? "v-s1" : "v-sm"}" ${pick.has(i) ? "" : 'style="opacity:.28"'} x="${X0 + c * C}" y="${Y0 + rw * C}" width="${C - 3}" height="${C - 3}" rx="2.5"/>`; }
+    if (s.m === 1) for (let h = 1; h < 4; h++) o += `<line class="v-cm v-dash" x1="${X0 - 4}" x2="${X0 + W * C}" y1="${Y0 + h * 3 * C - 2}" y2="${Y0 + h * 3 * C - 2}"/>`;
+    if (s.m === 3) blocks.forEach(b => { const c0 = b[0] % W, r0 = Math.floor(b[0] / W); o += `<rect class="v-cm" fill="none" x="${X0 + c0 * C - 1.5}" y="${Y0 + r0 * C - 1.5}" width="${4 * C}" height="${2 * C}" rx="3"/>`; });
+    s.msg = ["Every unit and every set of 16 units is equally likely.", "Dashed lines separate the 4 strata; each stratum contributes 4 units, so no stratum is missed.", "All units are a fixed distance apart in the list (k = 9). Danger: a periodic list can match k.", "Units come in groups: cheap to survey, but units in a block are alike, so precision is lower."][s.m];
+    return SV(o, 440, 222);
+  });
+}];
+
+/* ---- Eigenvectors ---- */
+reg.eigen = ["The matrix A = [[a, b], [b, c]] transforms the unit circle (dashed) into an ellipse (orange). The eigenvectors (green lines) are the directions that are only stretched, not turned; the stretch factors are the eigenvalues λ. The ellipse axes follow the eigenvectors, as in PCA.", (root) => {
+  ui(root, [{ k: "a", label: "a ", min: -3, max: 3, step: .5, v: 2 }, { k: "b", label: "b ", min: -3, max: 3, step: .5, v: 1 }, { k: "c", label: "c ", min: -3, max: 3, step: .5, v: 2 }], s => {
+    const F = frame(-4.4, 4.4, -3.7, 3.7, { x: 90, y: 0, w: 260, h: 220 }), T = [s.a, s.b, s.b, s.c];
+    const tr = s.a + s.c, det = s.a * s.c - s.b * s.b, d = Math.sqrt(((s.a - s.c) / 2) ** 2 + s.b ** 2), l1 = tr / 2 + d, l2 = tr / 2 - d, th = .5 * Math.atan2(2 * s.b, s.a - s.c);
+    let circ = "", ell = ""; for (let i = 0; i <= 90; i++) { const t = i / 90 * 2 * Math.PI, x = Math.cos(t), y = Math.sin(t); circ += (i ? "L" : "M") + F.X(x).toFixed(1) + " " + F.Y(y).toFixed(1); ell += (i ? "L" : "M") + F.X(T[0] * x + T[1] * y).toFixed(1) + " " + F.Y(T[2] * x + T[3] * y).toFixed(1); }
+    const e1 = [Math.cos(th), Math.sin(th)], e2 = [-Math.sin(th), Math.cos(th)];
+    let o = F.clip + F.axes([-4, -2, 0, 2, 4], [-3, 0, 3], "", "") + F.g(`<path class="v-cm v-dash" d="${circ}Z"/><path class="v-a2" d="${ell}Z"/><path class="v-c2" d="${ell}Z"/>` +
+      F.line(-4 * e1[0], -4 * e1[1], 4 * e1[0], 4 * e1[1], "v-c1 v-dash") + F.line(-4 * e2[0], -4 * e2[1], 4 * e2[0], 4 * e2[1], "v-c1 v-dash") +
+      F.dot(l1 * e1[0], l1 * e1[1], "v-s1", 4.5) + F.dot(l2 * e2[0], l2 * e2[1], "v-s1", 4.5));
+    s.msg = `λ₁ = <b>${f2(l1)}</b>, λ₂ = <b>${f2(l2)}</b> · trace = ${f2(tr)} = λ₁ + λ₂ · det = ${f2(det)} = λ₁λ₂ · eigenvector directions ${f2(th * 180 / Math.PI)}° and ${f2(th * 180 / Math.PI + 90)}°`;
+    return SV(o);
+  });
+}];
+
+/* ---- Lorenz curve & Gini ---- */
+reg.lorenz = ["Lorenz curve: cumulative share of income against cumulative share of people (poorest first). The 45° line is perfect equality; the shaded area between the line and the curve gives the Gini coefficient G = 1 − 2 × (area under the curve). Try the smooth family L(p) = pᵏ (G = (k − 1)/(k + 1)) or the worked example 10, 20, 30, 40, 100.", (root) => {
+  ui(root, [{ k: "d", label: "Data ", opts: ["Smooth curve L(p) = pᵏ", "Example: 10, 20, 30, 40, 100"], v: 0 }, { k: "q", label: "k ", min: 1, max: 8, step: .5, v: 2.5 }], s => {
+    const F = frame(0, 1, 0, 1, { x: 90, y: 0, w: 260, h: 220 });
+    let o = F.clip + F.axes([0, .25, .5, .75, 1], [0, .25, .5, .75, 1], "people", "income") + F.line(0, 0, 1, 1, "v-cm v-dash"), G;
+    if (s.d === 0) {
+      const L = x => Math.pow(x, s.q), pts = []; for (let i = 0; i <= 50; i++) pts.push([i / 50, i / 50]); for (let i = 50; i >= 0; i--) pts.push([i / 50, L(i / 50)]);
+      o += F.poly(pts, "v-a4") + F.path(L, 0, 1, "v-c4", 80); G = (s.q - 1) / (s.q + 1);
+    } else {
+      const P = [[0, 0], [.2, .05], [.4, .15], [.6, .3], [.8, .5], [1, 1]];
+      o += F.poly(P.concat([[1, 1]]).concat(P.slice(0, -1).reverse().map(p => [p[0], p[0]])), "v-a4"); for (let i = 0; i < P.length - 1; i++) o += F.line(P[i][0], P[i][1], P[i + 1][0], P[i + 1][1], "v-c4"); P.forEach(p => o += F.dot(p[0], p[1], "v-s4", 3)); G = .4;
+    }
+    o += F.text(.75, .2, "area A", "middle");
+    s.msg = `Gini G = <b>${G.toFixed(2)}</b> · area under the curve = ${(.5 - G / 2).toFixed(2)} · ${G < .2 ? "low inequality" : G < .4 ? "moderate inequality" : "high inequality"}`;
+    return SV(o);
+  });
+}];
+
+/* ---- Cobb–Douglas isoquants ---- */
+reg.cobb = ["Isoquants Q = K^α L^β for Q = 1, 2, 3: all input mixes that give the same output. They are convex to the origin and never cross. The slope of an isoquant is −MRTS. α + β tells the returns to scale: doubling both inputs multiplies output by 2^(α+β).", (root) => {
+  ui(root, [{ k: "al", label: "α (capital) ", min: .1, max: .9, step: .05, v: .5 }, { k: "be", label: "β (labour) ", min: .1, max: .9, step: .05, v: .5 }], s => {
+    const F = frame(0, 10, 0, 10);
+    let o = F.clip + F.axes([0, 2, 4, 6, 8, 10], [0, 2, 4, 6, 8, 10], "L", "K");
+    [[1, "v-c3"], [2, "v-c1"], [3, "v-c2"]].forEach(([q, c], qi) => { o += F.g(F.path(l => Math.pow(q / Math.pow(l, s.be), 1 / s.al), .05, 10, c, 140)); const lx = Math.pow(q / Math.pow(8.5, s.al), 1 / s.be); if (lx > .2 && lx < 9) o += F.text(lx + .2, 8.9 - qi * 1.3, "Q = " + q, "start"); });
+    const n = s.al + s.be, K = 4, Lb = 4, mrts = (s.be / s.al) * (K / Lb);
+    s.msg = `α + β = <b>${f2(n)}</b> → ${Math.abs(n - 1) < .001 ? "constant" : n > 1 ? "increasing" : "decreasing"} returns to scale · at K = L: MRTS = MP_L/MP_K = β/α = <b>${f2(mrts)}</b> · doubling inputs multiplies output by ${f2(Math.pow(2, n))}`;
+    return SV(o);
+  });
+}];
+
+/* ---- Control chart ---- */
+reg.ctrlchart = ["X̄ control chart for 30 samples from a process with target μ = 50. Dashed lines: centre line and ±3σ limits. At sample 16 the process mean shifts by the chosen amount; points beyond the limits (red) signal an assignable cause. A small shift often goes unnoticed on a Shewhart chart.", (root) => {
+  ui(root, [{ k: "sh", label: "Shift (in σ of x̄) ", min: 0, max: 4, step: .5, v: 2 }, { btn: "New samples", on: s => { s.seed = Math.random(); } }], s => {
+    const r = seedn(seeded(Math.floor((s.seed || .271828) * 1e9))), F = frame(0, 31, 44, 56);
+    // sigma of x-bar = 1 (so limits are 50 +- 3)
+    const x = range(1, 30).map(i => 50 + (i >= 16 ? s.sh : 0) + r());
+    let o = F.clip + F.axes([1, 5, 10, 15, 20, 25, 30], [44, 47, 50, 53, 56], "sample", "x̄");
+    o += F.line(0, 53, 31, 53, "v-c4 v-dash") + F.line(0, 47, 31, 47, "v-c4 v-dash") + F.line(0, 50, 31, 50, "v-cm v-dash");
+    o += F.text(.4, 53.4, "UCL = 53", "start") + F.text(.4, 46.2, "LCL = 47", "start") + F.line(15.5, 44, 15.5, 56, "v-cm v-dash");
+    let path = ""; x.forEach((v, i) => { path += (i ? "L" : "M") + F.X(i + 1).toFixed(1) + " " + F.Y(Math.max(44, Math.min(56, v))).toFixed(1); });
+    o += F.g(`<path class="v-c1" d="${path}"/>`) + x.map((v, i) => F.dot(i + 1, Math.max(44, Math.min(56, v)), v > 53 || v < 47 ? "v-s4" : "v-s1", v > 53 || v < 47 ? 5 : 3.2)).join("");
+    const first = x.findIndex(v => v > 53 || v < 47);
+    s.msg = first < 0 ? "No point outside the limits: the chart shows the process as in control." : `First signal at sample <b>${first + 1}</b>${first + 1 < 16 ? " (a false alarm before the shift)" : first + 1 >= 16 ? ", " + (first + 1 - 15) + " sample(s) after the shift" : ""} · ${x.filter(v => v > 53 || v < 47).length} point(s) out of control`;
+    return SV(o);
+  });
+}];
+
+/* ---- OC curve ---- */
+reg.ocurve = ["Operating characteristic (OC) curve of a single sampling plan: inspect n items and accept the lot if at most c are defective. Pₐ = P(X ≤ c) with X ~ Binomial(n, p). A larger n makes the curve steeper (better discrimination); a larger c shifts it to the right.", (root) => {
+  const Pa = (n, c, p) => { let t = 0; for (let k = 0; k <= c; k++) t += Math.exp(lg(n + 1) - lg(k + 1) - lg(n - k + 1) + (k ? k * Math.log(p) : 0) + (n - k) * Math.log(1 - p)); return Math.min(1, t); };
+  ui(root, [{ k: "n", label: "n ", min: 5, max: 150, step: 5, v: 10 }, { k: "c", label: "c ", min: 0, max: 5, step: 1, v: 0 }], s => {
+    const F = frame(0, .2, 0, 1);
+    let o = F.clip + F.axes([0, .05, .1, .15, .2], [0, .25, .5, .75, 1], "p", "Pₐ") + F.line(.05, 0, .05, 1, "v-cm v-dash") + F.line(.1, 0, .1, 1, "v-cm v-dash");
+    o += F.g(F.path(p => Pa(s.n, s.c, Math.max(p, 1e-6)), 0, .2, "v-c1", 100)) + F.dot(.05, Pa(s.n, s.c, .05), "v-s2", 4.5) + F.dot(.1, Pa(s.n, s.c, .1), "v-s4", 4.5);
+    s.msg = `Plan (n = ${s.n}, c = ${s.c}): Pₐ(p = 0.05) = <b>${Pa(s.n, s.c, .05).toFixed(3)}</b> · Pₐ(p = 0.10) = <b>${Pa(s.n, s.c, .1).toFixed(3)}</b> · producer's risk at p = 0.05: ${(1 - Pa(s.n, s.c, .05)).toFixed(3)}`;
+    return SV(o);
+  });
+}];
+
+/* ---- Bivariate normal ---- */
+reg.mvn = ["Bivariate normal sample (dots) with unit variances and correlation ρ. Ellipses are contours that contain 50%, 90% and 95% of the probability (Mahalanobis D² = 1.39, 4.61, 5.99). The red segment is the conditional distribution of X₁ given X₂ = x₂: mean ρx₂ and spread √(1 − ρ²).", (root) => {
+  const r0 = seedn(seeded(7)), Z = range(1, 160).map(() => [r0(), r0()]);
+  ui(root, [{ k: "rho", label: "ρ ", min: -.95, max: .95, step: .05, v: .6 }, { k: "x2", label: "x₂ = ", min: -2.5, max: 2.5, step: .1, v: 1.5 }], s => {
+    const F = frame(-3.5, 3.5, -3.7, 3.7, { x: 90, y: 0, w: 260, h: 220 }), rho = s.rho, a = Math.sqrt(1 + rho), b = Math.sqrt(1 - rho);
+    const ell = c => { let d = ""; for (let i = 0; i <= 80; i++) { const t = i / 80 * 2 * Math.PI, u = Math.sqrt(c) * a * Math.cos(t), v = Math.sqrt(c) * b * Math.sin(t), x = (u + v) / Math.SQRT2, y = (u - v) / Math.SQRT2; d += (i ? "L" : "M") + F.X(x).toFixed(1) + " " + F.Y(y).toFixed(1); } return `<path class="v-c1" d="${d}Z"/>`; };
+    let o = F.clip + F.axes([-3, -2, -1, 0, 1, 2, 3], [-3, 0, 3], "x₁", "x₂");
+    o += F.g(Z.map(z => F.dot(z[0], rho * z[0] + Math.sqrt(1 - rho * rho) * z[1], "v-sm", 2)).join("") + ell(1.386) + ell(4.605) + ell(5.991) +
+      F.line(-3.5, s.x2, 3.5, s.x2, "v-cm v-dash") + F.line(rho * s.x2 - Math.sqrt(1 - rho * rho), s.x2, rho * s.x2 + Math.sqrt(1 - rho * rho), s.x2, "v-dot4") + F.dot(rho * s.x2, s.x2, "v-s2", 4.5));
+    s.msg = `E(X₁ | X₂ = ${f2(s.x2)}) = ρx₂ = <b>${f2(rho * s.x2)}</b> · Var(X₁ | X₂) = 1 − ρ² = <b>${f2(1 - rho * rho)}</b> · when ρ = 0 the contours are circles and the variables are independent`;
+    return SV(o);
+  });
+}];
+
+/* ---- Kaplan–Meier ---- */
+reg.km = ["Kaplan–Meier survival curve (solid): at each event time S drops by the fraction dᵢ/nᵢ; censored subjects (+) leave the risk set without causing a drop. The dashed curve is exp(−Ĥ) from the Nelson–Aalen cumulative hazard. Switch to a larger simulated sample to see the curve approach the true exponential curve (orange).", (root) => {
+  const small = { t: [2, 3, 5, 7, 8], e: [1, 0, 1, 0, 1] };
+  ui(root, [{ k: "d", label: "Data ", opts: ["Example: 2, 3+, 5, 7+, 8", "Simulated n = 25"], v: 0 }, { btn: "New sample", on: s => { s.seed = Math.random(); } }], s => {
+    let T, E;
+    if (s.d === 0) { T = small.t; E = small.e; } else {
+      const r = seeded(Math.floor((s.seed || .141592) * 1e9)); T = []; E = [];
+      for (let i = 0; i < 25; i++) { const t = -Math.log(1 - r()) / .1, c = r() * 25; T.push(Math.min(t, c)); E.push(t <= c ? 1 : 0); }
+    }
+    const idx = T.map((_, i) => i).sort((a, b) => T[a] - T[b]), n = T.length, tmax = Math.max(...T) * 1.05, F = frame(0, tmax, 0, 1);
+    let S = 1, H = 0, km = [[0, 1]], na = [[0, 1]], cens = [], atRisk = n, i = 0;
+    while (i < n) { const t = T[idx[i]]; let d = 0, c = 0, j = i; while (j < n && T[idx[j]] === t) { if (E[idx[j]]) d++; else c++; j++; }
+      if (d) { km.push([t, S]); S *= 1 - d / atRisk; km.push([t, S]); H += d / atRisk; na.push([t, Math.exp(-(H - d / atRisk))]); na.push([t, Math.exp(-H)]); }
+      if (c) cens.push([t, S]); atRisk -= d + c; i = j; }
+    km.push([tmax, S]); na.push([tmax, Math.exp(-H)]);
+    const pth = a => a.map((p, k) => (k ? "L" : "M") + F.X(p[0]).toFixed(1) + " " + F.Y(p[1]).toFixed(1)).join("");
+    let o = F.clip + F.axes(range(0, Math.floor(tmax), tmax > 15 ? 5 : 2), [0, .25, .5, .75, 1], "time", "S(t)");
+    o += F.g((s.d ? F.path(t => Math.exp(-.1 * t), 0, tmax, "v-c2 v-dash", 80) : "") + `<path class="v-c3 v-dash" d="${pth(na)}"/><path class="v-c1" d="${pth(km)}"/>`);
+    cens.forEach(c => o += `<text class="v-t" x="${F.X(c[0])}" y="${F.Y(c[1]) + 4}" text-anchor="middle" font-size="18" font-weight="700">+</text>`);
+    s.msg = s.d === 0 ? "S = 1 → 0.8 at t = 2 (1 of 5) → 0.533 at t = 5 (1 of 3 at risk) → 0 at t = 8 (1 of 1). Cumulative hazard at t = 5: 1/5 + 1/3 = 0.533." : `${E.reduce((a, b) => a + b, 0)} events and ${n - E.reduce((a, b) => a + b, 0)} censored · final KM estimate ${S.toFixed(2)} (true: exponential λ = 0.1)`;
+    return SV(o);
+  });
+}];
+
+/* ---- ROC curve ---- */
+reg.roc = ["ROC curve: for every cut-off the test gives a point (1 − specificity, sensitivity). Healthy scores ~ N(0, 1), diseased ~ N(d, 1). A bigger separation d bows the curve towards the top-left corner (AUC → 1); with d = 0 the test is useless (diagonal, AUC = 0.5). Move the cut-off to trade sensitivity for specificity.", (root) => {
+  ui(root, [{ k: "d", label: "Separation d ", min: 0, max: 3.5, step: .1, v: 1.5 }, { k: "c", label: "Cut-off ", min: -1, max: 4, step: .1, v: 1 }], s => {
+    const F = frame(0, 1, 0, 1, { x: 90, y: 0, w: 260, h: 220 }), fpr = c => 1 - Phi(c), tpr = c => 1 - Phi(c - s.d);
+    let pth = ""; for (let i = 0, c = -4; c <= 7; i++, c += .1) pth += (i ? "L" : "M") + F.X(fpr(c)).toFixed(1) + " " + F.Y(tpr(c)).toFixed(1);
+    let o = F.clip + F.axes([0, .25, .5, .75, 1], [0, .25, .5, .75, 1], "1 − specificity", "sensitivity") + F.line(0, 0, 1, 1, "v-cm v-dash") + F.g(`<path class="v-c1" d="${pth}"/>`) + F.dot(fpr(s.c), tpr(s.c), "v-s2", 5.5);
+    s.msg = `Cut-off ${f2(s.c)}: sensitivity = <b>${tpr(s.c).toFixed(2)}</b>, specificity = <b>${Phi(s.c).toFixed(2)}</b> · AUC = Φ(d/√2) = <b>${Phi(s.d / Math.SQRT2).toFixed(2)}</b>`;
+    return SV(o);
+  });
+}];
+
+/* ---- GLM link functions ---- */
+reg.glmlink = ["The link function g(μ) = η connects the mean μ to the linear predictor η = β₀ + β₁x. Identity: μ = η (any real value). Log: μ = e^η (always positive, for counts). Logit: μ = e^η/(1 + e^η) (always between 0 and 1, for probabilities). Move η to read the mean.", (root) => {
+  const M = [e => e, e => Math.exp(e), e => 1 / (1 + Math.exp(-e))], R = [[-4, 4], [0, 10], [0, 1]], Y = [[-4, 0, 4], [0, 5, 10], [0, .5, 1]];
+  ui(root, [{ k: "l", label: "Link ", opts: ["identity (normal)", "log (Poisson)", "logit (binomial)"], v: 2 }, { k: "e", label: "η ", min: -4, max: 4, step: .1, v: 1 }], s => {
+    const F = frame(-4, 4, R[s.l][0], R[s.l][1]), f = M[s.l];
+    let o = F.clip + F.axes([-4, -2, 0, 2, 4], Y[s.l], "η", "μ") + F.g(F.path(f, -4, 4, "v-c1", 120) + F.line(s.e, R[s.l][0], s.e, f(s.e), "v-cm v-dash") + F.dot(s.e, f(s.e), "v-s2", 5));
+    if (s.l === 2) o += F.line(-4, .5, 4, .5, "v-cm v-dash");
+    s.msg = `η = ${f2(s.e)} → μ = <b>${f2(f(s.e))}</b>` + [" (μ can be negative or exceed 1: unsuitable for counts or probabilities)", " (μ is always positive; a one-unit rise in η multiplies μ by e = 2.718)", " (a probability; η = 0 gives μ = 0.5 and e^η is the odds)"][s.l];
+    return SV(o);
+  });
+}];
+
+/* ============================================================
    Mount: turns <div class="vis" data-vis="name[:option]"></div> into a figure
    ============================================================ */
 function mount(el) {

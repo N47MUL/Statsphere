@@ -6,6 +6,13 @@ $("#menuBtn").onclick = () => $("#nav").classList.toggle("open");
 const driveId = u => { const m = (u||"").match(/folders\/([\w-]+)/) || (u||"").match(/[?&]id=([\w-]+)/); return m ? m[1] : null; };
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+
+/* Show 1st-year subjects first and 4th-year subjects last in Topics, Quizzes and Mock lists */
+(function () {
+  const first = ["pos","alg","ip","st1","spss","calc1","la"], last = ["es","as","doe2","st2","mva","bio","glm"];
+  const rank = id => first.includes(id) ? first.indexOf(id) - 100 : last.includes(id) ? 100 + last.indexOf(id) : 0;
+  [TOPICS, QUIZZES, MOCKS].forEach(a => { const o = a.slice(); o.sort((x, y) => rank(x.id) - rank(y.id) || o.indexOf(x) - o.indexOf(y)); a.splice(0, a.length, ...o); });
+})();
 let timerHandle = null;
 $("#themeBtn").onclick = () => { const r = document.documentElement, t = r.dataset.theme === "light" ? "dark" : "light"; r.dataset.theme = t; try { localStorage.setItem("ss-theme", t); } catch(e){} };
 
@@ -32,7 +39,7 @@ function siteCounts() {
 }
 
 const routes = {
-  home, library, topics, quizzes, practice, about,
+  home, library, curriculum, topics, quizzes, practice, about,
 };
 
 function router() {
@@ -68,6 +75,7 @@ function home() {
   </div>
   <div class="grid">
     <a class="card" href="#/library"><div class="ico">📚</div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>
+    <a class="card" href="#/curriculum"><div class="ico">🎓</div><h3>Curriculum</h3><p>All 8 semesters: every course with its type and credit, plus semester totals.</p></a>
     <a class="card" href="#/topics"><div class="ico">💡</div><h3>Topic Explanations</h3><p>Clear, exam-focused explanations with formulas and examples.</p></a>
     <a class="card" href="#/quizzes"><div class="ico">✅</div><h3>Quizzes &amp; MCQs</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
     <a class="card" href="#/practice"><div class="ico">📝</div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
@@ -91,17 +99,44 @@ function libSemester(code, ci) {
   LIBRARY.forEach(y => y.semesters.forEach(s => { if (s.code === code) { sem = s; yr = y; } }));
   if (!sem) return library([]);
   if (ci !== undefined && sem.courses[ci]) {
-    const c = sem.courses[ci], link = c.drive || sem.drive || SITE.driveRoot, id = driveId(c.drive);
+    const c = sem.courses[ci], id = driveId(c.drive);
     app.innerHTML = `<div class="crumb"><a href="#/library">Library</a> › <a href="#/library/${code}">${code}</a> › ${esc(c.name)}</div>
       <h1>${esc(c.name)}</h1>${c.note?`<p>${esc(c.note)}</p>`:""}
-      ${c.drive ? "" : `<div class="note">This course has no direct folder link yet, so the button opens the main Drive folder. Open "${esc(sem.folder)}" there and find this course.</div>`}
-      <a class="btn" target="_blank" rel="noopener" href="${link}">Open in Google Drive ↗</a>
+      ${c.drive ? `<a class="btn" target="_blank" rel="noopener" href="${c.drive}">Open in Google Drive ↗</a>`
+        : `<div class="note">The Drive folder for this course is not ready yet. It will be added soon.</div><span class="btn disabled" aria-disabled="true">Drive link coming soon</span>`}
       ${id ? `<iframe class="drive" src="https://drive.google.com/embeddedfolderview?id=${id}#list"></iframe>` : ""}`;
     return;
   }
   app.innerHTML = `<div class="crumb"><a href="#/library">Library</a> › ${yr.year} › ${code}</div><h1>Semester ${code}</h1>
-    <div class="grid">${sem.courses.map((c,i)=>`<a class="card" href="#/library/${code}/${i}"><h3>${esc(c.name)}</h3><p>${c.drive?"Folder linked ✓":"Open materials"}</p></a>`).join("")}</div>
-    <a class="btn alt" target="_blank" rel="noopener" href="${sem.drive||SITE.driveRoot}">Open ${esc(sem.folder)} in Drive ↗</a>`;
+    <div class="grid">${sem.courses.map((c,i)=>`<a class="card" href="#/library/${code}/${i}"><h3>${esc(c.name)}</h3><p>${c.drive?"Folder linked ✓":"Drive link coming soon"}</p></a>`).join("")}</div>
+    ${sem.drive ? `<a class="btn alt" target="_blank" rel="noopener" href="${sem.drive}">Open ${esc(sem.folder)} in Drive ↗</a>` : `<a class="btn alt" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open the main Drive folder ↗</a>`}`;
+}
+
+/* ---------- CURRICULUM ---------- */
+function fc(v) { return v.toFixed(1); }
+function curriculum(p) {
+  const types = ["Theory","Lab","Viva-voce","Field Work","Project"], cls = t => "ty-" + t.toLowerCase().replace(/[^a-z]/g,"");
+  const sel = p[0] || "all";
+  let all = 0, sumT = {}, n = 0;
+  CURRICULUM.forEach(y => y.semesters.forEach(s => { all += s.total; n++; s.courses.forEach(c => { if (!c[3]) sumT[c[1]] = (sumT[c[1]]||0) + c[2]; }); }));
+  let h = `<h1>🎓 Curriculum</h1><p>Every course of the 4-year B.Sc. (Hons.) in Statistics, year by year: course type and credit, with the credit total of each semester.</p>
+   <div class="stats cur-sum"><div class="stat"><i>k =</i><b>${n}</b><span>Semesters</span></div><div class="stat"><i>Σ =</i><b>${fc(all)}</b><span>Total credits (sum of semester totals)</span></div>
+   <div class="stat"><i>Th =</i><b>${fc(sumT["Theory"])}</b><span>Theory credits</span></div><div class="stat"><i>Lab =</i><b>${fc(sumT["Lab"])}</b><span>Lab credits</span></div></div>
+   <div class="tabs">${["all"].concat(CURRICULUM.map(y=>y.year)).map(v=>`<a class="tab ${sel===v?"on":""}" href="#/curriculum/${v==="all"?"all":encodeURIComponent(v)}">${v==="all"?"All years":v}</a>`).join("")}</div>
+   <div class="legend">${types.map(t=>`<span class="ty ${cls(t)}">${t}</span>`).join("")}</div>`;
+  const dsel = decodeURIComponent(sel);
+  CURRICULUM.filter(y => sel === "all" || y.year === dsel).forEach(y => {
+    h += `<h2>${y.year}</h2><div class="cgrid">`;
+    y.semesters.forEach(s => {
+      h += `<div class="panel cur"><h3><span class="tag">Semester ${s.code}</span></h3><div class="tblw"><table class="ctab"><thead><tr><th>Course</th><th>Type</th><th class="r">Credit</th></tr></thead><tbody>` +
+        s.courses.map(c => `<tr${c[3]?' class="optrow"':""}><td>${esc(c[0])}</td><td><span class="ty ${cls(c[1])}">${c[1]}</span></td><td class="r">${fc(c[2])}</td></tr>`).join("") +
+        `</tbody><tfoot><tr><td colspan="2">${s.totalOpt?"Total (without optional)":"Total"}</td><td class="r">${fc(s.total)}</td></tr>` +
+        (s.totalOpt ? `<tr><td colspan="2">Total (with optional Comprehensive)</td><td class="r">${fc(s.totalOpt)}</td></tr>` : "") + `</tfoot></table></div></div>`;
+    });
+    h += `</div>`;
+  });
+  h += `<div class="note">${CURRICULUM_NOTE}</div><p class="src">Source: ${CURRICULUM_SOURCE}</p>`;
+  app.innerHTML = h;
 }
 
 /* ---------- TOPICS ---------- */

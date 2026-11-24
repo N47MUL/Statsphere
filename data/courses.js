@@ -6,6 +6,21 @@
 */
 const ROOT = SITE.driveRoot;
 const LIBRARY = [
+  { year: "1st Year", semesters: [
+    { code: "1-1", folder: "1-1 by N@sir", drive: "", courses: [
+      { name: "Principles of Statistics", drive: "" },
+      { name: "Basic Algebra", drive: "" },
+      { name: "English Language", drive: "" },
+      { name: "History of the Emergence of Independent Bangladesh", drive: "" },
+      { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] },
+    { code: "1-2", folder: "1-2 by N@sir", drive: "", courses: [
+      { name: "Introduction to Probability", drive: "" },
+      { name: "Sampling Techniques I", drive: "" },
+      { name: "Introduction to Computer and SPSS", drive: "" },
+      { name: "Calculus", drive: "" },
+      { name: "Linear Algebra", drive: "" },
+      { name: "Academic Writing", drive: "" },
+      { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] } ] },
   { year: "2nd Year", semesters: [
     { code: "2-1", folder: "2-1 by N@sir", drive: "", courses: [
       { name: "Theory of Statistics", drive: "https://drive.google.com/drive/folders/1Fd_G3GPvZC1LZo6BvPqm0b-MS8Prw3dj" },
@@ -23,8 +38,8 @@ const LIBRARY = [
       { name: "TT and Semester Final Questions", drive: "https://drive.google.com/drive/folders/1Wya-xYTkv7Btc3K9M2AJ-4CyZPIo0w8b", note: "TT = Term Test" } ] } ] },
   { year: "3rd Year", semesters: [
     { code: "3-1", folder: "3-1 by N@sir", drive: "", courses: [
-      { name: "Design and Analysis of Experiments I", drive: "https://drive.google.com/drive/folders/1qJNdq-sPCqjb4kuUOHtBdt1SzbBxdEwc" },
-      { name: "Statistical Inference", drive: "https://drive.google.com/drive/folders/1SiYKxHuyBDjea0Rv-Ga1CpXXDb7rd7Pq" },
+      { name: "Design and Analysis of Experiments I", drive: "https://drive.google.com/drive/folders/1SiYKxHuyBDjea0Rv-Ga1CpXXDb7rd7Pq" },
+      { name: "Statistical Inference", drive: "https://drive.google.com/drive/folders/1qJNdq-sPCqjb4kuUOHtBdt1SzbBxdEwc" },
       { name: "Statistical Simulation and Data Analysis with R and Python", drive: "https://drive.google.com/drive/folders/1nrxyuscKuD0694mp6_5wMgPEpK_vQizE" },
       { name: "Linear Programming", drive: "https://drive.google.com/drive/folders/1RQ3KzEIWlVP__6YDwRZHsHwKEnjoE_Rl" },
       { name: "Previous Questions", drive: "https://drive.google.com/drive/folders/1RSZ7UTggGF_H7Wsa1vzohkL0EXCkHzQJ" },
@@ -35,5 +50,19 @@ const LIBRARY = [
       { name: "Data Analysis with SAS", drive: "https://drive.google.com/drive/folders/1GMq4hEZkHun1luYBvbHeV3mMJah90jXc" },
       { name: "Regression Analysis II", drive: "https://drive.google.com/drive/folders/1y5gEYIekLApsmkFiMGf2yfQt1QzBihmc" },
       { name: "Field Work", drive: "https://drive.google.com/drive/folders/1LPtnzvPyye-rvRc75c1y3ThynnO376zD" },
-      { name: "TT and Semester Final Questions", drive: "https://drive.google.com/drive/folders/1_H4IydFRfAL2I_AksM7baNcd1UyO7k8E", note: "TT = Term Test" } ] } ] }
+      { name: "TT and Semester Final Questions", drive: "https://drive.google.com/drive/folders/1_H4IydFRfAL2I_AksM7baNcd1UyO7k8E", note: "TT = Term Test" } ] } ] },
+  { year: "4th Year", semesters: [
+    { code: "4-1", folder: "4-1 by N@sir", drive: "", courses: [
+      { name: "Economic Statistics", drive: "" },
+      { name: "Applied Statistics", drive: "" },
+      { name: "Design and Analysis of Experiments II", drive: "" },
+      { name: "Sampling Techniques II", drive: "" },
+      { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] },
+    { code: "4-2", folder: "4-2 by N@sir", drive: "", courses: [
+      { name: "Multivariate Analysis", drive: "" },
+      { name: "Biostatistics and Epidemiology", drive: "" },
+      { name: "Generalized Linear Models", drive: "" },
+      { name: "Research Methodology", drive: "" },
+      { name: "Research Project", drive: "" },
+      { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] } ] }
 ];

@@ -1123,14 +1123,14 @@ const TOPICS = [
 { id:"sas", name:"Data Analysis with SAS", topics:[
  { title:"DATA Step and PROC Step Basics", body:`
   <p>A SAS program is a series of steps. A <b>DATA step</b> creates or changes a dataset (row-by-row processing). A <b>PROC step</b> analyses or prints a dataset. Every statement ends with a semicolon; a step ends with RUN; (or QUIT; for some procs).</p>
-  <div class="formula">libname mylib 'C:\\sasdata';<br>data mylib.students;<br>&nbsp;&nbsp;input id name $ sex $ score;<br>&nbsp;&nbsp;datalines;<br>1 Rahim M 70<br>2 Nila F 80<br>3 Karim M 90<br>;<br>run;<br>proc print data=mylib.students; run;</div>
+  <div class="formula">libname mylib 'C:sasdata';<br>data mylib.students;<br>&nbsp;&nbsp;input id name $ sex $ score;<br>&nbsp;&nbsp;datalines;<br>1 Rahim M 70<br>2 Nila F 80<br>3 Karim M 90<br>;<br>run;<br>proc print data=mylib.students; run;</div>
   <p>The LIBNAME gives a permanent library; without it, data goes to the temporary WORK library. The $ after a variable name means character. The PDV (program data vector) holds one observation at a time while the step loops.</p>
   <p><b>Example:</b> PROC MEANS on the three scores above (70, 80, 90) shows N = 3, Mean = 80, Std Dev = 10, Min = 70, Max = 90.</p>
   <div class="formula">proc means data=mylib.students n mean std min max;<br>&nbsp;&nbsp;var score;<br>run;</div>
   <div class="note">Missing semicolons are the most common error. Remember DATA= names the input dataset, OUT= names the output. Variable names: up to 32 characters, start with a letter or underscore.</div>`},
  { title:"Reading Raw Data: INPUT, INFILE, Informats", body:`
   <p>Use INFILE to point to an external file and INPUT to describe its fields. Three input styles: list (space-separated), column (fixed positions) and formatted (informats).</p>
-  <div class="formula">data emp;<br>&nbsp;&nbsp;infile 'C:\\data\\emp.csv' dlm=',' dsd firstobs=2 missover;<br>&nbsp;&nbsp;input id name :$12. joindate :date9. salary :comma8.;<br>&nbsp;&nbsp;format joindate date9. salary comma10.;<br>run;</div>
+  <div class="formula">data emp;<br>&nbsp;&nbsp;infile 'C:dataemp.csv' dlm=',' dsd firstobs=2 missover;<br>&nbsp;&nbsp;input id name :$12. joindate :date9. salary :comma8.;<br>&nbsp;&nbsp;format joindate date9. salary comma10.;<br>run;</div>
   <ul><li>DLM=',' sets the delimiter; DSD treats consecutive commas as a missing value and strips quotes.</li>
   <li>FIRSTOBS=2 skips the header line; MISSOVER sets missing values for short lines.</li>
   <li>The colon modifier (:) allows informats with list input.</li>
@@ -1181,7 +1181,8 @@ const TOPICS = [
   <div class="vis" data-vis="regfit"></div>
   <p><b>Example:</b> x = 1,…,5 and y = 2, 4, 5, 4, 5. x̄ = 3, ȳ = 4, Sxy = 6, Sxx = 10. SAS reports slope = 6/10 = 0.6 and Intercept = 4 − 0.6×3 = 2.2. SST = 6, SSR = 0.6²×10 = 3.6, so R² = 0.6.</p>
   <p><b>ODS</b> (Output Delivery System) controls where output goes and in which format:</p>
-  <div class="formula">ods html file='C:\\out\\report.html';<br>ods graphics on;<br>proc reg data=d; model y = x1; run; quit;<br>ods html close;</div>
+  <div class="formula">ods html file='C:out
+eport.html';<br>ods graphics on;<br>proc reg data=d; model y = x1; run; quit;<br>ods html close;</div>
   <div class="formula">ods trace on;<br>ods output ParameterEstimates=pe;<br>ods rtf file='out.rtf'; ... ods rtf close;</div>
   <div class="note">ODS TRACE ON lists the names of output tables; ODS OUTPUT saves any table as a dataset. Always close the ODS destination, otherwise the file stays locked. PROC REG is interactive, so end it with QUIT;.</div>`}
 ]},

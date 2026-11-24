@@ -105,3 +105,36 @@ ul.clean{padding-left:20px}
 }
 
 .qtopic{font-size:1.05rem;margin:26px 0 8px;color:var(--acc2);border-bottom:1px solid var(--line);padding-bottom:4px}
+
+/* DISABLED BUTTON */
+.btn.disabled{background:var(--deep);color:var(--mut);border:1px dashed var(--line);cursor:not-allowed;box-shadow:none;pointer-events:none}
+:root[data-theme=light] .btn.disabled{color:var(--mut)}
+
+/* CURRICULUM */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.tab{padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--mut);text-decoration:none;font-size:.9rem;font-weight:600}
+.tab.on,.tab:hover{color:var(--text);border-color:var(--acc);box-shadow:inset 0 -2px 0 var(--acc)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:16px;align-items:start}
+.panel.cur{margin:0;padding:14px}
+.tblw{overflow-x:auto}
+.ctab{width:100%;border-collapse:collapse;font-size:.92rem}
+.ctab th,.ctab td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.ctab th{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+.ctab .r{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ctab tfoot td{font-weight:700;border-top:2px solid var(--acc);border-bottom:0;color:var(--acc)}
+.ctab tr.optrow td:first-child{color:var(--mut)}
+.ctab em{font-size:.8rem}
+.ty{display:inline-block;white-space:nowrap;padding:1px 9px;border-radius:20px;font-size:.76rem;font-weight:700;border:1px solid var(--line);background:var(--deep)}
+.ty-theory{color:var(--blue);border-color:var(--blue)}
+.ty-lab{color:var(--acc);border-color:var(--acc)}
+.ty-vivavoce{color:var(--acc2);border-color:var(--acc2)}
+.ty-fieldwork{color:var(--ok);border-color:var(--ok)}
+.ty-project{color:var(--bad);border-color:var(--bad)}
+.src{color:var(--mut);font-size:.85rem}
+@media(max-width:760px){.ctab{font-size:.86rem}.ctab th,.ctab td{padding:6px 5px}}
+
+/* TABLES inside topic explanations */
+.tp table{border-collapse:collapse;width:100%;font-size:.9rem;margin:10px 0;display:block;overflow-x:auto}
+.tp table th,.tp table td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+.tp table th{background:var(--deep);color:var(--acc)}

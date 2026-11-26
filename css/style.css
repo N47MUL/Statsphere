@@ -167,3 +167,21 @@ ul.clean{padding-left:20px}
 .about-card figcaption{text-align:center;margin-top:8px;color:var(--mut);font-size:.85rem}
 .about-card .who{flex:1;min-width:220px}
 @media(max-width:520px){.about-card{justify-content:center;text-align:center}}
+
+/* ---- Resource Library layout ---- */
+main:has(.libpage){max-width:1240px}
+.libpage{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:28px;align-items:start}
+.libside{position:sticky;top:78px;display:grid;gap:14px}
+.libside .panel{padding:14px 16px}.libside h3{margin:0 0 10px;font-size:1rem}
+.libside .panel>a:not(.btn){display:block;padding:6px 0;text-decoration:none}
+.libside .btn{display:block;text-align:center}
+.libstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.libjump{display:flex;flex-wrap:wrap;gap:6px}.libjump .tag{text-decoration:none;color:var(--text)}.libjump .tag:hover{border-color:var(--acc);color:var(--acc)}
+.libbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.libsearch{flex:1 1 220px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1rem}
+.libsearch:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+.libgrid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin:12px 0}
+.libico{display:grid;place-items:center;font-size:1.9rem;animation:none!important}
+.sem-head a.pill{text-decoration:none}
+@media(max-width:900px){.libpage{grid-template-columns:1fr}.libside{position:static;grid-template-columns:1fr 1fr}.libside .panel:last-child{grid-column:1/-1}}
+@media(max-width:560px){.libside{grid-template-columns:1fr}.libside .panel:nth-child(3){display:none}.libgrid{grid-template-columns:1fr}}

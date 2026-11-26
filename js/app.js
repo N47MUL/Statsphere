@@ -93,15 +93,46 @@ function home() {
 }
 
 /* ---------- LIBRARY ---------- */
+function libNorm(t) { return String(t).toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g," ").trim(); }
+function libArt(name, code) {
+  const n = libNorm(name);
+  if (/question|previous/.test(n)) return `<span class="cart libico">📝</span>`;
+  if (/table/.test(n)) return `<span class="cart libico">📊</span>`;
+  if (/field work|project/.test(n)) return `<span class="cart libico">🗂️</span>`;
+  const ids = Object.keys(COURSE_SEM).filter(i => COURSE_SEM[i] === code);
+  const names = {}; (typeof TOPICS !== "undefined" ? TOPICS : []).forEach(t => names[t.id] = libNorm(t.name));
+  let id = ids.find(i => names[i] === n) || ids.find(i => names[i] && (names[i].includes(n) || n.includes(names[i])));
+  if (!id) { const w = n.split(" ").filter(x => x.length > 3); id = ids.find(i => names[i] && w.some(x => names[i].includes(x))); }
+  return id ? courseArt(id) : `<span class="cart libico">📁</span>`;
+}
 function library(p) {
   if (p[0]) return libSemester(p[0], p[1]);
-  let h = `<h1>📚 Resource Library</h1><p>Choose your year and semester. All files are stored in Google Drive and open in a new tab.</p>`;
-  LIBRARY.forEach(y => {
-    h += `<h2>${y.year}</h2><div class="grid">` + y.semesters.map(s =>
-      `<a class="card" href="#/library/${s.code}"><span class="tag">Semester ${s.code}</span><h3>${s.courses.length} items</h3><p>${s.courses.filter(c=>!/question|previous|tables/i.test(c.name)).map(c=>esc(c.name)).slice(0,3).join(", ")}…</p></a>`).join("") + `</div>`;
-  });
-  h += `<a class="btn alt" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open the full Drive folder ↗</a>`;
-  app.innerHTML = h;
+  const q = (library.q || "").toLowerCase(), yf = library.yf || "all";
+  const total = LIBRARY.reduce((a, y) => a + y.semesters.reduce((b, s) => b + s.courses.length, 0), 0);
+  const ready = LIBRARY.reduce((a, y) => a + y.semesters.reduce((b, s) => b + s.courses.filter(c => c.drive).length, 0), 0);
+  let main = "", shown = 0;
+  LIBRARY.forEach(y => y.semesters.forEach(s => {
+    if (yf !== "all" && y.year !== yf) return;
+    const cs = s.courses.map((c, i) => [c, i]).filter(([c]) => !q || c.name.toLowerCase().includes(q));
+    if (!cs.length) return; shown += cs.length;
+    const lab = y.year.replace(" Year", "") + " Year · " + (s.code.endsWith("1") ? "1st" : "2nd") + " Semester";
+    main += `<section class="sem-group" id="sem-${s.code}"><div class="sem-head"><h2><span class="yr">${y.year}</span> · ${s.code.endsWith("1") ? "1st" : "2nd"} Semester</h2><a class="pill" href="#/library/${s.code}">Semester ${s.code} · ${s.courses.length} items</a></div>
+      <div class="grid libgrid">${cs.map(([c, i]) => `<a class="card course" href="#/library/${s.code}/${i}">${libArt(c.name, s.code)}<div class="cbody"><h3>${esc(c.name)}</h3><p>${c.drive ? "Folder linked ✓" : "Drive link coming soon"}</p></div></a>`).join("")}</div></section>`;
+  }));
+  if (!shown) main = `<div class="note">No resources match “${esc(library.q || "")}”.</div>`;
+  const years = ["all"].concat(LIBRARY.map(y => y.year));
+  app.innerHTML = `<div class="libpage"><div class="libmain"><h1>📚 Resource Library</h1><p>Choose your year and semester. All files are stored in Google Drive and open in a new tab.</p>
+    <div class="libbar"><input class="libsearch" type="search" placeholder="Search courses…" aria-label="Search courses" value="${esc(library.q || "")}">
+    <div class="tabs">${years.map(v => `<a class="tab ${yf === v ? "on" : ""}" href="#/library" data-yf="${v}">${v === "all" ? "All years" : v}</a>`).join("")}</div></div>
+    <div id="libres">${main}</div></div>
+    <aside class="libside"><div class="panel"><h3>Quick links</h3>
+      <a class="btn" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open full Drive folder ↗</a>
+      <div class="libstats"><div class="stat"><b>${total}</b><span>Folders</span></div><div class="stat"><b>${ready}</b><span>Linked</span></div></div></div>
+      <div class="panel"><h3>Jump to semester</h3><div class="libjump">${LIBRARY.flatMap(y => y.semesters).map(s => `<a class="tag" href="#/library/${s.code}">${s.code}</a>`).join("")}</div></div>
+      <div class="panel"><h3>Also on StatSphere</h3><a href="#/topics">📖 Topic explanations</a><a href="#/quizzes">🧠 Quizzes</a><a href="#/practice">📝 Practice</a></div></aside></div>`;
+  const inp = app.querySelector(".libsearch");
+  inp.oninput = () => { library.q = inp.value; const pos = inp.selectionStart; library([]); const n = app.querySelector(".libsearch"); n.focus(); n.setSelectionRange(pos, pos); };
+  app.querySelectorAll("[data-yf]").forEach(a => a.onclick = e => { e.preventDefault(); library.yf = a.dataset.yf; library([]); });
 }
 function libSemester(code, ci) {
   let sem, yr;
@@ -117,7 +148,7 @@ function libSemester(code, ci) {
     return;
   }
   app.innerHTML = `<div class="crumb"><a href="#/library">Library</a> › ${yr.year} › ${code}</div><h1>Semester ${code}</h1>
-    <div class="grid">${sem.courses.map((c,i)=>`<a class="card" href="#/library/${code}/${i}"><h3>${esc(c.name)}</h3><p>${c.drive?"Folder linked ✓":"Drive link coming soon"}</p></a>`).join("")}</div>
+    <div class="grid libgrid">${sem.courses.map((c,i)=>`<a class="card course" href="#/library/${code}/${i}">${libArt(c.name, code)}<div class="cbody"><h3>${esc(c.name)}</h3><p>${c.drive?"Folder linked ✓":"Drive link coming soon"}</p></div></a>`).join("")}</div>
     ${sem.drive ? `<a class="btn alt" target="_blank" rel="noopener" href="${sem.drive}">Open ${esc(sem.folder)} in Drive ↗</a>` : `<a class="btn alt" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open the main Drive folder ↗</a>`}`;
 }
 
@@ -279,13 +310,13 @@ function runQuiz(s, seconds, isMock) {
 function practice(p) {
   if (p[0]) {
     const s = PRACTICE.find(x => x.id === p[0]); if (!s) return practice([]);
-    app.innerHTML = `<div class="crumb"><a href="#/practice">Practice</a> › ${s.name}</div><h1>${s.name} – Practice</h1><p>Try each problem on paper first, then reveal the answer.</p>
+    app.innerHTML = `<div class="crumb"><a href="#/practice">Practice</a> › ${s.name}</div><div class="title-art">${courseArt(s.id)}<h1>${s.name} – Practice</h1></div><p>Try each problem on paper first, then reveal the answer.</p>
       ${s.items.map((it,i)=>`<div class="q"><p class="t">Q${i+1}. ${it.q}</p><details><summary>Show / hide answer</summary><p>${it.a}</p></details></div>`).join("")}
       ${QZ.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">Take the ${s.name} quizzes</a>`:""}`;
     return;
   }
   app.innerHTML = `<h1>📝 Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>
-    <div class="grid">${PRACTICE.map(s=>`<a class="card" href="#/practice/${s.id}"><h3>${s.name}</h3><p>${s.items.length} problems</p></a>`).join("")}</div>
+    ${semGrouped(PRACTICE, c=>"#/practice/"+c.id, c=>c.items.length+" problems")}
     <a class="btn" href="#/quizzes">Go to quizzes &amp; mock tests ⏱</a>`;
 }
 
@@ -297,5 +328,6 @@ function about() {
    <div class="panel about-card">${a.photo?`<figure><img src="${a.photo}" alt="Photo of ${a.name}" loading="lazy"><figcaption>${a.name}</figcaption></figure>`:""}<div class="who"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.uni}</p></div></div>
    <div class="panel"><h3>💬 Feedback</h3><p>Found a mistake or want a topic added? Tell us!</p>
     <a class="btn" href="${mail}">✉ Send feedback by email</a>
+    <p class="muted" style="margin-top:.6rem">Or write to us at <a href="${mail}">${SITE.feedbackEmail}</a></p>
     ${SITE.feedbackForm?`<a class="btn alt" target="_blank" rel="noopener" href="${SITE.feedbackForm}">Open feedback form ↗</a>`:""}</div>`;
 }

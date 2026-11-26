@@ -8,7 +8,7 @@ const SITE = {
   driveRoot: "https://drive.google.com/drive/folders/1cgFVKB7YM-bqWzah0PpY4RRt3QwHz5Rh",
 
   // FEEDBACK: put your email here. Students click "Send feedback" and their email app opens.
-  feedbackEmail: "your-email@example.com",
+  feedbackEmail: "nazmulnasir2019@gmail.com",
   // Optional: paste a Google Form link here (leave "" to hide the button)
   feedbackForm: "",
 

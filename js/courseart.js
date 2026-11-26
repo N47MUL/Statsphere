@@ -45,6 +45,9 @@ const COURSE_ART = (function () {
    glm: axes + `<path d="M8 38C20 38 28 34 34 24s6-14 10-14" fill="none" stroke="${A}" stroke-width="3"/><circle cx="14" cy="38" r="2.2" fill="${B}"/><circle cx="22" cy="37" r="2.2" fill="${B}"/><circle cx="34" cy="10" r="2.2" fill="${Y}"/><circle cx="40" cy="10" r="2.2" fill="${Y}"/><circle cx="29" cy="12" r="2.2" fill="${Y}"/>`,
    rm: `<path d="M6 10h15a3 3 0 0 1 3 3v27a3 3 0 0 0-3-3H6zM42 10H27a3 3 0 0 0-3 3v27a3 3 0 0 1 3-3h15z" fill="${B}" fill-opacity=".2" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M10 17h9M10 23h9M30 17h9M30 23h9" stroke="${A}" stroke-width="2" stroke-linecap="round"/><circle cx="35" cy="34" r="4" fill="none" stroke="${R}" stroke-width="2.2"/><path d="M38 37l4 4" stroke="${R}" stroke-width="2.6" stroke-linecap="round"/>`
   };
+  m.eng = `<path d="M6 10h36a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H22l-9 7v-7H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z" fill="${B}" fill-opacity=".2" stroke="${B}" stroke-width="2.4" stroke-linejoin="round"/>` + txt("Aa", A, 24, 29, 17);
+  m.aw = `<path d="M10 6h22l8 8v28H10z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M16 20h18M16 26h18M16 32h10" stroke="${B}" stroke-width="2.2" stroke-linecap="round"/><path d="M30 44l12-18 3 2-12 18-4 2z" fill="${Y}" stroke="#c98a14" stroke-width="1.6" stroke-linejoin="round"/>`;
+  m.hist = `<path d="M6 40h36M10 40V20M20 40V20M28 40V20M38 40V20M6 20h36L24 7z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 7L6 20h36z" fill="${A}" fill-opacity=".3"/>`;
   return m;
 })();
 function courseArt(id, cls) {

@@ -14,6 +14,7 @@ const SITE = {
 
   about: {
     name: "Nazmul Islam Nasir",
+    photo: "img/nasir.jpg",
     dept: "Department of Statistics",
     level: "4th Year, 1st Semester (Session 2022-23)",
     uni: "Shahjalal University of Science and Technology (SUST), Sylhet"

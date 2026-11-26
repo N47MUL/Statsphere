@@ -11,7 +11,7 @@ const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Mat
 (function () {
   const first = ["pos","alg","ip","st1","spss","calc1","la"], last = ["es","as","doe2","st2","mva","bio","glm"];
   const rank = id => first.includes(id) ? first.indexOf(id) - 100 : last.includes(id) ? 100 + last.indexOf(id) : 0;
-  [TOPICS, QUIZZES, MOCKS].forEach(a => { const o = a.slice(); o.sort((x, y) => rank(x.id) - rank(y.id) || o.indexOf(x) - o.indexOf(y)); a.splice(0, a.length, ...o); });
+  [TOPICS, QZ, MOCKS].forEach(a => { const o = a.slice(); o.sort((x, y) => rank(x.id) - rank(y.id) || o.indexOf(x) - o.indexOf(y)); a.splice(0, a.length, ...o); });
 })();
 /* Merge practice entries that share an id, and list practice courses year by year */
 (function () {
@@ -44,7 +44,7 @@ function chartSVG() {
 function siteCounts() {
   let courses=0, sems=0;
   LIBRARY.forEach(y => y.semesters.forEach(s => { sems++; courses += s.courses.length; }));
-  return { courses, sems, topics: TOPICS.reduce((n,s)=>n+s.topics.length,0), qs: QUIZZES.reduce((n,s)=>n+s.questions.length,0) + MOCKS.reduce((n,s)=>n+s.questions.length,0) };
+  return { courses, sems, topics: TOPICS.reduce((n,s)=>n+s.topics.length,0), qs: QZ.reduce((n,s)=>n+s.topics.length*20,0) + MOCKS.reduce((n,s)=>n+s.questions.length,0) };
 }
 
 const routes = {
@@ -93,15 +93,46 @@ function home() {
 }
 
 /* ---------- LIBRARY ---------- */
+function libNorm(t) { return String(t).toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g," ").trim(); }
+function libArt(name, code) {
+  const n = libNorm(name);
+  if (/question|previous/.test(n)) return `<span class="cart libico">📝</span>`;
+  if (/table/.test(n)) return `<span class="cart libico">📊</span>`;
+  if (/field work|project/.test(n)) return `<span class="cart libico">🗂️</span>`;
+  const ids = Object.keys(COURSE_SEM).filter(i => COURSE_SEM[i] === code);
+  const names = {}; (typeof TOPICS !== "undefined" ? TOPICS : []).forEach(t => names[t.id] = libNorm(t.name));
+  let id = ids.find(i => names[i] === n) || ids.find(i => names[i] && (names[i].includes(n) || n.includes(names[i])));
+  if (!id) { const w = n.split(" ").filter(x => x.length > 3); id = ids.find(i => names[i] && w.some(x => names[i].includes(x))); }
+  return id ? courseArt(id) : `<span class="cart libico">📁</span>`;
+}
 function library(p) {
   if (p[0]) return libSemester(p[0], p[1]);
-  let h = `<h1>📚 Resource Library</h1><p>Choose your year and semester. All files are stored in Google Drive and open in a new tab.</p>`;
-  LIBRARY.forEach(y => {
-    h += `<h2>${y.year}</h2><div class="grid">` + y.semesters.map(s =>
-      `<a class="card" href="#/library/${s.code}"><span class="tag">Semester ${s.code}</span><h3>${s.courses.length} items</h3><p>${s.courses.filter(c=>!/question|previous|tables/i.test(c.name)).map(c=>esc(c.name)).slice(0,3).join(", ")}…</p></a>`).join("") + `</div>`;
-  });
-  h += `<a class="btn alt" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open the full Drive folder ↗</a>`;
-  app.innerHTML = h;
+  const q = (library.q || "").toLowerCase(), yf = library.yf || "all";
+  const total = LIBRARY.reduce((a, y) => a + y.semesters.reduce((b, s) => b + s.courses.length, 0), 0);
+  const ready = LIBRARY.reduce((a, y) => a + y.semesters.reduce((b, s) => b + s.courses.filter(c => c.drive).length, 0), 0);
+  let main = "", shown = 0;
+  LIBRARY.forEach(y => y.semesters.forEach(s => {
+    if (yf !== "all" && y.year !== yf) return;
+    const cs = s.courses.map((c, i) => [c, i]).filter(([c]) => !q || c.name.toLowerCase().includes(q));
+    if (!cs.length) return; shown += cs.length;
+    const lab = y.year.replace(" Year", "") + " Year · " + (s.code.endsWith("1") ? "1st" : "2nd") + " Semester";
+    main += `<section class="sem-group" id="sem-${s.code}"><div class="sem-head"><h2><span class="yr">${y.year}</span> · ${s.code.endsWith("1") ? "1st" : "2nd"} Semester</h2><a class="pill" href="#/library/${s.code}">Semester ${s.code} · ${s.courses.length} items</a></div>
+      <div class="grid libgrid">${cs.map(([c, i]) => `<a class="card course" href="#/library/${s.code}/${i}">${libArt(c.name, s.code)}<div class="cbody"><h3>${esc(c.name)}</h3><p>${c.drive ? "Folder linked ✓" : "Drive link coming soon"}</p></div></a>`).join("")}</div></section>`;
+  }));
+  if (!shown) main = `<div class="note">No resources match “${esc(library.q || "")}”.</div>`;
+  const years = ["all"].concat(LIBRARY.map(y => y.year));
+  app.innerHTML = `<div class="libpage"><div class="libmain"><h1>📚 Resource Library</h1><p>Choose your year and semester. All files are stored in Google Drive and open in a new tab.</p>
+    <div class="libbar"><input class="libsearch" type="search" placeholder="Search courses…" aria-label="Search courses" value="${esc(library.q || "")}">
+    <div class="tabs">${years.map(v => `<a class="tab ${yf === v ? "on" : ""}" href="#/library" data-yf="${v}">${v === "all" ? "All years" : v}</a>`).join("")}</div></div>
+    <div id="libres">${main}</div></div>
+    <aside class="libside"><div class="panel"><h3>Quick links</h3>
+      <a class="btn" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open full Drive folder ↗</a>
+      <div class="libstats"><div class="stat"><b>${total}</b><span>Folders</span></div><div class="stat"><b>${ready}</b><span>Linked</span></div></div></div>
+      <div class="panel"><h3>Jump to semester</h3><div class="libjump">${LIBRARY.flatMap(y => y.semesters).map(s => `<a class="tag" href="#/library/${s.code}">${s.code}</a>`).join("")}</div></div>
+      <div class="panel"><h3>Also on StatSphere</h3><a href="#/topics">📖 Topic explanations</a><a href="#/quizzes">🧠 Quizzes</a><a href="#/practice">📝 Practice</a></div></aside></div>`;
+  const inp = app.querySelector(".libsearch");
+  inp.oninput = () => { library.q = inp.value; const pos = inp.selectionStart; library([]); const n = app.querySelector(".libsearch"); n.focus(); n.setSelectionRange(pos, pos); };
+  app.querySelectorAll("[data-yf]").forEach(a => a.onclick = e => { e.preventDefault(); library.yf = a.dataset.yf; library([]); });
 }
 function libSemester(code, ci) {
   let sem, yr;
@@ -117,7 +148,7 @@ function libSemester(code, ci) {
     return;
   }
   app.innerHTML = `<div class="crumb"><a href="#/library">Library</a> › ${yr.year} › ${code}</div><h1>Semester ${code}</h1>
-    <div class="grid">${sem.courses.map((c,i)=>`<a class="card" href="#/library/${code}/${i}"><h3>${esc(c.name)}</h3><p>${c.drive?"Folder linked ✓":"Drive link coming soon"}</p></a>`).join("")}</div>
+    <div class="grid libgrid">${sem.courses.map((c,i)=>`<a class="card course" href="#/library/${code}/${i}">${libArt(c.name, code)}<div class="cbody"><h3>${esc(c.name)}</h3><p>${c.drive?"Folder linked ✓":"Drive link coming soon"}</p></div></a>`).join("")}</div>
     ${sem.drive ? `<a class="btn alt" target="_blank" rel="noopener" href="${sem.drive}">Open ${esc(sem.folder)} in Drive ↗</a>` : `<a class="btn alt" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open the main Drive folder ↗</a>`}`;
 }
 
@@ -168,26 +199,56 @@ function showSyllabus(i, semCode) {
   document.body.classList.add("noscroll"); document.body.appendChild(ov); ov.querySelector(".modal-x").focus();
 }
 
+/* ---------- shared: courses grouped under Year / Semester ---------- */
+function semGrouped(list, href, sub) {
+  return SEM_GROUPS.map(g => {
+    const cs = list.filter(c => COURSE_SEM[c.id] === g.code);
+    if (!cs.length) return "";
+    return `<section class="sem-group"><div class="sem-head"><h2><span class="yr">${g.label.split(" · ")[0]}</span> · ${g.label.split(" · ")[1]}</h2><span class="pill">Semester ${g.code} · ${cs.length} course${cs.length>1?"s":""}</span></div>
+      <div class="grid">${cs.map(c=>`<a class="card course" href="${href(c)}">${courseArt(c.id)}<div class="cbody"><h3>${c.name}</h3><p>${sub(c)}</p></div></a>`).join("")}</div></section>`;
+  }).join("");
+}
+
 /* ---------- TOPICS ---------- */
 function topics(p) {
   if (p[0]) {
     const s = TOPICS.find(x => x.id === p[0]); if (!s) return topics([]);
-    app.innerHTML = `<div class="crumb"><a href="#/topics">Topics</a> › ${s.name}</div><h1>${s.name}</h1>
+    app.innerHTML = `<div class="crumb"><a href="#/topics">Topics</a> › ${s.name}</div><div class="title-art">${courseArt(s.id)}<h1>${s.name}</h1></div>
       <input class="search" id="ts" placeholder="Search in this subject…">
-      <div id="tl">${s.topics.map((t,i)=>`<details class="tp" ${i===0?"open":""}><summary>${t.title}</summary>${t.body}</details>`).join("")}</div>`;
+      <div id="tl">${s.topics.map((t,i)=>`<details class="tp" ${i===0?"open":""}><summary>${t.title}</summary>${t.body}</details>`).join("")}</div>
+      ${QZ.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">🧠 Take topic-wise quizzes</a>`:""}`;
     $("#ts").oninput = e => { const v = e.target.value.toLowerCase(); document.querySelectorAll(".tp").forEach(d => { const m = d.textContent.toLowerCase().includes(v); d.style.display = m ? "" : "none"; if (v && m) d.open = true; }); };
     return;
   }
-  app.innerHTML = `<h1>💡 Topic Explanations</h1><p>Pick a subject. More topics are added regularly.</p>
-    <div class="grid">${TOPICS.map(s=>`<a class="card" href="#/topics/${s.id}"><h3>${s.name}</h3><p>${s.topics.length} topics</p></a>`).join("")}</div>`;
+  app.innerHTML = `<h1>💡 Topic Explanations</h1><p>Pick a course from your semester. Every course lists its chapters and topics with worked examples and graphs.</p>
+    ${semGrouped(TOPICS, c=>"#/topics/"+c.id, c=>c.topics.length+" topics")}`;
 }
 
-/* ---------- QUIZZES ---------- */
+/* ---------- QUIZZES (course → topic → 20 questions: MCQ + True/False + Fill in the blank) ---------- */
+const normAns = v => String(v).toLowerCase().replace(/[−–—]/g,"-").replace(/[\s,'"`.]+/g,"").replace(/^\$|\$$/g,"");
+function buildTopicQuiz(top) {
+  const L = [];
+  (top.mcq||[]).forEach(r => { const ix = shuffle(r[1].map((_, i) => i)); L.push({ k:"mcq", q:r[0], o:ix.map(i => r[1][i]), a:ix.indexOf(r[2]), e:r[3] }); });
+  (top.tf||[]).forEach(r => L.push({ k:"tf", q:r[0], a:r[1]?0:1, o:["True","False"], e:r[2] }));
+  (top.fib||[]).forEach(r => L.push({ k:"fib", q:r[0], ans:String(r[1]).split("|"), e:r[2] }));
+  return L;
+}
 function quizzes(p) {
   if (p[0] === "mock") return mock(p[1]);
-  if (p[0]) return runQuiz(QUIZZES.find(x => x.id === p[0]));
-  app.innerHTML = `<h1>🧠 Quizzes &amp; MCQs</h1><p>Choose a subject. You get your score and an explanation for every answer.</p>
-    <div class="grid">${QUIZZES.map(s=>`<a class="card" href="#/quizzes/${s.id}"><h3>${s.name}</h3><p>${s.questions.length} questions</p></a>`).join("")}</div>
+  if (p[0] && p[1] !== undefined) {
+    const c = QZ.find(x => x.id === p[0]), t = c && c.topics[+p[1]]; if (!t) return quizzes([p[0]]);
+    return runQuiz({ name: t.t, course: c, ti: +p[1], questions: buildTopicQuiz(t) });
+  }
+  if (p[0]) {
+    const c = QZ.find(x => x.id === p[0]); if (!c) return quizzes([]);
+    app.innerHTML = `<div class="crumb"><a href="#/quizzes">Quizzes</a> › ${c.name}</div><div class="title-art">${courseArt(c.id)}<h1>${c.name}</h1></div>
+      <p>Choose a topic. Each topic has its own quiz of 20 questions: 8 MCQ, 6 True/False and 6 Fill in the blank.</p>
+      <div class="grid">${c.topics.map((t,i)=>`<a class="card tcard" href="#/quizzes/${c.id}/${i}"><div><h3>${t.t}</h3><div class="mixbar"><span class="tag">${(t.mcq||[]).length} MCQ</span><span class="tag">${(t.tf||[]).length} T/F</span><span class="tag">${(t.fib||[]).length} Fill-in</span></div></div><span class="n">${i+1}</span></a>`).join("")}</div>
+      <a class="btn alt" href="#/topics/${c.id}">📖 Read the topic explanations first</a>`;
+    return;
+  }
+  app.innerHTML = `<h1>🧠 Quizzes &amp; MCQs</h1><p>Pick your course, then a topic. Every topic has 20 questions (MCQ, True/False and Fill in the blank) with instant score and explanations.</p>
+    ${semGrouped(QZ, c=>"#/quizzes/"+c.id, c=>c.topics.length+" topics · "+c.topics.length*20+" questions")}
     <h2>⏱ Mock Tests</h2><p>Real exam practice: 20 questions, timed. Answers and explanations are shown after you submit (or when time is up).</p>
     <div class="grid">${MOCKS.map(s=>`<a class="card" href="#/quizzes/mock/${s.id}"><h3>Mock: ${s.name}</h3><p>${s.questions.length} questions · ${s.minutes} min</p></a>`).join("")}
     <a class="card" href="#/quizzes/mock/all"><h3>Mock: Mixed</h3><p>20 random questions from all courses · 30 min</p></a></div>`;
@@ -200,25 +261,44 @@ function mock(id) {
 function runQuiz(s, seconds, isMock) {
   if (!s) return quizzes([]);
   const qs = isMock ? shuffle(s.questions) : s.questions.slice(), ans = {};
-  let h = `<div class="crumb"><a href="#/quizzes">Quizzes</a> › ${s.name}</div><h1>${s.name}</h1>${seconds?`<div class="timer" id="tm"></div>`:""}${isMock?`<p>${qs.length} questions · answers are shown after you submit. <span id="ansct"></span></p>`:""}`;
-  let lastT = null;
-  qs.forEach((q, i) => { if (!isMock && q.t && q.t !== lastT) { h += `<h2 class="qtopic">${q.t}</h2>`; lastT = q.t; }
-    h += `<div class="q" data-i="${i}"><p class="t">${i+1}. ${q.q}</p>${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}<div class="exp"></div></div>`; });
+  const back = s.course ? `<a href="#/quizzes">Quizzes</a> › <a href="#/quizzes/${s.course.id}">${s.course.name}</a> › ${s.name}` : `<a href="#/quizzes">Quizzes</a> › ${s.name}`;
+  let h = `<div class="crumb">${back}</div><h1>${s.name}</h1>${s.course?`<p>${s.course.name} · Topic ${s.ti+1} of ${s.course.topics.length} · ${qs.length} questions</p>`:""}${seconds?`<div class="timer" id="tm"></div>`:""}${isMock?`<p>${qs.length} questions · answers are shown after you submit. <span id="ansct"></span></p>`:""}`;
+  const label = { mcq:"MCQ", tf:"TRUE / FALSE", fib:"FILL IN THE BLANK" };
+  qs.forEach((q, i) => {
+    const kind = q.k || "mcq", tag = q.k ? `<span class="qtype">${label[kind]}</span>` : "";
+    let body;
+    if (kind === "fib") body = `<input class="fib" type="text" autocomplete="off" spellcheck="false" placeholder="Type your answer" aria-label="Answer ${i+1}"><div class="fibans"></div>`;
+    else if (kind === "tf") body = `<div class="tfrow">${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join("")}</div>`;
+    else body = q.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${q.k ? esc(o) : o}</button>`).join("");
+    h += `<div class="q" data-i="${i}" data-k="${kind}"><p class="t">${i+1}. ${tag}${(q.k ? esc(q.q) : q.q).replace(/___+/g,"<b>_____</b>")}</p>${body}<div class="exp"></div></div>`; });
   h += `<button class="btn" id="sub">Submit &amp; see score</button><div id="res"></div>`;
   app.innerHTML = h;
   let done = false;
-  app.querySelectorAll(".q").forEach(box => box.querySelectorAll(".opt").forEach(b => b.onclick = () => {
-    if (done) return; box.querySelectorAll(".opt").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); ans[box.dataset.i] = +b.dataset.j; const c = $("#ansct"); if (c) c.textContent = "Answered " + Object.keys(ans).length + " / " + qs.length; }));
+  const cnt = () => { const c = $("#ansct"); if (c) c.textContent = "Answered " + Object.keys(ans).length + " / " + qs.length; };
+  app.querySelectorAll(".q").forEach(box => {
+    box.querySelectorAll(".opt").forEach(b => b.onclick = () => {
+      if (done) return; box.querySelectorAll(".opt").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); ans[box.dataset.i] = +b.dataset.j; cnt(); });
+    const inp = box.querySelector(".fib");
+    if (inp) inp.oninput = () => { if (inp.value.trim()) ans[box.dataset.i] = inp.value; else delete ans[box.dataset.i]; cnt(); };
+  });
   const finish = () => {
     if (done) return; done = true; clearInterval(timerHandle); let score = 0;
-    app.querySelectorAll(".q").forEach(box => { const i = +box.dataset.i, q = qs[i], opts = box.querySelectorAll(".opt");
-      opts[q.a].classList.add("right");
-      if (ans[i] === q.a) score++; else if (ans[i] !== undefined) opts[ans[i]].classList.add("wrong");
-      const e = box.querySelector(".exp"); e.classList.add("show"); e.innerHTML = (ans[i]===undefined?"<b>Not answered.</b> ":"") + "<b>Explanation:</b> " + q.e; });
+    app.querySelectorAll(".q").forEach(box => { const i = +box.dataset.i, q = qs[i], e = box.querySelector(".exp"); let ok;
+      if (q.k === "fib") {
+        const inp = box.querySelector(".fib"); inp.disabled = true;
+        ok = ans[i] !== undefined && q.ans.some(a => normAns(a) === normAns(ans[i]));
+        inp.classList.add(ok ? "right" : "wrong");
+        box.querySelector(".fibans").innerHTML = ok ? "✔ Correct" : "✘ Correct answer: <b>" + esc(q.ans[0]) + "</b>";
+      } else {
+        const opts = box.querySelectorAll(".opt"); opts[q.a].classList.add("right");
+        ok = ans[i] === q.a; if (!ok && ans[i] !== undefined) opts[ans[i]].classList.add("wrong");
+      }
+      if (ok) score++;
+      e.classList.add("show"); e.innerHTML = (ans[i]===undefined?"<b>Not answered.</b> ":"") + "<b>Explanation:</b> " + (q.k ? esc(q.e) : q.e); });
     const pct = Math.round(100 * score / qs.length);
     $("#sub").style.display = "none";
     $("#res").innerHTML = `<div class="score">Your score: <b>${score} / ${qs.length}</b> (${pct}%) — ${pct>=80?"Excellent! 🎉":pct>=50?"Good, keep practising 👍":"Review the topics and try again 📖"}</div>
-      <p><button class="btn" onclick="router()">Try again</button><a class="btn alt" href="#/topics">Review topics</a></p>`;
+      <p><button class="btn" onclick="router()">Try again</button>${s.course?`<a class="btn alt" href="#/quizzes/${s.course.id}">All topics</a>${s.course.topics[s.ti+1]?`<a class="btn alt" href="#/quizzes/${s.course.id}/${s.ti+1}">Next topic ›</a>`:""}<a class="btn alt" href="#/topics/${s.course.id}">Review topic</a>`:`<a class="btn alt" href="#/topics">Review topics</a>`}</p>`;
     $("#tm") && ($("#tm").textContent = "Test finished");
     $("#res").scrollIntoView({behavior:"smooth"});
   };
@@ -230,13 +310,13 @@ function runQuiz(s, seconds, isMock) {
 function practice(p) {
   if (p[0]) {
     const s = PRACTICE.find(x => x.id === p[0]); if (!s) return practice([]);
-    app.innerHTML = `<div class="crumb"><a href="#/practice">Practice</a> › ${s.name}</div><h1>${s.name} – Practice</h1><p>Try each problem on paper first, then reveal the answer.</p>
+    app.innerHTML = `<div class="crumb"><a href="#/practice">Practice</a> › ${s.name}</div><div class="title-art">${courseArt(s.id)}<h1>${s.name} – Practice</h1></div><p>Try each problem on paper first, then reveal the answer.</p>
       ${s.items.map((it,i)=>`<div class="q"><p class="t">Q${i+1}. ${it.q}</p><details><summary>Show / hide answer</summary><p>${it.a}</p></details></div>`).join("")}
-      ${QUIZZES.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">Take the ${s.name} quiz</a>`:""}`;
+      ${QZ.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">Take the ${s.name} quizzes</a>`:""}`;
     return;
   }
   app.innerHTML = `<h1>📝 Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>
-    <div class="grid">${PRACTICE.map(s=>`<a class="card" href="#/practice/${s.id}"><h3>${s.name}</h3><p>${s.items.length} problems</p></a>`).join("")}</div>
+    ${semGrouped(PRACTICE, c=>"#/practice/"+c.id, c=>c.items.length+" problems")}
     <a class="btn" href="#/quizzes">Go to quizzes &amp; mock tests ⏱</a>`;
 }
 
@@ -245,8 +325,9 @@ function about() {
   const a = SITE.about, subj = encodeURIComponent("StatSphere feedback"), mail = `mailto:${SITE.feedbackEmail}?subject=${subj}`;
   app.innerHTML = `<h1>About StatSphere</h1>
    <div class="panel"><p>StatSphere is a free academic learning platform made for Statistics students of SUST. It brings notes, past questions, explanations, quizzes and practice together in one place.</p></div>
-   <div class="panel"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.uni}</p></div>
+   <div class="panel about-card">${a.photo?`<figure><img src="${a.photo}" alt="Photo of ${a.name}" loading="lazy"><figcaption>${a.name}</figcaption></figure>`:""}<div class="who"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.uni}</p></div></div>
    <div class="panel"><h3>💬 Feedback</h3><p>Found a mistake or want a topic added? Tell us!</p>
     <a class="btn" href="${mail}">✉ Send feedback by email</a>
+    <p class="muted" style="margin-top:.6rem">Or write to us at <a href="${mail}">${SITE.feedbackEmail}</a></p>
     ${SITE.feedbackForm?`<a class="btn alt" target="_blank" rel="noopener" href="${SITE.feedbackForm}">Open feedback form ↗</a>`:""}</div>`;
 }

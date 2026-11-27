@@ -8,5 +8,6 @@ const PREVQ = [
   { name: "2nd Year 2nd Semester", code: "2-2", drive: "" },
   { name: "3rd Year 1st Semester", code: "3-1", drive: "" },
   { name: "3rd Year 2nd Semester", code: "3-2", drive: "" },
-  { name: "4th Year 1st Semester", code: "4-1", drive: "" }
+  { name: "4th Year 1st Semester", code: "4-1", drive: "" },
+  { name: "4th Year 2nd Semester", code: "4-2", drive: "" }
 ];

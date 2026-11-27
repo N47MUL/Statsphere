@@ -126,7 +126,7 @@ function libArt(name, code) {
 }
 function prevq() {
   const ready = PREVQ.filter(x => x.drive).length;
-  app.innerHTML = `<h1>${navIco("prevq")} Previous Questions</h1><p>Semester-wise previous question papers, from 1st Year 1st Semester to 4th Year 1st Semester. Folders open in Google Drive in a new tab.</p>
+  app.innerHTML = `<h1>${navIco("prevq")} Previous Questions</h1><p>Semester-wise previous question papers, from 1st Year 1st Semester to 4th Year 2nd Semester. Folders open in Google Drive in a new tab.</p>
     <div class="grid libgrid">${PREVQ.map(x => {
       const inner = `<span class="cart libico">📁</span><div class="cbody"><h3>${esc(x.name)}</h3><p>${x.drive ? "Open folder ↗" : "Link coming soon"}</p></div>`;
       return x.drive ? `<a class="card course" target="_blank" rel="noopener" href="${esc(x.drive)}">${inner}</a>` : `<div class="card course disabled" aria-disabled="true">${inner}</div>`;

@@ -140,7 +140,7 @@ function library(p) {
   }));
   if (!shown) main = `<div class="note">No resources match “${esc(library.q || "")}”.</div>`;
   const years = ["all"].concat(LIBRARY.map(y => y.year));
-  app.innerHTML = `<div class="libpage"><div class="libmain"><h1>📚 Resource Library</h1><p>Choose your year and semester. All files are stored in Google Drive and open in a new tab.</p>
+  app.innerHTML = `<div class="libpage"><div class="libmain"><h1>${navIco("library")} Resource Library</h1><p>Choose your year and semester. All files are stored in Google Drive and open in a new tab.</p>
     <div class="libbar"><input class="libsearch" type="search" placeholder="Search courses…" aria-label="Search courses" value="${esc(library.q || "")}">
     <div class="tabs">${years.map(v => `<a class="tab ${yf === v ? "on" : ""}" href="#/library" data-yf="${v}">${v === "all" ? "All years" : v}</a>`).join("")}</div></div>
     <div id="libres">${main}</div></div>
@@ -148,7 +148,7 @@ function library(p) {
       <a class="btn" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open full Drive folder ↗</a>
       <div class="libstats"><div class="stat"><b>${total}</b><span>Folders</span></div><div class="stat"><b>${ready}</b><span>Linked</span></div></div></div>
       <div class="panel"><h3>Jump to semester</h3><div class="libjump">${LIBRARY.flatMap(y => y.semesters).map(s => `<a class="tag" href="#/library/${s.code}">${s.code}</a>`).join("")}</div></div>
-      <div class="panel"><h3>Also on StatSphere</h3><a href="#/topics">📊 Topic explanations</a><a href="#/quizzes">🧠 Quizzes</a><a href="#/practice">📝 Practice</a></div></aside></div>`;
+      <div class="panel"><h3>Also on StatSphere</h3><a href="#/topics">${navIco("topics",20)} Topic explanations</a><a href="#/quizzes">${navIco("quizzes",20)} Quizzes</a><a href="#/practice">${navIco("practice",20)} Practice</a></div></aside></div>`;
   const inp = app.querySelector(".libsearch");
   inp.oninput = () => { library.q = inp.value; const pos = inp.selectionStart; library([]); const n = app.querySelector(".libsearch"); n.focus(); n.setSelectionRange(pos, pos); };
   app.querySelectorAll("[data-yf]").forEach(a => a.onclick = e => { e.preventDefault(); library.yf = a.dataset.yf; library([]); });
@@ -235,11 +235,11 @@ function topics(p) {
     app.innerHTML = `<div class="crumb"><a href="#/topics">Topics</a> › ${s.name}</div><div class="title-art">${courseArt(s.id)}<h1>${s.name}</h1></div>
       <input class="search" id="ts" placeholder="Search in this subject…">
       <div id="tl">${s.topics.map((t,i)=>`<details class="tp" ${i===0?"open":""}><summary>${t.title}</summary>${t.body}</details>`).join("")}</div>
-      ${QZ.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">🧠 Take topic-wise quizzes</a>`:""}`;
+      ${QZ.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">${navIco("quizzes",20)} Take topic-wise quizzes</a>`:""}`;
     $("#ts").oninput = e => { const v = e.target.value.toLowerCase(); document.querySelectorAll(".tp").forEach(d => { const m = d.textContent.toLowerCase().includes(v); d.style.display = m ? "" : "none"; if (v && m) d.open = true; }); };
     return;
   }
-  app.innerHTML = `<h1>💡 Topic Explanations</h1><p>Pick a course from your semester. Every course lists its chapters and topics with worked examples and graphs.</p>
+  app.innerHTML = `<h1>${navIco("topics")} Topic Explanations</h1><p>Pick a course from your semester. Every course lists its chapters and topics with worked examples and graphs.</p>
     ${semGrouped(TOPICS, c=>"#/topics/"+c.id, c=>c.topics.length+" topics")}`;
 }
 
@@ -266,7 +266,7 @@ function quizzes(p) {
       <a class="btn alt" href="#/topics/${c.id}">📖 Read the topic explanations first</a>`;
     return;
   }
-  app.innerHTML = `<h1>🧠 Quizzes &amp; MCQs</h1><p>Pick your course, then a topic. Every topic has 20 questions (MCQ, True/False and Fill in the blank) with instant score and explanations.</p>
+  app.innerHTML = `<h1>${navIco("quizzes")} Quizzes &amp; MCQs</h1><p>Pick your course, then a topic. Every topic has 20 questions (MCQ, True/False and Fill in the blank) with instant score and explanations.</p>
     ${semGrouped(QZ, c=>"#/quizzes/"+c.id, c=>c.topics.length+" topics · "+c.topics.length*20+" questions")}
     <h2>⏱ Mock Tests</h2><p>Real exam practice: 20 questions, timed. Answers and explanations are shown after you submit (or when time is up).</p>
     <div class="grid">${MOCKS.map(s=>`<a class="card" href="#/quizzes/mock/${s.id}"><h3>Mock: ${s.name}</h3><p>${s.questions.length} questions · ${s.minutes} min</p></a>`).join("")}
@@ -334,7 +334,7 @@ function practice(p) {
       ${QZ.some(x=>x.id===s.id)?`<a class="btn" href="#/quizzes/${s.id}">Take the ${s.name} quizzes</a>`:""}`;
     return;
   }
-  app.innerHTML = `<h1>📝 Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>
+  app.innerHTML = `<h1>${navIco("practice")} Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>
     ${semGrouped(PRACTICE, c=>"#/practice/"+c.id, c=>c.items.length+" problems")}
     <a class="btn" href="#/quizzes">Go to quizzes &amp; mock tests ⏱</a>`;
 }

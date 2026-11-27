@@ -22,7 +22,7 @@ st.textContent = `
 .tv-chip:hover{border-color:var(--acc)}.tv-chip b{color:var(--acc)}
 .chap{margin:26px 0 8px;scroll-margin-top:80px}
 .chap h2{display:flex;align-items:center;gap:10px;margin:0 0 4px;font-size:1.25rem}
-.chap h2 .chn{background:linear-gradient(135deg,#f59e0b,#ef4444 55%,#db2777);color:#fff;border-radius:999px;padding:4px 14px;font-size:.78rem;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 3px 10px rgba(219,39,119,.35),inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 2px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.4)}
+.chap h2 .chn{background:#0ea5e9;color:#fff;border-radius:6px;padding:4px 12px;font-size:.78rem;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 2px 6px rgba(14,165,233,.3)}
 .chap .chd{color:var(--mut);font-size:.9rem;margin:0 0 10px}
 .chap .chcount{font-size:.78rem;color:var(--mut);margin-left:auto;white-space:nowrap}
 details.tp>summary .vc{float:right;font-size:.75rem;color:var(--mut);font-weight:400}
@@ -79,7 +79,7 @@ function topicHTML(t, open, store) {
   body = body.replace(/\[\[(\d+)\]\]/g, (m, n) => { n = +n; if (!specs[n]) return ""; placed.add(n); return ph(n); });
   const pre = specs.map((s, i) => placed.has(i) ? "" : ph(i)).join("");
   const key = t.key && t.key.length ? `<div class="key"><b class="kh">✅ Remember</b><ul>${t.key.map(k => `<li>${k}</li>`).join("")}</ul></div>` : "";
-  const qq = t.q && t.q.length ? `<div class="qh">🧠 Quick check (tap to reveal)</div>` + t.q.map(x => `<details class="qc"><summary>${x[0]}</summary><div>${x[1]}</div></details>`).join("") : "";
+  const qq = t.q && t.q.length ? `<div class="qh">${navIco("quizzes",20)} Quick check (tap to reveal)</div>` + t.q.map(x => `<details class="qc"><summary>${x[0]}</summary><div>${x[1]}</div></details>`).join("") : "";
   const n = specs.length + (t.body || "").split('data-vis=').length - 1;
   return `<details class="tp"${open ? " open" : ""}><summary>${t.title}${n ? `<span class="vc">🖼 ${n}</span>` : ""}</summary>${t.intro ? `<div class="tp-intro">${t.intro}</div>` : ""}${pre}${body}${key}${qq}</details>`;
 }

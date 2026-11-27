@@ -15,4 +15,4 @@ TOPIC-WISE QUIZZES: data/quiz-*.js (QZ array). Each topic has 20 questions: 8 MC
  Fill-in row: ["sentence with ___","answer|alternative answer","explanation"]  (answers are matched ignoring case, spaces and punctuation)
 Semester grouping: data/course-map.js (course id -> semester). Course clip-art icons: js/courseart.js. Styles: css/quiz.css.
 
-CACHE-BUSTING (IMPORTANT): every script/stylesheet in index.html ends with ?v=VERSION (currently 20261128a). On EVERY upload, open index.html and Find & Replace the old version with a new one (e.g. 20261126a -> 20261201a) so browsers don't show stale files. Upload index.html together with the changed files.
+CACHE-BUSTING (IMPORTANT): every script/stylesheet in index.html ends with ?v=VERSION (currently 20261128b). On EVERY upload, open index.html and Find & Replace the old version with a new one (e.g. 20261126a -> 20261201a) so browsers don't show stale files. Upload index.html together with the changed files.

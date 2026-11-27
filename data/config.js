@@ -16,7 +16,9 @@ const SITE = {
     name: "Nazmul Islam Nasir",
     photo: "img/nasir.jpg",
     dept: "Department of Statistics",
-    level: "4th Year, 1st Semester (Session 2022-23)",
+    level: "4th Year 1st Semester",
+    session: "Session 2022-2023",
+    email: "nazmulnasir2019@gmail.com",
     uni: "Shahjalal University of Science and Technology (SUST), Sylhet"
   }
 };

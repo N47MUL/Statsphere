@@ -293,8 +293,7 @@ function quizzes(p) {
     return;
   }
   app.innerHTML = `<h1>${navIco("quizzes")} Quiz</h1><p>Pick your course, then a topic. Every topic has 20 questions (MCQ, True/False and Fill in the blank) with instant score and explanations.</p>
-    ${semGrouped(QZ, c=>"#/quizzes/"+c.id, c=>c.topics.length+" topics · "+c.topics.length*20+" questions")}
-    <div class="panel"><h3>${navIco("mocks",24)} Mock Tests</h3><p>Timed mock tests now have their own section, grouped by semester.</p><a class="btn" href="#/mocks">Go to Mock Tests ⏱</a></div>`;
+    ${semGrouped(QZ, c=>"#/quizzes/"+c.id, c=>c.topics.length+" topics · "+c.topics.length*20+" questions")}`;
 }
 /* ---------- MOCK TESTS (own section, grouped by semester) ---------- */
 function mocks(p) {

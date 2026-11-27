@@ -124,14 +124,30 @@ function libArt(name, code) {
   if (!id) { const w = n.split(" ").filter(x => x.length > 3); id = ids.find(i => names[i] && w.some(x => names[i].includes(x))); }
   return id ? courseArt(id) : `<span class="cart libico">📁</span>`;
 }
-function prevq() {
-  const ready = PREVQ.filter(x => x.drive).length;
-  app.innerHTML = `<h1>${navIco("prevq")} Previous Questions</h1><p>Semester-wise previous question papers, from 1st Year 1st Semester to 4th Year 2nd Semester. Folders open in Google Drive in a new tab.</p>
-    <div class="grid libgrid">${PREVQ.map(x => {
-      const inner = `<span class="cart libico">📁</span><div class="cbody"><h3>${esc(x.name)}</h3><p>${x.drive ? "Open folder ↗" : "Link coming soon"}</p></div>`;
-      return x.drive ? `<a class="card course" target="_blank" rel="noopener" href="${esc(x.drive)}">${inner}</a>` : `<div class="card course disabled" aria-disabled="true">${inner}</div>`;
-    }).join("")}</div>
-    <p class="note">${ready} of ${PREVQ.length} folders linked.</p>`;
+function prevqArt(code) {
+  const [y, s] = code.split("-").map(Number);
+  const col = ["#0ea5e9", "#8b5cf6", "#14b8a6", "#f59e0b"][y - 1], dk = ["#0369a1", "#6d28d9", "#0f766e", "#b45309"][y - 1];
+  const motif = [
+    `<path d="M12 33l9-9 3 3-9 9-4 1z" fill="#fde68a" stroke="${dk}" stroke-width="1.2" stroke-linejoin="round"/><path d="M21 24l3-3 3 3-3 3z" fill="#f9a8d4" stroke="${dk}" stroke-width="1.2"/><path d="M28 33h6M28 36h4" stroke="${col}" stroke-width="1.6" stroke-linecap="round"/>`,
+    `<rect x="12" y="29" width="4" height="7" fill="${col}"/><rect x="18" y="24" width="4" height="12" fill="${dk}"/><rect x="24" y="27" width="4" height="9" fill="${col}"/><rect x="30" y="21" width="4" height="15" fill="${dk}"/><path d="M11 36.5h24" stroke="${dk}" stroke-width="1.2"/>`,
+    `<path d="M10 36c4 0 4-14 9-14s5 14 9 14 4-8 7-8" fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round"/><path d="M10 36.5h26" stroke="${dk}" stroke-width="1.2"/><circle cx="19" cy="22" r="2" fill="${dk}"/>`,
+    `<path d="M23 21l12 5-12 5-12-5z" fill="${dk}"/><path d="M16 29v5c4 3 12 3 16 0v-5l-8 3.5z" fill="${col}"/><path d="M35 26v7" stroke="${dk}" stroke-width="1.4"/><circle cx="35" cy="34" r="1.5" fill="#fde68a"/>`
+  ][y - 1];
+  return `<svg class="cart prevart" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="3" width="32" height="40" rx="3" fill="#fff" stroke="${dk}" stroke-width="1.8"/><rect x="6" y="3" width="32" height="9" rx="3" fill="${col}"/><rect x="6" y="9" width="32" height="3" fill="${col}"/><text x="22" y="10.2" text-anchor="middle" font-size="6.5" font-weight="800" fill="#fff" font-family="Arial,sans-serif">YEAR ${y}</text>${motif}<circle cx="37" cy="38" r="8" fill="${dk}" stroke="#fff" stroke-width="1.6"/><text x="37" y="41.6" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" font-family="Arial,sans-serif">S${s}</text></svg>`;
+}
+function prevq(p) {
+  const x = p[0] && PREVQ.find(q => q.code === p[0]);
+  if (x) {
+    const id = driveId(x.drive);
+    app.innerHTML = `<div class="crumb"><a href="#/prevq">Previous Questions</a> › ${esc(x.name)}</div>
+      <h1>${esc(x.name)}</h1>
+      ${x.drive ? `<a class="btn" target="_blank" rel="noopener" href="${esc(x.drive)}">Open in Google Drive ↗</a>`
+        : `<div class="note">The Drive folder for this semester is not ready yet. It will be added soon.</div><span class="btn disabled" aria-disabled="true">Drive link coming soon</span>`}
+      ${id ? `<iframe class="drive" src="https://drive.google.com/embeddedfolderview?id=${id}#list"></iframe>` : ""}`;
+    return;
+  }
+  app.innerHTML = `<h1>${navIco("prevq")} Previous Questions</h1>
+    <div class="grid libgrid">${PREVQ.map(x => `<a class="card course" href="#/prevq/${x.code}">${prevqArt(x.code)}<div class="cbody"><h3>${esc(x.name)}</h3><p>${x.drive ? "Open question papers ›" : "Link coming soon"}</p></div></a>`).join("")}</div>`;
 }
 function library(p) {
   if (p[0]) return libSemester(p[0], p[1]);

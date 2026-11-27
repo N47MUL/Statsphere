@@ -56,6 +56,8 @@ function router() {
   const fn = routes[parts[0]] || home;
   document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#/" + parts[0]));
   $("#nav").classList.remove("open");
+  app.className = "";
+  document.body.classList.toggle("is-home", fn === home);
   fn(parts.slice(1));
   window.scrollTo(0, 0);
 }
@@ -76,10 +78,10 @@ function home() {
     ${chartSVG()}
   </section>
   <div class="stats">
-    <div class="stat"><b>${c.courses}</b><span>Courses &amp; folders</span></div>
-    <div class="stat"><b>${c.sems}</b><span>Semesters</span></div>
-    <div class="stat"><b>${c.topics}</b><span>Topic explanations</span></div>
-    <div class="stat"><b>${c.qs}</b><span>Quiz &amp; mock questions</span></div>
+    <div class="stat"><i>n =</i><b>${c.courses}</b><span>Courses &amp; folders</span></div>
+    <div class="stat"><i>k =</i><b>${c.sems}</b><span>Semesters</span></div>
+    <div class="stat"><i>Σ =</i><b>${c.topics}</b><span>Topic explanations</span></div>
+    <div class="stat"><i>N =</i><b>${c.qs}</b><span>Quiz questions</span></div>
   </div>
   <div class="grid">
     <a class="card" href="#/library"><div class="ico">📚</div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>

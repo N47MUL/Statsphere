@@ -23,6 +23,7 @@ function cgpa() {
       <select id="cgDone" class="cg-sel">${sems.map((s, i) => `<option value="${i + 1}" ${i + 1 === st.done ? "selected" : ""}>Up to semester ${s.code} (${i + 1} semester${i ? "s" : ""})</option>`).join("")}</select></label>
       <div class="cg-res"><div class="cg-box"><span>Current semester (${cur.code}) SGPA</span><b id="cgCur">–</b><small id="cgCurS"></small></div>
       <div class="cg-box all"><span>Overall CGPA (${shown.length} semester${shown.length > 1 ? "s" : ""})</span><b id="cgAll">–</b><small id="cgAllS"></small></div></div>
+      <div class="cg-actions"><button type="button" class="btn alt" id="cgClear">↺ Clear all grades &amp; calculate again</button></div>
       <p class="cg-note">Current semester = the one selected below (tap a tab). By default it is your latest completed semester.</p></div>
     <div class="tabs">${shown.map(s => `<a class="tab ${s === cur ? "on" : ""}" href="javascript:void 0" data-v="${s.code}">${s.code}</a>`).join("")}</div>`;
     shown.forEach(s => {
@@ -33,6 +34,7 @@ function cgpa() {
     app.innerHTML = h;
     update();
     $("#cgDone").onchange = e => { st.done = +e.target.value; st.view = ""; save(); render(); };
+    $("#cgClear").onclick = () => { st.g = {}; st.view = ""; save(); render(); window.scrollTo(0, 0); };
     app.querySelectorAll(".tab[data-v]").forEach(a => a.onclick = () => { st.view = a.dataset.v; save(); render(); });
     app.querySelectorAll("select[data-id]").forEach(el => el.onchange = () => { st.g[el.dataset.id] = el.value; save(); update(); });
   }

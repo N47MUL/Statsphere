@@ -164,7 +164,7 @@ ul.clean{padding-left:20px}
 @media(max-width:520px){.about-card{justify-content:center;text-align:center}}
 
 /* ---- Resource Library layout ---- */
-main:has(.libpage){max-width:1240px}
+main:has(.libpage){max-width:1320px}
 .libpage{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:28px;align-items:start}
 .libside{position:sticky;top:78px;display:grid;gap:14px}
 .libside .panel{padding:14px 16px}.libside h3{margin:0 0 10px;font-size:1rem}
@@ -244,7 +244,7 @@ body.is-home main .hero h1 span{background:linear-gradient(90deg,#0ea5e9,#2563eb
 @media(prefers-reduced-motion:reduce){body.is-home .stats .stat,body.is-home .homegrid .card{opacity:1;transform:none}}
 
 /* keep nav on one row beside the logo (desktop) */
-@media(min-width:1181px){
+@media(min-width:1321px){
   .top{flex-wrap:nowrap;padding:8px 14px;gap:10px}
   .brand{margin-right:6px;flex:none}
   #nav{flex-wrap:nowrap;gap:2px;margin-left:auto}
@@ -252,10 +252,14 @@ body.is-home main .hero h1 span{background:linear-gradient(90deg,#0ea5e9,#2563eb
   #nav a i{font-size:.95rem;display:inline-flex;align-items:center}
   #nav a i svg{width:18px;height:18px}
 }
-@media(min-width:1181px) and (max-width:1320px){#nav a{font-size:.76rem;padding:6px 5px;gap:3px}#nav a i svg{width:15px;height:15px}}
-@media(max-width:1180px){
+@media(min-width:1321px) and (max-width:1480px){#nav a{font-size:.76rem;padding:6px 5px;gap:3px}#nav a i svg{width:15px;height:15px}}
+@media(max-width:1320px){
   .top{flex-wrap:wrap}
   #menuBtn{display:block}
   #nav{display:none;width:100%;order:5;padding-top:8px;flex-direction:column;margin-left:0}#nav.open{display:flex}#nav a{display:flex;padding:11px 16px;font-size:.95rem}
 }
 .hico{display:inline-flex;vertical-align:middle;margin-right:4px}.hico svg{display:block}
+
+/* Previous Questions: folders without a link yet */
+.card.course.disabled{opacity:.65;cursor:default}
+.card.course.disabled:hover{transform:none;box-shadow:none;border-color:var(--line)}

@@ -86,9 +86,9 @@ function home() {
   <div class="grid homegrid">
     <a class="card" href="#/library"><div class="ico">📚</div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>
     <a class="card" href="#/curriculum"><div class="ico">📋</div><h3>Curriculum</h3><p>All 8 semesters: every course with its type and credit, plus semester totals.</p></a>
-    <a class="card" href="#/topics"><div class="ico">💡</div><h3>Topic Explanations</h3><p>Clear, exam-focused explanations with formulas and examples.</p></a>
-    <a class="card" href="#/quizzes"><div class="ico">🧠</div><h3>Quizzes &amp; MCQs</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
-    <a class="card" href="#/practice"><div class="ico">📝</div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
+    <a class="card" href="#/topics"><div class="ico">📊</div><h3>Topic Explanations</h3><p>Clear, exam-focused explanations with formulas and examples.</p></a>
+    <a class="card" href="#/quizzes"><div class="ico"><svg viewBox="6 1 20 31" width="30" height="38" aria-hidden="true"><circle cx="16" cy="18" r="6" fill="#f5c28b"/><path d="M9 31c0-6 3-8 7-8s7 2 7 8z" fill="#0ea5e9"/><path d="M10 16c0-6 12-6 12 0-3-2-9-2-12 0z" fill="#475569"/><circle cx="14" cy="18" r=".9" fill="#0b2540"/><circle cx="18" cy="18" r=".9" fill="#0b2540"/><path d="M14.5 21.2q1.5 1 3 0" stroke="#0b2540" fill="none" stroke-width=".9"/><text x="16" y="10" text-anchor="middle" font-size="14" font-weight="800" fill="#0284c7" font-family="Arial,sans-serif">?</text></svg></div><h3>Quizzes &amp; MCQs</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
+    <a class="card" href="#/practice"><div class="ico"><svg viewBox="4 3 26 26" width="38" height="38" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="#f5c28b"/><path d="M7 8.5l5-3 5 3-5 2.5z" fill="#0369a1"/><path d="M6 15c1-3 4-4 6-4s5 1 6 4v4H6z" fill="#0ea5e9"/><path d="M18 16l5-1 1 3-6 2z" fill="#f5c28b"/><rect x="15" y="16" width="14" height="3" rx="1" fill="#92400e"/><rect x="17" y="19" width="2" height="9" fill="#92400e"/><rect x="26" y="19" width="2" height="9" fill="#92400e"/><rect x="19" y="12" width="7" height="4" rx=".5" fill="#fff" stroke="#0369a1" stroke-width="1"/><rect x="6" y="19" width="10" height="3" rx="1" fill="#475569"/><rect x="8" y="22" width="2.5" height="6" fill="#475569"/></svg></div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
     <a class="card" href="#/about"><div class="ico">👤</div><h3>About &amp; Feedback</h3><p>Who made this, and how to send suggestions.</p></a>
   </div>`;
   const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
@@ -148,7 +148,7 @@ function library(p) {
       <a class="btn" target="_blank" rel="noopener" href="${SITE.driveRoot}">Open full Drive folder ↗</a>
       <div class="libstats"><div class="stat"><b>${total}</b><span>Folders</span></div><div class="stat"><b>${ready}</b><span>Linked</span></div></div></div>
       <div class="panel"><h3>Jump to semester</h3><div class="libjump">${LIBRARY.flatMap(y => y.semesters).map(s => `<a class="tag" href="#/library/${s.code}">${s.code}</a>`).join("")}</div></div>
-      <div class="panel"><h3>Also on StatSphere</h3><a href="#/topics">📖 Topic explanations</a><a href="#/quizzes">🧠 Quizzes</a><a href="#/practice">📝 Practice</a></div></aside></div>`;
+      <div class="panel"><h3>Also on StatSphere</h3><a href="#/topics">📊 Topic explanations</a><a href="#/quizzes">🧠 Quizzes</a><a href="#/practice">📝 Practice</a></div></aside></div>`;
   const inp = app.querySelector(".libsearch");
   inp.oninput = () => { library.q = inp.value; const pos = inp.selectionStart; library([]); const n = app.querySelector(".libsearch"); n.focus(); n.setSelectionRange(pos, pos); };
   app.querySelectorAll("[data-yf]").forEach(a => a.onclick = e => { e.preventDefault(); library.yf = a.dataset.yf; library([]); });

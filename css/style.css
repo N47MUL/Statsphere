@@ -208,12 +208,12 @@ main:has(.libpage){max-width:1240px}
 .tab.on,.tab.on:hover{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;box-shadow:0 4px 14px color-mix(in srgb,var(--acc) 35%,transparent)}
 @media(max-width:760px){#nav{display:none;width:100%;order:5;padding-top:8px;flex-direction:column}#nav.open{display:flex}#nav a{display:flex;padding:11px 16px}}
 
-/* HOME: original first-version look (dark navy + teal/amber), scoped to the home page only */
-body.is-home{--hbg:#071426;background-color:#071426;background-image:linear-gradient(rgba(120,180,220,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(120,180,220,.07) 1px,transparent 1px)}
-body.is-home main{--bg:#071426;--bg2:#0d2038;--card:#112a47;--line:#1f4468;--text:#e6f1fa;--mut:#9db6cf;--acc:#2dd4bf;--acc-d:#0ea5a4;--acc2:#fbbf24;--sec:#3b82f6;--deep:#050f1c;--shadow:0 10px 30px rgba(0,0,0,.35);color:var(--text)}
-body.is-home main .hero{background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,#3b82f6 28%,transparent),transparent 70%),var(--bg2)}
-body.is-home main .hero h1 span{background:linear-gradient(90deg,var(--acc),#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent}
-body.is-home main .card::after{background:linear-gradient(90deg,var(--acc),#3b82f6)}
-body.is-home main .btn:not(.alt){background:linear-gradient(135deg,var(--acc),var(--acc-d));color:#031a1a}
+/* HOME: original first-version LIGHT look (teal/amber/blue on pale blue), scoped to the home page only */
+body.is-home{background-color:#f3f8fb;background-image:linear-gradient(rgba(30,90,140,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(30,90,140,.08) 1px,transparent 1px)}
+body.is-home main{--bg:#f3f8fb;--bg2:#e8f1f7;--card:#ffffff;--line:#c7d9e6;--text:#0b2540;--mut:#4b6580;--acc:#0d9488;--acc-d:#0f766e;--acc2:#b45309;--sec:#2563eb;--deep:#e1edf5;--shadow:0 10px 30px rgba(20,60,100,.12);color:var(--text)}
+body.is-home main .hero{background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,#2563eb 28%,transparent),transparent 70%),var(--bg2)}
+body.is-home main .hero h1 span{background:linear-gradient(90deg,var(--acc),#2563eb);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.is-home main .card::after{background:linear-gradient(90deg,var(--acc),#2563eb)}
+body.is-home main .btn:not(.alt){background:linear-gradient(135deg,var(--acc),var(--acc-d));color:#fff}
 body.is-home main .btn.alt{background:transparent;color:var(--text);border:1px solid var(--line)}
 .cg-actions{margin:12px 0 4px}

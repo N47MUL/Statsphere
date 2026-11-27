@@ -78,12 +78,12 @@ function home() {
     ${chartSVG()}
   </section>
   <div class="stats">
-    <div class="stat"><i>n =</i><b>${c.courses}</b><span>Courses &amp; folders</span></div>
-    <div class="stat"><i>k =</i><b>${c.sems}</b><span>Semesters</span></div>
-    <div class="stat"><i>Σ =</i><b>${c.topics}</b><span>Topic explanations</span></div>
-    <div class="stat"><i>N =</i><b>${c.qs}</b><span>Quiz questions</span></div>
+    <div class="stat"><b data-count="${c.courses}">0</b><span>Courses &amp; folders</span></div>
+    <div class="stat"><b data-count="${c.sems}">0</b><span>Semesters</span></div>
+    <div class="stat"><b data-count="${c.topics}">0</b><span>Topic explanations</span></div>
+    <div class="stat"><b data-count="${c.qs}">0</b><span>Quiz questions</span></div>
   </div>
-  <div class="grid">
+  <div class="grid homegrid">
     <a class="card" href="#/library"><div class="ico">📚</div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>
     <a class="card" href="#/curriculum"><div class="ico">📋</div><h3>Curriculum</h3><p>All 8 semesters: every course with its type and credit, plus semester totals.</p></a>
     <a class="card" href="#/topics"><div class="ico">💡</div><h3>Topic Explanations</h3><p>Clear, exam-focused explanations with formulas and examples.</p></a>
@@ -91,6 +91,16 @@ function home() {
     <a class="card" href="#/practice"><div class="ico">📝</div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
     <a class="card" href="#/about"><div class="ico">👤</div><h3>About &amp; Feedback</h3><p>Who made this, and how to send suggestions.</p></a>
   </div>`;
+  const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; io.unobserve(e.target); e.target.classList.add("in");
+    const b = e.target.querySelector("b[data-count]"); if (!b) return;
+    const to = +b.dataset.count, t0 = performance.now();
+    const step = t => { const k = Math.min((t - t0) / 1100, 1); b.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString(); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }), { threshold: .3 }) : null;
+  app.querySelectorAll(".stat, .homegrid .card").forEach((el, i) => { el.style.setProperty("--d", (i % 4) * 90 + "ms"); io ? io.observe(el) : (el.classList.add("in"), el.querySelector("b[data-count]") && (el.querySelector("b").textContent = el.querySelector("b").dataset.count)); });
+  app.querySelectorAll(".homegrid .card, .stat").forEach(el => el.addEventListener("pointerdown", () => el.classList.add("press")));
+  document.addEventListener("pointerup", () => app.querySelectorAll(".press").forEach(el => el.classList.remove("press")), { once: true });
 }
 
 /* ---------- CLASS ROUTINE ---------- */

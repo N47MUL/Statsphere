@@ -47,7 +47,7 @@ function siteCounts() {
 }
 
 const routes = {
-  home, library, curriculum, cgpa, topics, quizzes, practice, about,
+  home, library, curriculum, cgpa, routine, topics, quizzes, practice, about,
 };
 
 function router() {
@@ -91,6 +91,14 @@ function home() {
     <a class="card" href="#/practice"><div class="ico">📝</div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
     <a class="card" href="#/about"><div class="ico">👤</div><h3>About &amp; Feedback</h3><p>Who made this, and how to send suggestions.</p></a>
   </div>`;
+}
+
+/* ---------- CLASS ROUTINE ---------- */
+function routine() {
+  app.innerHTML = `<h1>🗓️ Class Routine</h1>
+  <div class="panel" style="text-align:center;padding:48px 20px"><div style="font-size:3rem">⏳</div><h2>Coming Soon</h2>
+  <p>The class routine has not been published yet. It will be added here as soon as it is available.</p>
+  <a class="btn alt" href="#/home">← Back to Home</a></div>`;
 }
 
 /* ---------- LIBRARY ---------- */

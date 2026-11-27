@@ -47,7 +47,7 @@ function siteCounts() {
 }
 
 const routes = {
-  home, library, curriculum, topics, quizzes, practice, about,
+  home, library, curriculum, cgpa, topics, quizzes, practice, about,
 };
 
 function router() {

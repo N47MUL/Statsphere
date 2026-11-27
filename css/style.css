@@ -180,3 +180,18 @@ main:has(.libpage){max-width:1240px}
 .sem-head a.pill{text-decoration:none}
 @media(max-width:900px){.libpage{grid-template-columns:1fr}.libside{position:static;grid-template-columns:1fr 1fr}.libside .panel:last-child{grid-column:1/-1}}
 @media(max-width:560px){.libside{grid-template-columns:1fr}.libside .panel:nth-child(3){display:none}.libgrid{grid-template-columns:1fr}}
+
+/* CGPA calculator */
+.cg-l{display:block;font-weight:600}
+.cg-sel{width:100%;max-width:360px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font-size:1rem;margin-top:6px}
+.ctab .cg-sel{margin-top:0;max-width:170px}
+.cg-res{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 4px}
+.cg-box{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.cg-box.all{border-color:var(--acc)}
+.cg-box span{display:block;font-size:.85rem;color:var(--mut)}
+.cg-box b{display:block;font-size:2.2rem;color:var(--acc-d);line-height:1.3}
+.cg-box small{color:var(--mut)}
+.cg-note{font-size:.85rem;color:var(--mut);margin:10px 0 0}
+.cg-sg{font-size:.9rem;color:var(--mut);font-weight:500;margin-left:8px}
+.cg-sem[hidden]{display:none}
+@media(max-width:560px){.cg-res{grid-template-columns:1fr}.ctab .cg-sel{max-width:none;width:104px;padding:7px 4px;font-size:.9rem}}

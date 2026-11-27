@@ -18,7 +18,7 @@ function cgpa() {
   }
   function render() {
     const shown = sems.slice(0, st.done), cur = shown.find(s => s.code === st.view) || shown[shown.length - 1];
-    let h = `<h1>🎓 CGPA Calculator</h1><p>Pick how many semesters you have completed, choose the grade for each course, and your SGPA and CGPA are calculated automatically (weighted by credit, SUST 4.00 scale). Courses with no grade selected are ignored. Your choices are saved on this device.</p>
+    let h = `<h1>${navIco("cgpa")} CGPA Calculator</h1><p>Pick how many semesters you have completed, choose the grade for each course, and your SGPA and CGPA are calculated automatically (weighted by credit, SUST 4.00 scale). Courses with no grade selected are ignored. Your choices are saved on this device.</p>
     <div class="panel"><label class="cg-l">Semesters completed so far
       <select id="cgDone" class="cg-sel">${sems.map((s, i) => `<option value="${i + 1}" ${i + 1 === st.done ? "selected" : ""}>Up to semester ${s.code} (${i + 1} semester${i ? "s" : ""})</option>`).join("")}</select></label>
       <div class="cg-res"><div class="cg-box"><span>Current semester (${cur.code}) SGPA</span><b id="cgCur">–</b><small id="cgCurS"></small></div>

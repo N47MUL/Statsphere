@@ -258,3 +258,4 @@ body.is-home main .hero h1 span{background:linear-gradient(90deg,#0ea5e9,#2563eb
   #menuBtn{display:block}
   #nav{display:none;width:100%;order:5;padding-top:8px;flex-direction:column;margin-left:0}#nav.open{display:flex}#nav a{display:flex;padding:11px 16px;font-size:.95rem}
 }
+.hico{display:inline-flex;vertical-align:middle;margin-right:4px}.hico svg{display:block}

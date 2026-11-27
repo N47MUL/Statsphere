@@ -3,7 +3,7 @@
   "appName": "StatSphere",
   "webDir": "www",
   "backgroundColor": "#ffffff",
-  "android": { "allowMixedContent": false },
+  "android": { "allowMixedContent": false, "adjustMarginsForEdgeToEdge": "force" },
   "plugins": {
     "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#ffffff", "showSpinner": false },
     "StatusBar": { "style": "DARK", "backgroundColor": "#ffffff", "overlaysWebView": false }

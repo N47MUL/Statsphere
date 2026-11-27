@@ -21,11 +21,11 @@ st.textContent = `
 .vis-fig svg .bx{fill:var(--card);stroke:var(--line);stroke-width:1.3}
 .vis-fig svg .bx1{fill:var(--acc);fill-opacity:.18;stroke:var(--acc);stroke-width:1.4}
 .vis-fig svg .bx2{fill:var(--acc2);fill-opacity:.18;stroke:var(--acc2);stroke-width:1.4}
-.vis-fig svg .bx3{fill:var(--blue);fill-opacity:.18;stroke:var(--blue);stroke-width:1.4}
+.vis-fig svg .bx3{fill:var(--sec);fill-opacity:.18;stroke:var(--sec);stroke-width:1.4}
 .vis-fig svg .bx4{fill:var(--bad);fill-opacity:.18;stroke:var(--bad);stroke-width:1.4}
 .vis-fig svg .ar{stroke:var(--mut);stroke-width:1.6;fill:none}
 .vis-fig svg .arh{fill:var(--mut)}
-.vis-fig svg .bar1{fill:var(--acc);fill-opacity:.75}.vis-fig svg .bar2{fill:var(--acc2);fill-opacity:.8}.vis-fig svg .bar3{fill:var(--blue);fill-opacity:.8}.vis-fig svg .bar4{fill:var(--bad);fill-opacity:.8}
+.vis-fig svg .bar1{fill:var(--acc);fill-opacity:.75}.vis-fig svg .bar2{fill:var(--acc2);fill-opacity:.8}.vis-fig svg .bar3{fill:var(--sec);fill-opacity:.8}.vis-fig svg .bar4{fill:var(--bad);fill-opacity:.8}
 .vis-fig svg .bar5{fill:var(--ok);fill-opacity:.8}
 .vis-fig svg .grow{transform-box:fill-box;transform-origin:bottom;animation:svgrow .7s ease backwards}
 @keyframes svgrow{from{transform:scaleY(0)}}
@@ -34,7 +34,7 @@ st.textContent = `
 .vis-fig svg .bob{animation:svbob 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes svbob{50%{transform:translateY(-3px)}}
 .vis-steps{min-height:70px;padding:8px 12px;border-left:3px solid var(--acc);background:var(--card);border-radius:6px;font-size:.92rem;line-height:1.55}
-.vis-steps .no{display:inline-block;background:var(--acc);color:#04121f;border-radius:50%;width:22px;height:22px;text-align:center;font-weight:700;font-size:.8rem;line-height:22px;margin-right:8px}
+.vis-steps .no{display:inline-block;background:var(--acc);color:#fff;border-radius:50%;width:22px;height:22px;text-align:center;font-weight:700;font-size:.8rem;line-height:22px;margin-right:8px}
 .vis-dots{display:flex;gap:5px;justify-content:center;margin-top:6px}.vis-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.vis-dots i.on{background:var(--acc)}
 .vis-fig table.vt{width:auto;display:table;margin:6px auto}
 .vis-fig table.vt td.hi{background:var(--selbg);color:var(--text);font-weight:700}
@@ -102,32 +102,32 @@ function frame(x0, x1, y0, y1, o = {}) {
 const SK = "#f1c9a5", HAIR = "#3b2a20";
 const person = (shirt, extra = "") => `<circle cy="-14" r="7.5" fill="${SK}" class="sk"/><path d="M-7.5 -18 Q0 -29 7.5 -18 Q0 -22 -7.5 -18Z" fill="${HAIR}"/><path d="M-12 18 L-12 -2 Q0 -8 12 -2 L12 18Z" style="fill:${shirt}" class="sk"/><circle cx="-2.6" cy="-14" r="1" fill="#222"/><circle cx="2.6" cy="-14" r="1" fill="#222"/><path d="M-2.5 -10.5 Q0 -8.5 2.5 -10.5" fill="none" stroke="#222" stroke-width="1"/>${extra}`;
 const ICONS = {
-  person: () => person("var(--blue)"),
+  person: () => person("var(--sec)"),
   student: () => person("var(--acc)", `<path d="M-11 -22 L0 -29 L11 -22 L0 -17Z" fill="#222" class="sk"/><path d="M8 -22 L8 -14" stroke="var(--acc2)" stroke-width="1.6"/>`),
   teacher: () => person("var(--acc2)", `<circle cx="-3" cy="-14" r="3.2" fill="none" stroke="#222" stroke-width="1"/><circle cx="3" cy="-14" r="3.2" fill="none" stroke="#222" stroke-width="1"/>`),
-  group: () => `<g transform="translate(-14 4) scale(.7)">${person("var(--blue)")}</g><g transform="translate(14 4) scale(.7)">${person("var(--acc2)")}</g><g transform="translate(0 0) scale(.85)">${person("var(--acc)")}</g>`,
+  group: () => `<g transform="translate(-14 4) scale(.7)">${person("var(--sec)")}</g><g transform="translate(14 4) scale(.7)">${person("var(--acc2)")}</g><g transform="translate(0 0) scale(.85)">${person("var(--acc)")}</g>`,
   dice: () => `<rect x="-16" y="-16" width="32" height="32" rx="6" fill="#fff" class="sk"/>${[[-8, -8], [8, -8], [0, 0], [-8, 8], [8, 8]].map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#222"/>`).join("")}`,
   coin: () => `<circle r="16" fill="#f5c542" class="sk"/><circle r="11.5" fill="none" stroke="#b8860b" stroke-width="1.5"/><text y="5" text-anchor="middle" style="font-size:14px;font-weight:700;fill:#8a6508">H</text>`,
   cards: () => `<rect x="-18" y="-18" width="22" height="32" rx="3" fill="#fff" class="sk" transform="rotate(-12)"/><rect x="-4" y="-16" width="22" height="32" rx="3" fill="#fff" class="sk" transform="rotate(10)"/><text x="7" y="3" text-anchor="middle" transform="rotate(10)" style="font-size:16px;fill:#d33">♥</text>`,
-  bag: () => `<path d="M-14 -4 Q-18 18 0 18 Q18 18 14 -4 Q8 -10 0 -10 Q-8 -10 -14 -4Z" style="fill:var(--acc2)" class="sk"/><path d="M-7 -10 Q0 -22 7 -10" fill="none" class="sk"/><circle cx="-5" cy="6" r="3.3" fill="#e5484d"/><circle cx="4" cy="3" r="3.3" fill="#3b82f6"/><circle cx="3" cy="11" r="3.3" fill="#e5484d"/>`,
-  calc: () => `<rect x="-13" y="-18" width="26" height="36" rx="4" fill="#33415c" class="sk"/><rect x="-9" y="-14" width="18" height="8" rx="1.5" fill="#bde7d0"/>${[0, 1, 2].map(r => [0, 1, 2].map(c => `<rect x="${-9 + c * 6.5}" y="${-2 + r * 6.5}" width="5" height="5" rx="1" fill="#e6edf5"/>`).join("")).join("")}`,
-  book: () => `<path d="M-18 -12 L0 -8 L18 -12 L18 14 L0 18 L-18 14Z" style="fill:var(--blue)" class="sk"/><path d="M0 -8 L0 18" class="sk"/><path d="M-13 -5 L-4 -3 M-13 1 L-4 3 M4 -3 L13 -5 M4 3 L13 1" stroke="#fff" stroke-width="1.3"/>`,
+  bag: () => `<path d="M-14 -4 Q-18 18 0 18 Q18 18 14 -4 Q8 -10 0 -10 Q-8 -10 -14 -4Z" style="fill:var(--acc2)" class="sk"/><path d="M-7 -10 Q0 -22 7 -10" fill="none" class="sk"/><circle cx="-5" cy="6" r="3.3" fill="#e5484d"/><circle cx="4" cy="3" r="3.3" fill="#f59e0b"/><circle cx="3" cy="11" r="3.3" fill="#e5484d"/>`,
+  calc: () => `<rect x="-13" y="-18" width="26" height="36" rx="4" fill="#4a3f35" class="sk"/><rect x="-9" y="-14" width="18" height="8" rx="1.5" fill="#bde7d0"/>${[0, 1, 2].map(r => [0, 1, 2].map(c => `<rect x="${-9 + c * 6.5}" y="${-2 + r * 6.5}" width="5" height="5" rx="1" fill="#f3ece0"/>`).join("")).join("")}`,
+  book: () => `<path d="M-18 -12 L0 -8 L18 -12 L18 14 L0 18 L-18 14Z" style="fill:var(--sec)" class="sk"/><path d="M0 -8 L0 18" class="sk"/><path d="M-13 -5 L-4 -3 M-13 1 L-4 3 M4 -3 L13 -5 M4 3 L13 1" stroke="#fff" stroke-width="1.3"/>`,
   bulb: () => `<path d="M-9 8 Q-18 -4 -9 -14 Q0 -22 9 -14 Q18 -4 9 8Z" fill="#ffe066" class="sk"/><rect x="-6" y="8" width="12" height="7" rx="2" fill="#aaa" class="sk"/><path d="M-4 18 L4 18" class="sk"/><path d="M0 -26 L0 -30 M-18 -18 L-22 -22 M18 -18 L22 -22" class="sk"/>`,
-  mag: () => `<circle cx="-4" cy="-4" r="11" fill="#cfe8ff" fill-opacity=".7" class="sk"/><path d="M4 4 L16 16" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round"/>`,
-  chartup: () => `<rect x="-18" y="-18" width="36" height="34" rx="4" fill="#fff" class="sk"/><rect x="-12" y="2" width="6" height="10" style="fill:var(--blue)"/><rect x="-3" y="-4" width="6" height="16" style="fill:var(--acc)"/><rect x="6" y="-11" width="6" height="23" style="fill:var(--acc2)"/>`,
-  factory: () => `<path d="M-20 16 L-20 -2 L-8 6 L-8 -2 L4 6 L4 -14 L12 -14 L12 16Z" fill="#8895a7" class="sk"/><rect x="-16" y="8" width="4" height="4" fill="#ffe066"/><rect x="-2" y="8" width="4" height="4" fill="#ffe066"/><circle cx="8" cy="-20" r="4" fill="#ddd" fill-opacity=".8"/><circle cx="13" cy="-26" r="3" fill="#ddd" fill-opacity=".6"/>`,
+  mag: () => `<circle cx="-4" cy="-4" r="11" fill="#fde8c8" fill-opacity=".7" class="sk"/><path d="M4 4 L16 16" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round"/>`,
+  chartup: () => `<rect x="-18" y="-18" width="36" height="34" rx="4" fill="#fff" class="sk"/><rect x="-12" y="2" width="6" height="10" style="fill:var(--sec)"/><rect x="-3" y="-4" width="6" height="16" style="fill:var(--acc)"/><rect x="6" y="-11" width="6" height="23" style="fill:var(--acc2)"/>`,
+  factory: () => `<path d="M-20 16 L-20 -2 L-8 6 L-8 -2 L4 6 L4 -14 L12 -14 L12 16Z" fill="#9a8f82" class="sk"/><rect x="-16" y="8" width="4" height="4" fill="#ffe066"/><rect x="-2" y="8" width="4" height="4" fill="#ffe066"/><circle cx="8" cy="-20" r="4" fill="#ddd" fill-opacity=".8"/><circle cx="13" cy="-26" r="3" fill="#ddd" fill-opacity=".6"/>`,
   tree: () => `<rect x="-3" y="4" width="6" height="14" fill="#8b5a2b"/><circle cy="-6" r="15" fill="#3fa65b" class="sk"/><circle cx="-6" cy="-8" r="3" fill="#e5484d"/><circle cx="6" cy="-2" r="3" fill="#e5484d"/>`,
   house: () => `<path d="M-18 -2 L0 -18 L18 -2Z" fill="#c0504d" class="sk"/><rect x="-14" y="-2" width="28" height="20" fill="#f3e3c3" class="sk"/><rect x="-4" y="5" width="8" height="13" fill="#8b5a2b"/>`,
   warn: () => `<path d="M0 -18 L18 14 L-18 14Z" fill="#ffd23f" class="sk"/><path d="M0 -8 L0 4" stroke="#222" stroke-width="3" stroke-linecap="round"/><circle cy="9.5" r="1.8" fill="#222"/>`,
   check: () => `<circle r="16" fill="#2ecc8f" class="sk"/><path d="M-8 0 L-2 7 L9 -6" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`,
   cross: () => `<circle r="16" fill="#ff6b6b" class="sk"/><path d="M-7 -7 L7 7 M7 -7 L-7 7" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`,
-  ques: () => `<circle r="16" style="fill:var(--blue)" class="sk"/><text y="8" text-anchor="middle" style="font-size:22px;font-weight:700;fill:#fff">?</text>`,
+  ques: () => `<circle r="16" style="fill:var(--sec)" class="sk"/><text y="8" text-anchor="middle" style="font-size:22px;font-weight:700;fill:#fff">?</text>`,
   clock: () => `<circle r="16" fill="#fff" class="sk"/><path d="M0 -10 L0 0 L8 4" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round"/>`,
   money: () => `<rect x="-20" y="-11" width="40" height="22" rx="3" fill="#8fd18f" class="sk"/><circle r="6" fill="#d6f5d6" class="sk"/><text y="3.5" text-anchor="middle" style="font-size:9px;font-weight:700;fill:#2b6a2b">৳</text>`,
-  flask: () => `<path d="M-5 -18 L5 -18 L5 -6 L16 14 Q18 18 13 18 L-13 18 Q-18 18 -16 14 L-5 -6Z" fill="#cfe8ff" fill-opacity=".8" class="sk"/><path d="M-12 8 L12 8 L15 14 L-15 14Z" fill="#7bd88f"/>`,
-  pc: () => `<rect x="-18" y="-16" width="36" height="24" rx="3" fill="#33415c" class="sk"/><rect x="-14" y="-12" width="28" height="16" fill="#bde7d0"/><path d="M-6 8 L-9 16 L9 16 L6 8" fill="#8895a7" class="sk"/>`,
-  db: () => `<path d="M-14 -12 L-14 12 Q0 22 14 12 L14 -12" fill="#4b7bec" class="sk"/><ellipse cy="-12" rx="14" ry="6" fill="#7aa2f7" class="sk"/><path d="M-14 -2 Q0 8 14 -2 M-14 6 Q0 16 14 6" fill="none" stroke="#fff" stroke-opacity=".6"/>`,
-  globe: () => `<circle r="16" fill="#4aa3df" class="sk"/><path d="M-16 0 L16 0 M0 -16 Q-12 0 0 16 M0 -16 Q12 0 0 16" fill="none" stroke="#fff" stroke-opacity=".7"/><path d="M-9 -9 Q-3 -5 -8 2 Q-12 -2 -9 -9 M4 -2 Q12 -4 9 6 Q4 8 4 -2" fill="#6fcf97"/>`,
+  flask: () => `<path d="M-5 -18 L5 -18 L5 -6 L16 14 Q18 18 13 18 L-13 18 Q-18 18 -16 14 L-5 -6Z" fill="#fde8c8" fill-opacity=".8" class="sk"/><path d="M-12 8 L12 8 L15 14 L-15 14Z" fill="#7bd88f"/>`,
+  pc: () => `<rect x="-18" y="-16" width="36" height="24" rx="3" fill="#4a3f35" class="sk"/><rect x="-14" y="-12" width="28" height="16" fill="#bde7d0"/><path d="M-6 8 L-9 16 L9 16 L6 8" fill="#9a8f82" class="sk"/>`,
+  db: () => `<path d="M-14 -12 L-14 12 Q0 22 14 12 L14 -12" fill="#65a30d" class="sk"/><ellipse cy="-12" rx="14" ry="6" fill="#a3c76a" class="sk"/><path d="M-14 -2 Q0 8 14 -2 M-14 6 Q0 16 14 6" fill="none" stroke="#fff" stroke-opacity=".6"/>`,
+  globe: () => `<circle r="16" fill="#d9a441" class="sk"/><path d="M-16 0 L16 0 M0 -16 Q-12 0 0 16 M0 -16 Q12 0 0 16" fill="none" stroke="#fff" stroke-opacity=".7"/><path d="M-9 -9 Q-3 -5 -8 2 Q-12 -2 -9 -9 M4 -2 Q12 -4 9 6 Q4 8 4 -2" fill="#6fcf97"/>`,
   target: () => `<circle r="17" fill="#fff" class="sk"/><circle r="11" fill="#e5484d"/><circle r="6" fill="#fff"/><circle r="2.5" fill="#e5484d"/><path d="M0 0 L16 -16" stroke="#222" stroke-width="2"/>`,
   scale: () => `<path d="M0 -16 L0 14 M-8 16 L8 16 M-18 -10 L18 -10" class="sk"/><path d="M-18 -10 L-24 2 L-12 2Z M18 -10 L12 2 L24 2Z" fill="var(--acc2)" class="sk"/>`,
   thermo: () => `<rect x="-4" y="-18" width="8" height="26" rx="4" fill="#fff" class="sk"/><circle cy="12" r="8" fill="#e5484d" class="sk"/><rect x="-1.5" y="-4" width="3" height="16" fill="#e5484d"/>`,
@@ -139,15 +139,15 @@ const ICONS = {
   plot: () => `<path d="M-16 -14 L-16 14 L16 14" fill="none" class="sk"/><rect x="-12" y="-10" width="10" height="9" fill="#8b5a2b" fill-opacity=".5" class="sk"/><rect x="0" y="-10" width="10" height="9" fill="#3fa65b" fill-opacity=".6" class="sk"/><rect x="-12" y="2" width="10" height="9" fill="#3fa65b" fill-opacity=".6" class="sk"/><rect x="0" y="2" width="10" height="9" fill="#8b5a2b" fill-opacity=".5" class="sk"/>`,
   flag: () => `<path d="M-10 18 L-10 -18" class="sk"/><path d="M-10 -18 L14 -12 L-10 -4Z" fill="#e5484d" class="sk"/>`,
   lock: () => `<rect x="-12" y="-4" width="24" height="20" rx="3" fill="#f5c542" class="sk"/><path d="M-7 -4 L-7 -10 Q0 -20 7 -10 L7 -4" fill="none" class="sk"/>`,
-  gear: () => `<circle r="9" fill="#8895a7" class="sk"/><circle r="3.5" style="fill:var(--bg)"/>${[0, 45, 90, 135].map(a => `<rect x="-3" y="-15" width="6" height="30" fill="#8895a7" class="sk" transform="rotate(${a})"/>`).join("")}<circle r="9" fill="#8895a7"/><circle r="3.5" style="fill:var(--bg)"/>`,
+  gear: () => `<circle r="9" fill="#9a8f82" class="sk"/><circle r="3.5" style="fill:var(--bg)"/>${[0, 45, 90, 135].map(a => `<rect x="-3" y="-15" width="6" height="30" fill="#9a8f82" class="sk" transform="rotate(${a})"/>`).join("")}<circle r="9" fill="#9a8f82"/><circle r="3.5" style="fill:var(--bg)"/>`,
   truck: () => `<rect x="-22" y="-12" width="26" height="20" fill="#f5c542" class="sk"/><path d="M4 -6 L14 -6 L20 2 L20 8 L4 8Z" fill="#fff" class="sk"/><circle cx="-12" cy="10" r="5" fill="#333"/><circle cx="12" cy="10" r="5" fill="#333"/>`,
   wheat: () => `<path d="M0 18 L0 -12" stroke="#b8860b" stroke-width="2"/>${[-10, -4, 2, 8].map(y => `<ellipse cx="-4" cy="${y}" rx="2.5" ry="5" fill="#f5c542" class="sk" transform="rotate(-30 -4 ${y})"/><ellipse cx="4" cy="${y}" rx="2.5" ry="5" fill="#f5c542" class="sk" transform="rotate(30 4 ${y})"/>`).join("")}`,
   baby: () => `<circle cy="-4" r="10" fill="${SK}" class="sk"/><circle cx="-3.5" cy="-5" r="1.2" fill="#222"/><circle cx="3.5" cy="-5" r="1.2" fill="#222"/><path d="M-3 0 Q0 3 3 0" fill="none" stroke="#222"/><path d="M-10 18 Q0 8 10 18Z" style="fill:var(--acc2)" class="sk"/><path d="M0 -14 Q4 -18 0 -20" fill="none" stroke="${HAIR}" stroke-width="2"/>`,
-  phone: () => `<rect x="-9" y="-18" width="18" height="36" rx="4" fill="#33415c" class="sk"/><rect x="-6.5" y="-14" width="13" height="26" fill="#bde7d0"/>`,
-  paper: () => `<path d="M-13 -18 L7 -18 L13 -12 L13 18 L-13 18Z" fill="#fff" class="sk"/><path d="M-8 -8 L8 -8 M-8 -2 L8 -2 M-8 4 L8 4 M-8 10 L3 10" stroke="#8895a7" stroke-width="1.6"/>`,
+  phone: () => `<rect x="-9" y="-18" width="18" height="36" rx="4" fill="#4a3f35" class="sk"/><rect x="-6.5" y="-14" width="13" height="26" fill="#bde7d0"/>`,
+  paper: () => `<path d="M-13 -18 L7 -18 L13 -12 L13 18 L-13 18Z" fill="#fff" class="sk"/><path d="M-8 -8 L8 -8 M-8 -2 L8 -2 M-8 4 L8 4 M-8 10 L3 10" stroke="#9a8f82" stroke-width="1.6"/>`,
   star: () => `<path d="M0 -17 L5 -5 L18 -5 L8 3 L12 16 L0 8 L-12 16 L-8 3 L-18 -5 L-5 -5Z" fill="#ffd23f" class="sk"/>`,
   sun: () => `<circle r="9" fill="#ffd23f" class="sk"/>${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<path d="M0 -13 L0 -19" class="sk" transform="rotate(${a})"/>`).join("")}`,
-  cloud: () => `<path d="M-14 8 Q-20 8 -18 0 Q-16 -6 -9 -5 Q-6 -14 4 -12 Q12 -11 12 -3 Q20 -2 18 6 Q17 8 14 8Z" fill="#dbe7f3" class="sk"/>`,
+  cloud: () => `<path d="M-14 8 Q-20 8 -18 0 Q-16 -6 -9 -5 Q-6 -14 4 -12 Q12 -11 12 -3 Q20 -2 18 6 Q17 8 14 8Z" fill="#efe6d8" class="sk"/>`,
   arrowup: () => `<path d="M0 16 L0 -12 M-9 -3 L0 -14 L9 -3" fill="none" stroke="#2ecc8f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`,
   arrowdown: () => `<path d="M0 -16 L0 12 M-9 3 L0 14 L9 3" fill="none" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`
 };
@@ -212,7 +212,7 @@ T.plot = (spec, p) => {
   (spec.vl || []).forEach(v => { if (v[1]) o += F.text(ev(v[0], p), y1 - (v[2] || 0) * (y1 - y0) * .075, tmpl(v[1], p), { a: "middle", c: "t s" }); });
   (spec.hl || []).forEach(v => { if (v[1]) o += F.text(x1, ev(v[0], p), tmpl(v[1], p), { a: "end", c: "t s" }); });
   (spec.pts || []).forEach(pt => { if (pt[2]) o += `<text class="t s" x="${F.X(ev(pt[0], p)) + 7}" y="${F.Y(ev(pt[1], p)) - 6}">${tmpl(pt[2], p)}</text>`; });
-  (spec.fns || []).forEach((fn, i) => { if (fn.l) { const f = fnOf(fn.f, p), xe = ev(fn.lx, p) != null ? ev(fn.lx, p) : x0 + (x1 - x0) * (.82 - i * .02), ye = f(xe); if (isFinite(ye)) o += `<text class="v-t" style="fill:var(--${["acc", "acc2", "blue", "bad"][(ev(fn.c, p) || i + 1) - 1]});font-weight:700;font-size:11px" x="${F.X(xe)}" y="${Math.max(12, Math.min(HH - 30, F.Y(ye) - 7))}" text-anchor="middle">${tmpl(fn.l, p)}</text>`; } });
+  (spec.fns || []).forEach((fn, i) => { if (fn.l) { const f = fnOf(fn.f, p), xe = ev(fn.lx, p) != null ? ev(fn.lx, p) : x0 + (x1 - x0) * (.82 - i * .02), ye = f(xe); if (isFinite(ye)) o += `<text class="v-t" style="fill:var(--${["acc", "acc2", "sec", "bad"][(ev(fn.c, p) || i + 1) - 1]});font-weight:700;font-size:11px" x="${F.X(xe)}" y="${Math.max(12, Math.min(HH - 30, F.Y(ye) - 7))}" text-anchor="middle">${tmpl(fn.l, p)}</text>`; } });
   (spec.tx || []).forEach(t => { o += F.text(ev(t[0], p), ev(t[1], p), tmpl(t[2], p), { c: "t s", a: t[3] || "middle" }); });
   return svgWrap(o);
 };
@@ -353,7 +353,7 @@ T.venn = (spec, p) => {
   };
   o += `<rect class="bx" x="${three ? 100 : 100}" y="${three ? 14 : 36}" width="280" height="${three ? 222 : 184}" rx="8" style="fill:none"/>` + txt(112, three ? 30 : 52, spec.u || "U", { a: "start", c: "t b" });
   (spec.sh || []).forEach(r => o += region(r));
-  C.forEach((c, i) => { o += `<circle cx="${c[0]}" cy="${c[1]}" r="${R}" fill="none" style="stroke:var(--${["acc", "acc2", "blue"][i]});stroke-width:2.2"/>` + txt(c[0] + (i === 0 ? -R * .72 : i === 1 ? R * .72 : 0), c[1] + (three ? (i === 2 ? R + 16 : -R - 4) : -R - 6), sets[i], { c: "t b l" }); });
+  C.forEach((c, i) => { o += `<circle cx="${c[0]}" cy="${c[1]}" r="${R}" fill="none" style="stroke:var(--${["acc", "acc2", "sec"][i]});stroke-width:2.2"/>` + txt(c[0] + (i === 0 ? -R * .72 : i === 1 ? R * .72 : 0), c[1] + (three ? (i === 2 ? R + 16 : -R - 4) : -R - 6), sets[i], { c: "t b l" }); });
   const lab = spec.lab || {}, pos = three ? { a: [160, 88], b: [320, 88], c: [240, 198], ab: [240, 78], ac: [196, 142], bc: [284, 142], abc: [240, 118], none: [128, 222] } : { a: [150, 129], b: [330, 129], ab: [240, 129], none: [128, 205] };
   Object.keys(lab).forEach(k => { if (pos[k]) o += txt(pos[k][0], pos[k][1] + 4, lab[k], { c: "t b" }); });
   return svgWrap(o, W, three ? 244 : 240);

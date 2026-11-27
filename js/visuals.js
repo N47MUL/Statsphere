@@ -30,17 +30,17 @@ st.textContent = `
 .vis-fig svg .v-gr{stroke:var(--line);stroke-width:1;opacity:.6}
 .vis-fig svg .v-c1{stroke:var(--acc);fill:none;stroke-width:2.2;stroke-linejoin:round}
 .vis-fig svg .v-c2{stroke:var(--acc2);fill:none;stroke-width:2.2;stroke-linejoin:round}
-.vis-fig svg .v-c3{stroke:var(--blue);fill:none;stroke-width:2.2;stroke-linejoin:round}
+.vis-fig svg .v-c3{stroke:var(--sec);fill:none;stroke-width:2.2;stroke-linejoin:round}
 .vis-fig svg .v-c4{stroke:var(--bad);fill:none;stroke-width:2.2;stroke-linejoin:round}
 .vis-fig svg .v-cm{stroke:var(--mut);fill:none;stroke-width:1.4}
 .vis-fig svg .v-dash{stroke-dasharray:5 4}
 .vis-fig svg .v-a1{fill:var(--acc);fill-opacity:.3;stroke:none}
 .vis-fig svg .v-a2{fill:var(--acc2);fill-opacity:.3;stroke:none}
-.vis-fig svg .v-a3{fill:var(--blue);fill-opacity:.3;stroke:none}
+.vis-fig svg .v-a3{fill:var(--sec);fill-opacity:.3;stroke:none}
 .vis-fig svg .v-a4{fill:var(--bad);fill-opacity:.3;stroke:none}
 .vis-fig svg .v-s1{fill:var(--acc);stroke:none}
 .vis-fig svg .v-s2{fill:var(--acc2);stroke:none}
-.vis-fig svg .v-s3{fill:var(--blue);stroke:none}
+.vis-fig svg .v-s3{fill:var(--sec);stroke:none}
 .vis-fig svg .v-s4{fill:var(--bad);stroke:none}
 .vis-fig svg .v-sm{fill:var(--mut);stroke:none}
 .vis-fig svg .v-box{fill:var(--card);stroke:var(--line)}
@@ -227,7 +227,7 @@ reg.ci = ["Each line is the confidence interval from one sample (x̄ ± z·σ/�
 }, 520];
 
 /* ---- Type I / II error and power ---- */
-reg.power = ["Right-tailed z-test. Blue: the sampling distribution if H₀ is true. Green: if H₁ is true. Orange area = α (Type I error), red area = β (Type II error). A bigger effect size δ or larger α increases power = 1 − β.", (root) => {
+reg.power = ["Right-tailed z-test. Green: the sampling distribution if H₀ is true. Olive: if H₁ is true. Orange area = α (Type I error), red area = β (Type II error). A bigger effect size δ or larger α increases power = 1 − β.", (root) => {
   ui(root, [
     { k: "d", label: "True shift δ ", min: 0, max: 4, step: .1, v: 2 },
     { k: "a", label: "α ", opts: ["0.10", "0.05", "0.01"], v: 1 }
@@ -501,7 +501,7 @@ reg.taylor = ["Taylor/Maclaurin polynomials of sin x. Each extra term hugs the t
 }];
 
 /* ---- Fourier ---- */
-reg.fourier = ["Fourier series of a square wave: adding more sine terms (blue) gives a better fit to the wave (orange). The small overshoot near the jumps is the Gibbs phenomenon.", (root) => {
+reg.fourier = ["Fourier series of a square wave: adding more sine terms (green) gives a better fit to the wave (orange). The small overshoot near the jumps is the Gibbs phenomenon.", (root) => {
   ui(root, [{ k: "k", label: "terms N ", min: 1, max: 30, step: 1, v: 3, fmt: v => v }], s => {
     const S = x => { let t = 0; for (let j = 1; j <= s.k; j++) t += 4 / Math.PI * Math.sin((2 * j - 1) * x) / (2 * j - 1); return t; };
     const F = frame(-Math.PI, Math.PI, -1.6, 1.6);
@@ -549,7 +549,7 @@ reg.mvt = ["Mean Value Theorem: between a and b there is a point c where the tan
 }];
 
 /* ---- Joins ---- */
-reg.joins = ["SQL joins as Venn diagrams: the blue-green area is the set of rows returned from Table A and Table B.", (root) => {
+reg.joins = ["SQL joins as Venn diagrams: the shaded area is the set of rows returned from Table A and Table B.", (root) => {
   const sql = ["SELECT * FROM A INNER JOIN B ON A.id = B.id;", "SELECT * FROM A LEFT JOIN B ON A.id = B.id;", "SELECT * FROM A RIGHT JOIN B ON A.id = B.id;", "SELECT * FROM A FULL OUTER JOIN B ON A.id = B.id;", "SELECT * FROM A LEFT JOIN B ON A.id = B.id WHERE B.id IS NULL;"];
   ui(root, [{ k: "j", label: "Join ", opts: ["INNER", "LEFT", "RIGHT", "FULL OUTER", "LEFT (only A)"], v: 0 }], s => {
     const id = "j" + (++uid);
@@ -708,7 +708,7 @@ reg.pyramid = ["Population pyramids (males left, females right). Wide base = you
   const info = ["Expanding (e.g. Bangladesh decades ago): high fertility, many children.", "Stationary: births ≈ deaths, nearly equal age groups.", "Constricting (e.g. Japan today): low fertility, many elderly."];
   ui(root, [{ k: "t", label: "Shape ", opts: ["Expanding", "Stationary", "Constricting"], v: 0 }], s => {
     const d = sets[s.t]; let o = `<text x="110" y="12" text-anchor="middle">Male %</text><text x="330" y="12" text-anchor="middle">Female %</text>`;
-    d.forEach((v, i) => { const y = 218 - (i + 1) * 11.8, w = v * 19; o += `<rect class="v-a3" x="${208 - w}" y="${y}" width="${w}" height="10.4" stroke="var(--blue)"/><rect class="v-a4" x="${232}" y="${y}" width="${w}" height="10.4" stroke="var(--bad)"/><text x="220" y="${y + 8.5}" text-anchor="middle" style="font-size:8px">${i < 16 ? i * 5 + "-" + (i * 5 + 4) : "80+"}</text>`; });
+    d.forEach((v, i) => { const y = 218 - (i + 1) * 11.8, w = v * 19; o += `<rect class="v-a3" x="${208 - w}" y="${y}" width="${w}" height="10.4" stroke="var(--sec)"/><rect class="v-a4" x="${232}" y="${y}" width="${w}" height="10.4" stroke="var(--bad)"/><text x="220" y="${y + 8.5}" text-anchor="middle" style="font-size:8px">${i < 16 ? i * 5 + "-" + (i * 5 + 4) : "80+"}</text>`; });
     s.msg = info[s.t];
     return SV(o, 440, 224);
   });
@@ -810,7 +810,7 @@ reg.nroots = ["The n-th roots of z = r(cos θ + i sin θ) lie on a circle of rad
 }];
 
 /* ---- Bayes / natural frequencies ---- */
-reg.bayes = ["Each square is one of 1000 people. Green = diseased and test positive (true positives), blue = diseased but test negative, red = healthy but test positive (false positives), grey = healthy and negative. When the disease is rare, false positives outnumber true positives, so a positive test is weaker evidence than it seems: P(D | +) = TP/(TP + FP).", (root) => {
+reg.bayes = ["Each square is one of 1000 people. Green = diseased and test positive (true positives), olive = diseased but test negative, red = healthy but test positive (false positives), grey = healthy and negative. When the disease is rare, false positives outnumber true positives, so a positive test is weaker evidence than it seems: P(D | +) = TP/(TP + FP).", (root) => {
   ui(root, [{ k: "p", label: "Prevalence % ", min: .1, max: 50, step: .1, v: 1 }, { k: "se", label: "Sensitivity % ", min: 50, max: 100, step: 1, v: 95 }, { k: "sp", label: "Specificity % ", min: 50, max: 100, step: 1, v: 95 }], s => {
     const p = s.p / 100, se = s.se / 100, sp = s.sp / 100, D = Math.round(p * 1000), TP = Math.round(D * se), FN = D - TP, FP = Math.round((1000 - D) * (1 - sp));
     const cls = []; for (let i = 0; i < 1000; i++) cls.push(i < TP ? "v-s1" : i < D ? "v-s3" : i < D + FP ? "v-s4" : "v-sm");

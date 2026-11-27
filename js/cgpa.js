@@ -18,7 +18,7 @@ function cgpa() {
   }
   function render() {
     const shown = sems.slice(0, st.done), cur = shown.find(s => s.code === st.view) || shown[shown.length - 1];
-    let h = `<h1>🎓 CGPA Calculator</h1><p>Pick how many semesters you have completed, choose the grade for each course, and your SGPA and CGPA are calculated automatically (weighted by credit). Courses with no grade selected are ignored. Your choices are saved on this device.</p>
+    let h = `<h1>🎓 CGPA Calculator</h1><p>Pick how many semesters you have completed, choose the grade for each course, and your SGPA and CGPA are calculated automatically (weighted by credit, SUST 4.00 scale). Courses with no grade selected are ignored. Your choices are saved on this device.</p>
     <div class="panel"><label class="cg-l">Semesters completed so far
       <select id="cgDone" class="cg-sel">${sems.map((s, i) => `<option value="${i + 1}" ${i + 1 === st.done ? "selected" : ""}>Up to semester ${s.code} (${i + 1} semester${i ? "s" : ""})</option>`).join("")}</select></label>
       <div class="cg-res"><div class="cg-box"><span>Current semester (${cur.code}) SGPA</span><b id="cgCur">–</b><small id="cgCurS"></small></div>
@@ -30,8 +30,6 @@ function cgpa() {
         s.courses.map((c, i) => `<tr><td>${esc(c[0])}</td><td class="r">${fc(c[2])}</td><td><select class="cg-sel" data-id="${gid(s, i)}"><option value="">— select —</option>${GRADES.map(g => `<option value="${g[1]}" ${String(st.g[gid(s, i)]) === String(g[1]) ? "selected" : ""}>${g[0]} (${f2(g[1])})</option>`).join("")}</select></td></tr>`).join("") +
         `</tbody></table></div></div>`;
     });
-    h += `<div class="panel"><h3>Grading scale</h3><div class="tblw"><table class="ctab"><thead><tr><th>Marks (%)</th><th>Letter grade</th><th>Grade point</th></tr></thead><tbody>${GRADES.map(g => `<tr><td>${g[2]}</td><td>${g[0]}</td><td>${f2(g[1])}</td></tr>`).join("")}</tbody></table></div>
-      <p class="cg-note">The curriculum document lists credits only, so the standard Bangladesh university 4.00 scale is used. A failed course (F) counts with 0.00 points. Calculations are an estimate; the official result is issued by the university.</p></div>`;
     app.innerHTML = h;
     update();
     $("#cgDone").onchange = e => { st.done = +e.target.value; st.view = ""; save(); render(); };

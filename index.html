@@ -1,82 +1,82 @@
 <!DOCTYPE html>
-<!-- RELEASE VERSION: 20261127c — bump every ?v= in this file on each upload (find and replace) so browsers fetch fresh files -->
+<!-- RELEASE VERSION: 20261127d — bump every ?v= in this file on each upload (find and replace) so browsers fetch fresh files -->
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>StatSphere by NASIR – Statistics Learning Platform for SUST</title>
 <meta name="description" content="StatSphere: an academic learning platform for Statistics students of SUST – resources, topic explanations, quizzes and practice.">
-<link rel="stylesheet" href="lib/katex/katex.min.css?v=20261127c">
-<link rel="stylesheet" href="css/style.css?v=20261127c">
-<link rel="stylesheet" href="css/quiz.css?v=20261127c">
+<link rel="stylesheet" href="lib/katex/katex.min.css?v=20261127d">
+<link rel="stylesheet" href="css/style.css?v=20261127d">
+<link rel="stylesheet" href="css/quiz.css?v=20261127d">
 </head>
 <body>
 <header class="top">
   <a class="brand" href="#/home"><span class="logo">Σ</span><span><b>StatSphere</b><small>BY NASIR</small></span></a>
   <button id="menuBtn" aria-label="Menu">☰</button>
   <nav id="nav">
-    <a href="#/home">Home</a>
-    <a href="#/library">Resource Library</a>
-    <a href="#/curriculum">Curriculum</a>
-    <a href="#/cgpa">CGPA Calculator</a>
-    <a href="#/topics">Topic Explanations</a>
-    <a href="#/quizzes">Quizzes &amp; MCQs</a>
-    <a href="#/practice">Practice</a>
-    <a href="#/about">About</a>
+    <a href="#/home"><i>🏠</i>Home</a>
+    <a href="#/library"><i>📚</i>Resource Library</a>
+    <a href="#/curriculum"><i>📋</i>Curriculum</a>
+    <a href="#/cgpa"><i>🎓</i>CGPA Calculator</a>
+    <a href="#/topics"><i>💡</i>Topic Explanations</a>
+    <a href="#/quizzes"><i>✅</i>Quizzes &amp; MCQs</a>
+    <a href="#/practice"><i>✏️</i>Practice</a>
+    <a href="#/about"><i>👤</i>About</a>
   </nav>
 </header>
 <main id="app"></main>
 <footer><span class="sym">Σ μ σ x̄ ∫</span>© <span id="yr"></span> StatSphere by Nasir · Department of Statistics, SUST · Free for all students</footer>
-<script src="data/config.js?v=20261127c"></script>
-<script src="data/courses.js?v=20261127c"></script>
-<script src="data/curriculum.js?v=20261127c"></script>
-<script src="data/syllabus.js?v=20261127c"></script>
-<script src="data/topics.js?v=20261127c"></script>
-<script src="data/quizzes.js?v=20261127c"></script>
+<script src="data/config.js?v=20261127d"></script>
+<script src="data/courses.js?v=20261127d"></script>
+<script src="data/curriculum.js?v=20261127d"></script>
+<script src="data/syllabus.js?v=20261127d"></script>
+<script src="data/topics.js?v=20261127d"></script>
+<script src="data/quizzes.js?v=20261127d"></script>
 <script>const QZ=[];</script>
-<script src="data/course-map.js?v=20261127c"></script>
-<script src="data/practice.js?v=20261127c"></script>
-<script src="data/practice-1y.js?v=20261127c"></script>
-<script src="data/practice-2y.js?v=20261127c"></script>
-<script src="data/practice-3y.js?v=20261127c"></script>
-<script src="data/practice-4y.js?v=20261127c"></script>
-<script src="data/new-1-1.js?v=20261127c"></script>
-<script src="data/new-1-2a.js?v=20261127c"></script>
-<script src="data/new-1-2b.js?v=20261127c"></script>
-<script src="data/new-4-1a.js?v=20261127c"></script>
-<script src="data/new-4-1b.js?v=20261127c"></script>
-<script src="data/new-4-2a.js?v=20261127c"></script>
-<script src="data/new-4-2b.js?v=20261127c"></script>
-<script src="js/courseart.js?v=20261127c"></script>
-<script src="data/quiz-1-1.js?v=20261127c"></script>
-<script src="data/quiz-1-2a.js?v=20261127c"></script>
-<script src="data/quiz-1-2b.js?v=20261127c"></script>
-<script src="data/quiz-2-1a.js?v=20261127c"></script>
-<script src="data/quiz-2-1b.js?v=20261127c"></script>
-<script src="data/quiz-2-2a.js?v=20261127c"></script>
-<script src="data/quiz-2-2b.js?v=20261127c"></script>
-<script src="data/quiz-3-1a.js?v=20261127c"></script>
-<script src="data/quiz-3-1b.js?v=20261127c"></script>
-<script src="data/quiz-3-2a.js?v=20261127c"></script>
-<script src="data/quiz-3-2b.js?v=20261127c"></script>
-<script src="data/quiz-4-1a.js?v=20261127c"></script>
-<script src="data/quiz-4-1b.js?v=20261127c"></script>
-<script src="data/quiz-4-2a.js?v=20261127c"></script>
-<script src="data/quiz-4-2b.js?v=20261127c"></script>
-<script src="data/ch-pos.js?v=20261127c"></script>
-<script src="data/ch-1y.js?v=20261127c"></script>
-<script src="data/ch-2y.js?v=20261127c"></script>
-<script src="data/ch-3y.js?v=20261127c"></script>
-<script src="data/ch-4y.js?v=20261127c"></script>
-<script src="js/click.js?v=20261127c"></script>
-<script src="js/cgpa.js?v=20261127c"></script>
-<script src="js/app.js?v=20261127c"></script>
-<script src="js/visuals.js?v=20261127c"></script>
-<script src="js/visuals2.js?v=20261127c"></script>
-<script src="js/topics-view.js?v=20261127c"></script>
-<script src="js/art-hook.js?v=20261127c"></script>
-<script src="lib/katex/katex.min.js?v=20261127c"></script>
-<script src="lib/katex/auto-render.min.js?v=20261127c"></script>
-<script src="js/math.js?v=20261127c"></script>
+<script src="data/course-map.js?v=20261127d"></script>
+<script src="data/practice.js?v=20261127d"></script>
+<script src="data/practice-1y.js?v=20261127d"></script>
+<script src="data/practice-2y.js?v=20261127d"></script>
+<script src="data/practice-3y.js?v=20261127d"></script>
+<script src="data/practice-4y.js?v=20261127d"></script>
+<script src="data/new-1-1.js?v=20261127d"></script>
+<script src="data/new-1-2a.js?v=20261127d"></script>
+<script src="data/new-1-2b.js?v=20261127d"></script>
+<script src="data/new-4-1a.js?v=20261127d"></script>
+<script src="data/new-4-1b.js?v=20261127d"></script>
+<script src="data/new-4-2a.js?v=20261127d"></script>
+<script src="data/new-4-2b.js?v=20261127d"></script>
+<script src="js/courseart.js?v=20261127d"></script>
+<script src="data/quiz-1-1.js?v=20261127d"></script>
+<script src="data/quiz-1-2a.js?v=20261127d"></script>
+<script src="data/quiz-1-2b.js?v=20261127d"></script>
+<script src="data/quiz-2-1a.js?v=20261127d"></script>
+<script src="data/quiz-2-1b.js?v=20261127d"></script>
+<script src="data/quiz-2-2a.js?v=20261127d"></script>
+<script src="data/quiz-2-2b.js?v=20261127d"></script>
+<script src="data/quiz-3-1a.js?v=20261127d"></script>
+<script src="data/quiz-3-1b.js?v=20261127d"></script>
+<script src="data/quiz-3-2a.js?v=20261127d"></script>
+<script src="data/quiz-3-2b.js?v=20261127d"></script>
+<script src="data/quiz-4-1a.js?v=20261127d"></script>
+<script src="data/quiz-4-1b.js?v=20261127d"></script>
+<script src="data/quiz-4-2a.js?v=20261127d"></script>
+<script src="data/quiz-4-2b.js?v=20261127d"></script>
+<script src="data/ch-pos.js?v=20261127d"></script>
+<script src="data/ch-1y.js?v=20261127d"></script>
+<script src="data/ch-2y.js?v=20261127d"></script>
+<script src="data/ch-3y.js?v=20261127d"></script>
+<script src="data/ch-4y.js?v=20261127d"></script>
+<script src="js/click.js?v=20261127d"></script>
+<script src="js/cgpa.js?v=20261127d"></script>
+<script src="js/app.js?v=20261127d"></script>
+<script src="js/visuals.js?v=20261127d"></script>
+<script src="js/visuals2.js?v=20261127d"></script>
+<script src="js/topics-view.js?v=20261127d"></script>
+<script src="js/art-hook.js?v=20261127d"></script>
+<script src="lib/katex/katex.min.js?v=20261127d"></script>
+<script src="lib/katex/auto-render.min.js?v=20261127d"></script>
+<script src="js/math.js?v=20261127d"></script>
 </body>
 </html>

@@ -195,3 +195,15 @@ main:has(.libpage){max-width:1240px}
 .cg-sg{font-size:.9rem;color:var(--mut);font-weight:500;margin-left:8px}
 .cg-sem[hidden]{display:none}
 @media(max-width:560px){.cg-res{grid-template-columns:1fr}.ctab .cg-sel{max-width:none;width:104px;padding:7px 4px;font-size:.9rem}}
+
+/* nicer navigation: pill links + tabs */
+#nav{display:flex;flex-wrap:wrap;gap:6px}
+#nav a{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:1px solid transparent;color:var(--text);font-weight:600;font-size:.92rem;transition:transform .15s,background .15s,box-shadow .15s,border-color .15s}
+#nav a i{font-style:normal;font-size:1rem}
+#nav a:hover{background:var(--card);border-color:var(--acc);color:var(--acc-d);box-shadow:0 4px 12px color-mix(in srgb,var(--acc) 22%,transparent);transform:translateY(-1px)}
+#nav a.on,#nav a.on:hover{background:linear-gradient(135deg,var(--acc),var(--blue));color:#fff;border-color:transparent;box-shadow:0 4px 14px color-mix(in srgb,var(--blue) 35%,transparent)}
+.tabs{gap:8px}
+.tab{padding:8px 18px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;box-shadow:0 1px 3px rgba(20,60,100,.08);transition:transform .15s,box-shadow .15s,border-color .15s}
+.tab:hover{border-color:var(--acc);color:var(--acc-d);box-shadow:0 4px 12px color-mix(in srgb,var(--acc) 22%,transparent);transform:translateY(-1px)}
+.tab.on,.tab.on:hover{background:linear-gradient(135deg,var(--acc),var(--blue));color:#fff;border-color:transparent;box-shadow:0 4px 14px color-mix(in srgb,var(--blue) 35%,transparent)}
+@media(max-width:760px){#nav{display:none;width:100%;order:5;padding-top:8px;flex-direction:column}#nav.open{display:flex}#nav a{display:flex;padding:11px 16px}}

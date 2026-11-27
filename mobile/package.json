@@ -1,0 +1,23 @@
+{
+  "name": "statsphere-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Android app wrapper (Capacitor) for the StatSphere website",
+  "scripts": {
+    "prepare-www": "node scripts/prepare-www.js",
+    "android:add": "npx cap add android",
+    "assets": "npx capacitor-assets generate --android",
+    "sync": "npm run prepare-www && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.0"
+  }
+}

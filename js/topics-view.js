@@ -22,7 +22,7 @@ st.textContent = `
 .tv-chip:hover{border-color:var(--acc)}.tv-chip b{color:var(--acc)}
 .chap{margin:26px 0 8px;scroll-margin-top:80px}
 .chap h2{display:flex;align-items:center;gap:10px;margin:0 0 4px;font-size:1.25rem}
-.chap h2 .chn{background:linear-gradient(135deg,var(--acc),var(--blue));color:#04121f;border-radius:8px;padding:2px 10px;font-size:.78rem;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+.chap h2 .chn{background:linear-gradient(135deg,#f59e0b,#ef4444 55%,#db2777);color:#fff;border-radius:999px;padding:4px 14px;font-size:.78rem;font-weight:800;letter-spacing:.08em;white-space:nowrap;box-shadow:0 3px 10px rgba(219,39,119,.35),inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 2px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.4)}
 .chap .chd{color:var(--mut);font-size:.9rem;margin:0 0 10px}
 .chap .chcount{font-size:.78rem;color:var(--mut);margin-left:auto;white-space:nowrap}
 details.tp>summary .vc{float:right;font-size:.75rem;color:var(--mut);font-weight:400}

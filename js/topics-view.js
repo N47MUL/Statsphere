@@ -34,6 +34,16 @@ details.tp>summary .vc{float:right;font-size:.75rem;color:var(--mut);font-weight
 .tp details.qc summary{cursor:pointer;font-weight:600}
 .tp .qh{font-weight:700;margin:14px 0 4px;color:var(--acc)}
 .tp .tv-ph{min-height:30px}
+@font-face{font-family:"SS Bangla";font-weight:400;font-display:swap;src:url(lib/fonts/noto-sans-bengali-bengali-400-normal.woff2) format("woff2");unicode-range:U+0980-09FF,U+200C-200D,U+25CC}
+@font-face{font-family:"SS Bangla";font-weight:700;font-display:swap;src:url(lib/fonts/noto-sans-bengali-bengali-700-normal.woff2) format("woff2");unicode-range:U+0980-09FF,U+200C-200D,U+25CC}
+details.bn{margin:10px 0;border:1px solid #0ea5e9;border-radius:4px;background:color-mix(in srgb,#0ea5e9 8%,var(--card));font-family:"SS Bangla","Noto Sans Bengali","Nirmala UI","Kohinoor Bangla","Vrinda",Inter,system-ui,sans-serif}
+details.bn>summary{cursor:pointer;font-weight:700;padding:8px 12px;color:#fff;background:#0ea5e9;border-radius:3px;list-style:none}
+details.bn>summary::-webkit-details-marker{display:none}
+details.bn>summary::after{content:"▼";float:right;font-size:.75rem;margin-top:3px}
+details.bn[open]>summary::after{content:"▲"}
+details.bn .bn-b{padding:6px 14px 10px;line-height:1.9}
+details.bn .bn-b p{margin:8px 0}
+details.bn .bn-k{border-left:3px solid #0ea5e9;padding-left:10px}
 `;
 document.head.appendChild(st);
 
@@ -70,6 +80,10 @@ function resolve(sub) {
 /* make the new topics count on the home page (topics are pushed into TOPICS once) */
 TOPICS.forEach(s => { try { resolve(s); } catch (e) { console.error(e); } });
 
+/* ---------- Bangla story explanations (data/bangla.js) ---------- */
+const BN = window.BN_KEYS || {};
+const bnKeys = Object.keys(BN).map(k => [norm(k), BN[k], /\$$/.test(k)]);
+function bnFor(title) { const n = norm(title); const m = bnKeys.find(x => x[2] ? n === x[0] : n.startsWith(x[0])); return m ? m[1] : ""; }
 /* ---------- render ---------- */
 function topicHTML(t, open, store) {
   const specs = [], named = [];
@@ -81,7 +95,7 @@ function topicHTML(t, open, store) {
   const key = t.key && t.key.length ? `<div class="key"><b class="kh">✅ Remember</b><ul>${t.key.map(k => `<li>${k}</li>`).join("")}</ul></div>` : "";
   const qq = t.q && t.q.length ? `<div class="qh">${navIco("quizzes",20)} Quick check (tap to reveal)</div>` + t.q.map(x => `<details class="qc"><summary>${x[0]}</summary><div>${x[1]}</div></details>`).join("") : "";
   const n = specs.length + (t.body || "").split('data-vis=').length - 1;
-  return `<details class="tp"${open ? " open" : ""}><summary>${t.title}${n ? `<span class="vc">🖼 ${n}</span>` : ""}</summary>${t.intro ? `<div class="tp-intro">${t.intro}</div>` : ""}${pre}${body}${key}${qq}</details>`;
+  return `<details class="tp"${open ? " open" : ""}><summary>${t.title}${n ? `<span class="vc">🖼 ${n}</span>` : ""}</summary>${t.intro ? `<div class="tp-intro">${t.intro}</div>` : ""}${bnFor(t.title) ? `<details class="bn"><summary lang="bn">🇧🇩 বাংলায় বুঝি (গল্পে ব্যাখ্যা)</summary><div class="bn-b" lang="bn">${bnFor(t.title)}</div></details>` : ""}${pre}${body}${key}${qq}</details>`;
 }
 function mountPh(root, store) {
   root.querySelectorAll(".tv-ph:not([data-m])").forEach(el => { const s = store[+el.dataset.sv]; if (s) SSV.mount(el, s); });

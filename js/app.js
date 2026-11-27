@@ -90,7 +90,7 @@ function home() {
     <a class="card" href="#/quizzes"><div class="ico"><svg viewBox="6 1 20 31" width="30" height="38" aria-hidden="true"><circle cx="16" cy="18" r="6" fill="#f5c28b"/><path d="M9 31c0-6 3-8 7-8s7 2 7 8z" fill="#0ea5e9"/><path d="M10 16c0-6 12-6 12 0-3-2-9-2-12 0z" fill="#475569"/><circle cx="14" cy="18" r=".9" fill="#0b2540"/><circle cx="18" cy="18" r=".9" fill="#0b2540"/><path d="M14.5 21.2q1.5 1 3 0" stroke="#0b2540" fill="none" stroke-width=".9"/><text x="16" y="10" text-anchor="middle" font-size="14" font-weight="800" fill="#0284c7" font-family="Arial,sans-serif">?</text></svg></div><h3>Quiz</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
     <a class="card" href="#/practice"><div class="ico"><svg viewBox="4 3 26 26" width="38" height="38" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="#f5c28b"/><path d="M7 8.5l5-3 5 3-5 2.5z" fill="#0369a1"/><path d="M6 15c1-3 4-4 6-4s5 1 6 4v4H6z" fill="#0ea5e9"/><path d="M18 16l5-1 1 3-6 2z" fill="#f5c28b"/><rect x="15" y="16" width="14" height="3" rx="1" fill="#92400e"/><rect x="17" y="19" width="2" height="9" fill="#92400e"/><rect x="26" y="19" width="2" height="9" fill="#92400e"/><rect x="19" y="12" width="7" height="4" rx=".5" fill="#fff" stroke="#0369a1" stroke-width="1"/><rect x="6" y="19" width="10" height="3" rx="1" fill="#475569"/><rect x="8" y="22" width="2.5" height="6" fill="#475569"/></svg></div><h3>Practice</h3><p>Practice problems with hide/show answers.</p></a>
     <a class="card" href="#/mocks"><div class="ico"><svg viewBox="0 0 32 32" width="38" height="38" aria-hidden="true"><rect x="3" y="3" width="19" height="26" rx="2" fill="#fff" stroke="#0369a1" stroke-width="1.6"/><path d="M7 9h11M7 13h8" stroke="#7dd3fc" stroke-width="1.5"/><path d="M7 18h5" stroke="#0284c7" stroke-width="1.5"/><circle cx="23" cy="21.5" r="7.5" fill="#0ea5e9" stroke="#0369a1" stroke-width="1.4"/><circle cx="23" cy="21.5" r="5.3" fill="#fff"/><path d="M23 18v3.8l2.5 1.5" stroke="#0369a1" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12.5h4" stroke="#0369a1" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Mock Tests</h3><p>Timed 20-question mock tests, grouped by semester.</p></a>
-    <a class="card" href="#/about"><div class="ico">👤</div><h3>About &amp; Feedback</h3><p>Who made this, and how to send suggestions.</p></a>
+    <a class="card" href="#/about"><div class="ico">👤</div><h3>About</h3><p>What StatSphere offers, and who made it.</p></a>
   </div>`;
   const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return; io.unobserve(e.target); e.target.classList.add("in");
@@ -371,12 +371,21 @@ function practice(p) {
 
 /* ---------- ABOUT ---------- */
 function about() {
-  const a = SITE.about, subj = encodeURIComponent("StatSphere feedback"), mail = `mailto:${SITE.feedbackEmail}?subject=${subj}`;
+  const a = SITE.about, mail = `mailto:${a.email}`;
+  const feats = [
+    ["📚","Resource Library","Course materials organised semester by semester, with Google Drive folders for every course."],
+    ["📋","Curriculum","The full SUST Statistics course structure, year by year."],
+    ["🧮","CGPA Calculator","Work out your semester result and CGPA in seconds."],
+    ["🗓️","Class Routine","Coming soon."],
+    ["🔍","Topic Explanations","Clear notes with graphs and animations, plus “বাংলায় বুঝি” explanations in Bangla."],
+    ["❓","Previous Questions","Past exam papers from 1-1 to 4-2, semester-wise in Drive folders."],
+    ["📝","Quiz","Short topic-wise quizzes to check what you have learned."],
+    ["⏱️","Mock Tests","Semester-wise timed mock tests for exam practice."],
+    ["✏️","Practice","Extra problems to practise and build confidence."],
+    ["📱","Android App","Install StatSphere on your phone. The APK is available from the GitHub Releases page."]
+  ];
   app.innerHTML = `<h1>About StatSphere</h1>
-   <div class="panel"><p>StatSphere is a free academic learning platform made for Statistics students of SUST. It brings notes, past questions, explanations, quizzes and practice together in one place.</p></div>
-   <div class="panel about-card">${a.photo?`<figure><img src="${a.photo}" alt="Photo of ${a.name}" loading="lazy"><figcaption>${a.name}</figcaption></figure>`:""}<div class="who"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.uni}</p></div></div>
-   <div class="panel"><h3>💬 Feedback</h3><p>Found a mistake or want a topic added? Tell us!</p>
-    <a class="btn" href="${mail}">✉ Send feedback by email</a>
-    <p class="muted" style="margin-top:.6rem">Or write to us at <a href="${mail}">${SITE.feedbackEmail}</a></p>
-    ${SITE.feedbackForm?`<a class="btn alt" target="_blank" rel="noopener" href="${SITE.feedbackForm}">Open feedback form ↗</a>`:""}</div>`;
+   <div class="panel"><p>StatSphere is a free academic learning platform made for the Statistics students of SUST. Notes, explanations, past questions, quizzes, mock tests and practice are all together in one place, so you can study smarter and spend less time searching.</p></div>
+   <div class="panel"><h3>What you can find here</h3><ul class="about-list">${feats.map(f=>`<li><span class="ico">${f[0]}</span><div><b>${f[1]}</b><br><span class="muted">${f[2]}</span></div></li>`).join("")}</ul></div>
+   <div class="panel about-card">${a.photo?`<figure><img src="${a.photo}" alt="Photo of ${a.name}" loading="lazy"></figure>`:""}<div class="who"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.session}<br>${a.uni}<br>✉️ <a href="${mail}">${a.email}</a></p></div></div>`;
 }

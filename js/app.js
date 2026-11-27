@@ -47,7 +47,7 @@ function siteCounts() {
 }
 
 const routes = {
-  home, library, curriculum, cgpa, routine, topics, quizzes, practice, about,
+  home, library, curriculum, cgpa, routine, topics, prevq, quizzes, practice, about,
 };
 
 function router() {
@@ -123,6 +123,15 @@ function libArt(name, code) {
   let id = ids.find(i => names[i] === n) || ids.find(i => names[i] && (names[i].includes(n) || n.includes(names[i])));
   if (!id) { const w = n.split(" ").filter(x => x.length > 3); id = ids.find(i => names[i] && w.some(x => names[i].includes(x))); }
   return id ? courseArt(id) : `<span class="cart libico">📁</span>`;
+}
+function prevq() {
+  const ready = PREVQ.filter(x => x.drive).length;
+  app.innerHTML = `<h1>${navIco("prevq")} Previous Questions</h1><p>Semester-wise previous question papers, from 1st Year 1st Semester to 4th Year 1st Semester. Folders open in Google Drive in a new tab.</p>
+    <div class="grid libgrid">${PREVQ.map(x => {
+      const inner = `<span class="cart libico">📁</span><div class="cbody"><h3>${esc(x.name)}</h3><p>${x.drive ? "Open folder ↗" : "Link coming soon"}</p></div>`;
+      return x.drive ? `<a class="card course" target="_blank" rel="noopener" href="${esc(x.drive)}">${inner}</a>` : `<div class="card course disabled" aria-disabled="true">${inner}</div>`;
+    }).join("")}</div>
+    <p class="note">${ready} of ${PREVQ.length} folders linked.</p>`;
 }
 function library(p) {
   if (p[0]) return libSemester(p[0], p[1]);

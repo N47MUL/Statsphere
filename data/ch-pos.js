@@ -71,7 +71,7 @@
   { use: "Moments, Skewness & Kurtosis",
     intro: "<p>Mean and variance describe centre and spread. <b>Shape</b> needs the third and fourth moments: tilt (skewness) and tail-heaviness (kurtosis).</p>",
     vis: [
-      { t: "plot", cap: "Positive skew (red), symmetric (green), negative skew (olive): the long tail points the way of the skew.", x: [0, 12], y: [0, .5], fns: [{ f: "gpdf(x,3,1)", c: 4, l: "right (+)", lx: 6 }, { f: "npdf(x,6,1.7)", c: 1, l: "symmetric", lx: 6 }, { f: "gpdf(12-x,3,1)", c: 3, l: "left (−)", lx: 8 }] },
+      { t: "plot", cap: "Positive skew (red), symmetric (green), negative skew (teal): the long tail points the way of the skew.", x: [0, 12], y: [0, .5], fns: [{ f: "gpdf(x,3,1)", c: 4, l: "right (+)", lx: 6 }, { f: "npdf(x,6,1.7)", c: 1, l: "symmetric", lx: 6 }, { f: "gpdf(12-x,3,1)", c: 3, l: "left (−)", lx: 8 }] },
       { t: "plot", cap: "Kurtosis = tail weight. The t distribution with small df has fatter tails than the normal curve (more outliers). As df grows it becomes normal.", x: [-5, 5], y: [0, .45], fns: [{ f: "npdf(x,0,1)", c: 2, d: 1, l: "normal", lx: 1.6 }, { f: "tpdf(x,p.v)", c: 1, fill: true }], sl: [{ k: "v", l: "df ", min: 1, max: 30, v: 3 }], msg: "df = {p.v}: " + "heavier tails than the normal (dashed) when df is small." }],
     key: ["γ₁ > 0 right skew, < 0 left skew, 0 symmetric.", "γ₂ = β₂ − 3: > 0 heavy tails (leptokurtic), < 0 light tails (platykurtic), 0 normal (mesokurtic)."] },
   { use: "Five-Number Summary",

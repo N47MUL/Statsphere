@@ -227,7 +227,7 @@ reg.ci = ["Each line is the confidence interval from one sample (x̄ ± z·σ/�
 }, 520];
 
 /* ---- Type I / II error and power ---- */
-reg.power = ["Right-tailed z-test. Green: the sampling distribution if H₀ is true. Olive: if H₁ is true. Orange area = α (Type I error), red area = β (Type II error). A bigger effect size δ or larger α increases power = 1 − β.", (root) => {
+reg.power = ["Right-tailed z-test. Blue: the sampling distribution if H₀ is true. Green: if H₁ is true. Orange area = α (Type I error), red area = β (Type II error). A bigger effect size δ or larger α increases power = 1 − β.", (root) => {
   ui(root, [
     { k: "d", label: "True shift δ ", min: 0, max: 4, step: .1, v: 2 },
     { k: "a", label: "α ", opts: ["0.10", "0.05", "0.01"], v: 1 }
@@ -501,7 +501,7 @@ reg.taylor = ["Taylor/Maclaurin polynomials of sin x. Each extra term hugs the t
 }];
 
 /* ---- Fourier ---- */
-reg.fourier = ["Fourier series of a square wave: adding more sine terms (green) gives a better fit to the wave (orange). The small overshoot near the jumps is the Gibbs phenomenon.", (root) => {
+reg.fourier = ["Fourier series of a square wave: adding more sine terms (blue) gives a better fit to the wave (orange). The small overshoot near the jumps is the Gibbs phenomenon.", (root) => {
   ui(root, [{ k: "k", label: "terms N ", min: 1, max: 30, step: 1, v: 3, fmt: v => v }], s => {
     const S = x => { let t = 0; for (let j = 1; j <= s.k; j++) t += 4 / Math.PI * Math.sin((2 * j - 1) * x) / (2 * j - 1); return t; };
     const F = frame(-Math.PI, Math.PI, -1.6, 1.6);
@@ -810,7 +810,7 @@ reg.nroots = ["The n-th roots of z = r(cos θ + i sin θ) lie on a circle of rad
 }];
 
 /* ---- Bayes / natural frequencies ---- */
-reg.bayes = ["Each square is one of 1000 people. Green = diseased and test positive (true positives), olive = diseased but test negative, red = healthy but test positive (false positives), grey = healthy and negative. When the disease is rare, false positives outnumber true positives, so a positive test is weaker evidence than it seems: P(D | +) = TP/(TP + FP).", (root) => {
+reg.bayes = ["Each square is one of 1000 people. Green = diseased and test positive (true positives), teal = diseased but test negative, red = healthy but test positive (false positives), grey = healthy and negative. When the disease is rare, false positives outnumber true positives, so a positive test is weaker evidence than it seems: P(D | +) = TP/(TP + FP).", (root) => {
   ui(root, [{ k: "p", label: "Prevalence % ", min: .1, max: 50, step: .1, v: 1 }, { k: "se", label: "Sensitivity % ", min: 50, max: 100, step: 1, v: 95 }, { k: "sp", label: "Specificity % ", min: 50, max: 100, step: 1, v: 95 }], s => {
     const p = s.p / 100, se = s.se / 100, sp = s.sp / 100, D = Math.round(p * 1000), TP = Math.round(D * se), FN = D - TP, FP = Math.round((1000 - D) * (1 - sp));
     const cls = []; for (let i = 0; i < 1000; i++) cls.push(i < TP ? "v-s1" : i < D ? "v-s3" : i < D + FP ? "v-s4" : "v-sm");

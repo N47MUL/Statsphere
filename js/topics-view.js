@@ -95,7 +95,7 @@ function topicHTML(t, open, store) {
   const key = t.key && t.key.length ? `<div class="key"><b class="kh">✅ Remember</b><ul>${t.key.map(k => `<li>${k}</li>`).join("")}</ul></div>` : "";
   const qq = t.q && t.q.length ? `<div class="qh">${navIco("quizzes",20)} Quick check (tap to reveal)</div>` + t.q.map(x => `<details class="qc"><summary>${x[0]}</summary><div>${x[1]}</div></details>`).join("") : "";
   const n = specs.length + (t.body || "").split('data-vis=').length - 1;
-  return `<details class="tp"${open ? " open" : ""}><summary>${t.title}${n ? `<span class="vc">🖼 ${n}</span>` : ""}</summary>${t.intro ? `<div class="tp-intro">${t.intro}</div>` : ""}${bnFor(t.title) ? `<details class="bn"><summary lang="bn">🇧🇩 বাংলায় বুঝি (গল্পে ব্যাখ্যা)</summary><div class="bn-b" lang="bn">${bnFor(t.title)}</div></details>` : ""}${pre}${body}${key}${qq}</details>`;
+  return `<details class="tp"${open ? " open" : ""}><summary>${t.title}${n ? `<span class="vc">🖼 ${n}</span>` : ""}</summary>${t.intro ? `<div class="tp-intro">${t.intro}</div>` : ""}${bnFor(t.title) ? `<details class="bn"><summary lang="bn">বাংলায় বুঝি</summary><div class="bn-b" lang="bn">${bnFor(t.title)}</div></details>` : ""}${pre}${body}${key}${qq}</details>`;
 }
 function mountPh(root, store) {
   root.querySelectorAll(".tv-ph:not([data-m])").forEach(el => { const s = store[+el.dataset.sv]; if (s) SSV.mount(el, s); });

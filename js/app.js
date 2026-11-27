@@ -47,7 +47,7 @@ function siteCounts() {
 }
 
 const routes = {
-  home, library, curriculum, cgpa, routine, topics, prevq, quizzes, practice, about,
+  home, library, curriculum, cgpa, routine, topics, prevq, quizzes, mocks, practice, about,
 };
 
 function router() {
@@ -87,8 +87,9 @@ function home() {
     <a class="card" href="#/library"><div class="ico"><svg viewBox="0 0 32 32" width="38" height="38" aria-hidden="true"><path d="M16 8c-3-2-8-2-12-1v18c4-1 9-1 12 1 3-2 8-2 12-1V7c-4-1-9-1-12 1z" fill="#fff" stroke="#0369a1" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 8v18" stroke="#0369a1" stroke-width="1.4"/><rect x="6.5" y="17" width="2.2" height="5" fill="#0ea5e9"/><rect x="10" y="13.5" width="2.2" height="8.5" fill="#0284c7"/><rect x="13.3" y="19" width="1.6" height="3" fill="#7dd3fc"/><path d="M18.5 22c1.5 0 2-7 4.2-7s2.7 7 4.2 7" fill="none" stroke="#0284c7" stroke-width="1.6"/><path d="M18.5 22.2h8.5" stroke="#0369a1" stroke-width="1"/><circle cx="16" cy="4.2" r="2.4" fill="#0ea5e9"/><path d="M13.8 4.2h4.4M16 2v4.4" stroke="#fff" stroke-width=".7"/></svg></div><h3>Resource Library</h3><p>Notes, slides, books and past questions for every course, organised by year and semester.</p></a>
     <a class="card" href="#/curriculum"><div class="ico">📋</div><h3>Curriculum</h3><p>All 8 semesters: every course with its type and credit, plus semester totals.</p></a>
     <a class="card" href="#/topics"><div class="ico"><svg viewBox="0 0 32 32" width="38" height="38" aria-hidden="true"><rect x="3" y="3" width="21" height="25" rx="2" fill="#fff" stroke="#0369a1" stroke-width="1.6"/><path d="M6 8h9M6 11h6" stroke="#7dd3fc" stroke-width="1.4"/><path d="M5.5 22c3 0 3-9 7-9s4 9 7 9" fill="none" stroke="#0284c7" stroke-width="1.8"/><path d="M5 22.5h15" stroke="#0369a1" stroke-width="1.2"/><circle cx="21" cy="19" r="6" fill="#e0f2fe" fill-opacity=".75" stroke="#0ea5e9" stroke-width="2.2"/><path d="M25.3 23.3l5 5" stroke="#0369a1" stroke-width="3" stroke-linecap="round"/><path d="M17.5 21.5c1.5 0 1.5-4 3.5-4s2 4 3.5 4" fill="none" stroke="#0284c7" stroke-width="1.3"/></svg></div><h3>Topic Explanations</h3><p>Clear, exam-focused explanations with formulas and examples.</p></a>
-    <a class="card" href="#/quizzes"><div class="ico"><svg viewBox="6 1 20 31" width="30" height="38" aria-hidden="true"><circle cx="16" cy="18" r="6" fill="#f5c28b"/><path d="M9 31c0-6 3-8 7-8s7 2 7 8z" fill="#0ea5e9"/><path d="M10 16c0-6 12-6 12 0-3-2-9-2-12 0z" fill="#475569"/><circle cx="14" cy="18" r=".9" fill="#0b2540"/><circle cx="18" cy="18" r=".9" fill="#0b2540"/><path d="M14.5 21.2q1.5 1 3 0" stroke="#0b2540" fill="none" stroke-width=".9"/><text x="16" y="10" text-anchor="middle" font-size="14" font-weight="800" fill="#0284c7" font-family="Arial,sans-serif">?</text></svg></div><h3>Quizzes &amp; MCQs</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
-    <a class="card" href="#/practice"><div class="ico"><svg viewBox="4 3 26 26" width="38" height="38" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="#f5c28b"/><path d="M7 8.5l5-3 5 3-5 2.5z" fill="#0369a1"/><path d="M6 15c1-3 4-4 6-4s5 1 6 4v4H6z" fill="#0ea5e9"/><path d="M18 16l5-1 1 3-6 2z" fill="#f5c28b"/><rect x="15" y="16" width="14" height="3" rx="1" fill="#92400e"/><rect x="17" y="19" width="2" height="9" fill="#92400e"/><rect x="26" y="19" width="2" height="9" fill="#92400e"/><rect x="19" y="12" width="7" height="4" rx=".5" fill="#fff" stroke="#0369a1" stroke-width="1"/><rect x="6" y="19" width="10" height="3" rx="1" fill="#475569"/><rect x="8" y="22" width="2.5" height="6" fill="#475569"/></svg></div><h3>Practice &amp; Mock Tests</h3><p>Practice problems with hide/show answers and timed mock tests.</p></a>
+    <a class="card" href="#/quizzes"><div class="ico"><svg viewBox="6 1 20 31" width="30" height="38" aria-hidden="true"><circle cx="16" cy="18" r="6" fill="#f5c28b"/><path d="M9 31c0-6 3-8 7-8s7 2 7 8z" fill="#0ea5e9"/><path d="M10 16c0-6 12-6 12 0-3-2-9-2-12 0z" fill="#475569"/><circle cx="14" cy="18" r=".9" fill="#0b2540"/><circle cx="18" cy="18" r=".9" fill="#0b2540"/><path d="M14.5 21.2q1.5 1 3 0" stroke="#0b2540" fill="none" stroke-width=".9"/><text x="16" y="10" text-anchor="middle" font-size="14" font-weight="800" fill="#0284c7" font-family="Arial,sans-serif">?</text></svg></div><h3>Quiz</h3><p>Auto-graded quizzes with instant score and explanations.</p></a>
+    <a class="card" href="#/practice"><div class="ico"><svg viewBox="4 3 26 26" width="38" height="38" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="#f5c28b"/><path d="M7 8.5l5-3 5 3-5 2.5z" fill="#0369a1"/><path d="M6 15c1-3 4-4 6-4s5 1 6 4v4H6z" fill="#0ea5e9"/><path d="M18 16l5-1 1 3-6 2z" fill="#f5c28b"/><rect x="15" y="16" width="14" height="3" rx="1" fill="#92400e"/><rect x="17" y="19" width="2" height="9" fill="#92400e"/><rect x="26" y="19" width="2" height="9" fill="#92400e"/><rect x="19" y="12" width="7" height="4" rx=".5" fill="#fff" stroke="#0369a1" stroke-width="1"/><rect x="6" y="19" width="10" height="3" rx="1" fill="#475569"/><rect x="8" y="22" width="2.5" height="6" fill="#475569"/></svg></div><h3>Practice</h3><p>Practice problems with hide/show answers.</p></a>
+    <a class="card" href="#/mocks"><div class="ico"><svg viewBox="0 0 32 32" width="38" height="38" aria-hidden="true"><rect x="3" y="3" width="19" height="26" rx="2" fill="#fff" stroke="#0369a1" stroke-width="1.6"/><path d="M7 9h11M7 13h8" stroke="#7dd3fc" stroke-width="1.5"/><path d="M7 18h5" stroke="#0284c7" stroke-width="1.5"/><circle cx="23" cy="21.5" r="7.5" fill="#0ea5e9" stroke="#0369a1" stroke-width="1.4"/><circle cx="23" cy="21.5" r="5.3" fill="#fff"/><path d="M23 18v3.8l2.5 1.5" stroke="#0369a1" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12.5h4" stroke="#0369a1" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Mock Tests</h3><p>Timed 20-question mock tests, grouped by semester.</p></a>
     <a class="card" href="#/about"><div class="ico">👤</div><h3>About &amp; Feedback</h3><p>Who made this, and how to send suggestions.</p></a>
   </div>`;
   const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
@@ -278,7 +279,7 @@ function buildTopicQuiz(top) {
   return L;
 }
 function quizzes(p) {
-  if (p[0] === "mock") return mock(p[1]);
+  if (p[0] === "mock") { location.replace("#/mocks" + (p[1] ? "/" + p[1] : "")); return; }
   if (p[0] && p[1] !== undefined) {
     const c = QZ.find(x => x.id === p[0]), t = c && c.topics[+p[1]]; if (!t) return quizzes([p[0]]);
     return runQuiz({ name: t.t, course: c, ti: +p[1], questions: buildTopicQuiz(t) });
@@ -291,21 +292,26 @@ function quizzes(p) {
       <a class="btn alt" href="#/topics/${c.id}">📖 Read the topic explanations first</a>`;
     return;
   }
-  app.innerHTML = `<h1>${navIco("quizzes")} Quizzes &amp; MCQs</h1><p>Pick your course, then a topic. Every topic has 20 questions (MCQ, True/False and Fill in the blank) with instant score and explanations.</p>
+  app.innerHTML = `<h1>${navIco("quizzes")} Quiz</h1><p>Pick your course, then a topic. Every topic has 20 questions (MCQ, True/False and Fill in the blank) with instant score and explanations.</p>
     ${semGrouped(QZ, c=>"#/quizzes/"+c.id, c=>c.topics.length+" topics · "+c.topics.length*20+" questions")}
-    <h2>⏱ Mock Tests</h2><p>Real exam practice: 20 questions, timed. Answers and explanations are shown after you submit (or when time is up).</p>
-    <div class="grid">${MOCKS.map(s=>`<a class="card" href="#/quizzes/mock/${s.id}"><h3>Mock: ${s.name}</h3><p>${s.questions.length} questions · ${s.minutes} min</p></a>`).join("")}
-    <a class="card" href="#/quizzes/mock/all"><h3>Mock: Mixed</h3><p>20 random questions from all courses · 30 min</p></a></div>`;
+    <div class="panel"><h3>${navIco("mocks",24)} Mock Tests</h3><p>Timed mock tests now have their own section, grouped by semester.</p><a class="btn" href="#/mocks">Go to Mock Tests ⏱</a></div>`;
+}
+/* ---------- MOCK TESTS (own section, grouped by semester) ---------- */
+function mocks(p) {
+  if (p[0]) return mock(p[0]);
+  app.innerHTML = `<h1>${navIco("mocks")} Mock Tests</h1><p>Real exam practice: 20 questions, timed. Answers and explanations are shown after you submit (or when time is up). Pick your semester and course.</p>
+    <div class="grid"><a class="card" href="#/mocks/all"><h3>Mock: Mixed</h3><p>20 random questions from all courses · 30 min</p></a></div>
+    ${semGrouped(MOCKS, m=>"#/mocks/"+m.id, m=>m.questions.length+" questions · "+m.minutes+" min")}`;
 }
 function mock(id) {
   if (id === "all") return runQuiz({ name: "Mock Test: Mixed", questions: shuffle(MOCKS.flatMap(s => s.questions)).slice(0, 20) }, 30 * 60, true);
-  const m = MOCKS.find(x => x.id === id); if (!m) return quizzes([]);
+  const m = MOCKS.find(x => x.id === id); if (!m) return mocks([]);
   runQuiz({ name: "Mock Test: " + m.name, questions: m.questions }, (m.minutes || 30) * 60, true);
 }
 function runQuiz(s, seconds, isMock) {
   if (!s) return quizzes([]);
   const qs = isMock ? shuffle(s.questions) : s.questions.slice(), ans = {};
-  const back = s.course ? `<a href="#/quizzes">Quizzes</a> › <a href="#/quizzes/${s.course.id}">${s.course.name}</a> › ${s.name}` : `<a href="#/quizzes">Quizzes</a> › ${s.name}`;
+  const back = isMock ? `<a href="#/mocks">Mock Tests</a> › ${s.name}` : s.course ? `<a href="#/quizzes">Quizzes</a> › <a href="#/quizzes/${s.course.id}">${s.course.name}</a> › ${s.name}` : `<a href="#/quizzes">Quizzes</a> › ${s.name}`;
   let h = `<div class="crumb">${back}</div><h1>${s.name}</h1>${s.course?`<p>${s.course.name} · Topic ${s.ti+1} of ${s.course.topics.length} · ${qs.length} questions</p>`:""}${seconds?`<div class="timer" id="tm"></div>`:""}${isMock?`<p>${qs.length} questions · answers are shown after you submit. <span id="ansct"></span></p>`:""}`;
   const label = { mcq:"MCQ", tf:"TRUE / FALSE", fib:"FILL IN THE BLANK" };
   qs.forEach((q, i) => {
@@ -361,7 +367,7 @@ function practice(p) {
   }
   app.innerHTML = `<h1>${navIco("practice")} Practice &amp; Self-Assessment</h1><p>Practice problems with hidden answers, plus timed mock tests.</p>
     ${semGrouped(PRACTICE, c=>"#/practice/"+c.id, c=>c.items.length+" problems")}
-    <a class="btn" href="#/quizzes">Go to quizzes &amp; mock tests ⏱</a>`;
+    <a class="btn" href="#/quizzes">Go to quizzes</a> <a class="btn alt" href="#/mocks">Go to mock tests ⏱</a>`;
 }
 
 /* ---------- ABOUT ---------- */

@@ -23,7 +23,6 @@ const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Mat
   PRACTICE.splice(0, PRACTICE.length, ...m);
 })();
 let timerHandle = null;
-$("#themeBtn").onclick = () => { const r = document.documentElement, t = r.dataset.theme === "light" ? "dark" : "light"; r.dataset.theme = t; try { localStorage.setItem("ss-theme", t); } catch(e){} };
 
 function chartSVG() {
   // normal curve, histogram bars, scatter dots and regression line (decorative)

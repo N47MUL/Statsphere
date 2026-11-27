@@ -53,16 +53,17 @@ const LIBRARY = [
       { name: "TT and Semester Final Questions", drive: "https://drive.google.com/drive/folders/1_H4IydFRfAL2I_AksM7baNcd1UyO7k8E", note: "TT = Term Test" } ] } ] },
   { year: "4th Year", semesters: [
     { code: "4-1", folder: "4-1 by N@sir", drive: "", courses: [
-      { name: "Economic Statistics", drive: "" },
-      { name: "Applied Statistics", drive: "" },
-      { name: "Design and Analysis of Experiments II", drive: "" },
-      { name: "Sampling Techniques II", drive: "" },
+      { name: "Economic Statistics", drive: "https://drive.google.com/drive/folders/1piABLpzEeUnWwS-8x7REj0xbdzrYoj0X" },
+      { name: "Applied Statistics", drive: "https://drive.google.com/drive/folders/1fwGiPlTyrBMH3Kp60_KRytbpHPLQQDHf" },
+      { name: "Design and Analysis of Experiments II", drive: "https://drive.google.com/drive/folders/1vCqxGJ_QdiA-k7QoDFG-wrA7X3B6fmI4" },
+      { name: "Sampling Techniques II", drive: "https://drive.google.com/drive/folders/1i9zsS3by2DCNQ-myKCedXxNeAFlOtogz" },
+      { name: "Previous Questions", drive: "https://drive.google.com/drive/folders/18CVj7E2cTsaUrjSItADnIYSBfcaTsNKi" },
       { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] },
     { code: "4-2", folder: "4-2 by N@sir", drive: "", courses: [
-      { name: "Multivariate Analysis", drive: "" },
-      { name: "Biostatistics and Epidemiology", drive: "" },
-      { name: "Generalized Linear Models", drive: "" },
-      { name: "Research Methodology", drive: "" },
+      { name: "Multivariate Analysis", drive: "https://drive.google.com/drive/folders/1yCjiemDzQcpZVDLYqfHcIcuV166rBJKr" },
+      { name: "Biostatistics and Epidemiology", drive: "https://drive.google.com/drive/folders/1icyF0XQwZA4L5AnBNNPDNqNZMZ8Vz94x" },
+      { name: "Generalized Linear Models", drive: "https://drive.google.com/drive/folders/1leXYs0EmiIOwaWGtoCKLoIyAwgytRM9E" },
+      { name: "Research Methodology", drive: "https://drive.google.com/drive/folders/14r2acnKZN7RjyxoeBENSCxpVlxSoxHHI" },
       { name: "Research Project", drive: "" },
       { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] } ] }
 ];

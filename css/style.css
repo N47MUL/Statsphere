@@ -161,6 +161,13 @@ ul.clean{padding-left:20px}
 .about-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:18px;border:2px solid var(--acc);box-shadow:var(--shadow)}
 .about-card figcaption{text-align:center;margin-top:8px;color:var(--mut);font-size:.85rem}
 .about-card .who{flex:1;min-width:220px}
+.app-dl{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.app-dl-ico{font-size:2.4rem;line-height:1}
+.app-dl-txt{flex:1;min-width:220px}
+.app-dl-txt h3{margin:0 0 4px}
+.app-dl-txt p{margin:0}
+.app-dl .btn{margin:0}
+@media(max-width:520px){.app-dl{justify-content:center;text-align:center}.app-dl-txt{flex-basis:100%}}
 @media(max-width:520px){.about-card{justify-content:center;text-align:center}}
 
 /* ---- Resource Library layout ---- */

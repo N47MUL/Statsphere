@@ -3,6 +3,12 @@
 The app is the website wrapped with Capacitor. It bundles the site files, so it works offline
 (Google Drive links still need internet). The website at the repo root is unchanged.
 
+## Automatic content updates
+The app always opens its bundled copy (works offline). When online it quietly downloads the newest
+published website (GitHub Pages, `LIVE` in `mobile/sw.js`) and uses it from the next launch, with a
+"New content downloaded · Refresh" message. So normal website changes reach the app without a new APK;
+a new tag is only needed for app-level changes (icon, plugins, native settings).
+
 ## Release (GitHub does everything)
 1. Merge this to `main`.
 2. GitHub → **Releases → Draft a new release** → create a new tag like `v1.0.0` → **Publish**.

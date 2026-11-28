@@ -444,5 +444,6 @@ function about() {
   app.innerHTML = `<h1>About StatSphere</h1>
    <div class="panel"><p>StatSphere is a free academic learning platform made for the Statistics students of SUST. Notes, explanations, past questions, quizzes, mock tests and practice are all together in one place, so you can study smarter and spend less time searching.</p></div>
    <div class="panel"><h3>What you can find here</h3><ul class="about-list">${feats.map(f=>`<li><span class="ico">${f[0]}</span><div><b>${f[1]}</b><br><span class="muted">${f[2]}</span></div></li>`).join("")}</ul></div>
-   <div class="panel about-card">${a.photo?`<figure><img src="${a.photo}" alt="Photo of ${a.name}" loading="lazy"></figure>`:""}<div class="who"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.session}<br>${a.uni}<br>✉️ <a href="${mail}">${a.email}</a></p></div></div>`;
+   <div class="panel about-card">${a.photo?`<figure><img src="${a.photo}" alt="Photo of ${a.name}" loading="lazy"></figure>`:""}<div class="who"><h3>👤 ${a.name}</h3><p>${a.dept}<br>${a.level}<br>${a.session}<br>${a.uni}<br>✉️ <a href="${mail}">${a.email}</a></p></div></div>
+   <div class="panel app-dl"><div class="app-dl-ico">📱</div><div class="app-dl-txt"><h3>Get StatSphere mobile app</h3><p>Install StatSphere on your Android phone. Download the latest APK, open it and tap Install.</p></div><a class="btn" target="_blank" rel="noopener" href="https://github.com/N47MUL/Statsphere/releases/latest/download/StatSphere.apk">⬇ Download APK</a></div>`;
 }

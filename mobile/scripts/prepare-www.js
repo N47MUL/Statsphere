@@ -10,6 +10,8 @@ for (const item of ["index.html", "css", "data", "img", "js", "lib"]) {
 }
 fs.copyFileSync(path.join(__dirname, "../mobile-extra.js"), path.join(www, "js/mobile-extra.js"));
 let html = fs.readFileSync(path.join(www, "index.html"), "utf8");
+const ver = (html.match(/RELEASE VERSION:\s*(\w+)/) || [])[1] || "0";
+fs.writeFileSync(path.join(www, "sw.js"), fs.readFileSync(path.join(__dirname, "../sw.js"), "utf8").replace("__BUNDLED_VERSION__", ver));
 html = html.replace(/(<meta name="viewport" content="[^"]*)"/, '$1, viewport-fit=cover"');
 html = html.replace("</body>", '<script src="js/mobile-extra.js"></script>\n</body>');
 fs.writeFileSync(path.join(www, "index.html"), html);

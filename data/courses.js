@@ -8,19 +8,19 @@ const ROOT = SITE.driveRoot;
 const LIBRARY = [
   { year: "1st Year", semesters: [
     { code: "1-1", folder: "1-1 by N@sir", drive: "", courses: [
-      { name: "Principles of Statistics", drive: "" },
-      { name: "Basic Algebra", drive: "" },
-      { name: "English Language", drive: "" },
+      { name: "Principles of Statistics", drive: "https://drive.google.com/drive/folders/1h3ZO6MUq2Rv-4sLTyk-m_SHbLYeQDfbd" },
+      { name: "Basic Algebra", drive: "https://drive.google.com/drive/folders/1EtS1onBAkLvZRddFcw4F5UbjdH_KtMyu" },
+      { name: "English Language", drive: "https://drive.google.com/drive/folders/1iMc0JswGzCV7vUYOeoFVoxLHuTgRRTS2" },
       { name: "History of the Emergence of Independent Bangladesh", drive: "" },
-      { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] },
+      { name: "TT and Semester Final Questions", drive: "https://drive.google.com/drive/folders/1y9w9VsuvKpwypr4P5eV64fN35DgpATbF", note: "TT = Term Test" } ] },
     { code: "1-2", folder: "1-2 by N@sir", drive: "", courses: [
-      { name: "Introduction to Probability", drive: "" },
-      { name: "Sampling Techniques I", drive: "" },
+      { name: "Introduction to Probability", drive: "https://drive.google.com/drive/folders/124933o5QxByMVlJatydeCBh9z7GMY40P" },
+      { name: "Sampling Techniques I", drive: "https://drive.google.com/drive/folders/1trfag0HYs9_UEWOgymDmoP3wYNO8edaS" },
       { name: "Introduction to Computer and SPSS", drive: "" },
-      { name: "Calculus", drive: "" },
-      { name: "Linear Algebra", drive: "" },
-      { name: "Academic Writing", drive: "" },
-      { name: "TT and Semester Final Questions", drive: "", note: "TT = Term Test" } ] } ] },
+      { name: "Calculus", drive: "https://drive.google.com/drive/folders/1SFsRvKgFm36WnKTOgSSj3wBMUINdjRT3" },
+      { name: "Linear Algebra", drive: "https://drive.google.com/drive/folders/127bGwpYFjG-wzFB2LRGACsfeJYA3uwY1" },
+      { name: "Academic Writing", drive: "https://drive.google.com/drive/folders/145PfG-_hWq328O4ZiK9zhcpIeA167aDb" },
+      { name: "TT and Semester Final Questions", drive: "https://drive.google.com/drive/folders/1nNSxvi3L5qoMJ4Vs9ReFSPIxN4imBYqu", note: "TT = Term Test" } ] } ] },
   { year: "2nd Year", semesters: [
     { code: "2-1", folder: "2-1 by N@sir", drive: "", courses: [
       { name: "Theory of Statistics", drive: "https://drive.google.com/drive/folders/1Fd_G3GPvZC1LZo6BvPqm0b-MS8Prw3dj" },

@@ -59,10 +59,67 @@ function router() {
   app.className = "";
   document.body.classList.toggle("is-home", fn === home);
   fn(parts.slice(1));
+  try { addSearch(parts); } catch (e) { console.error(e); }
   window.scrollTo(0, 0);
 }
 window.addEventListener("hashchange", router);
 router();
+
+/* ---------- SEARCH BOX for every list page (live filter, English + Bangla) ----------
+   addSearch() runs after each route renders. It adds a search box to list pages (Topics, Quiz, Mock, Practice,
+   Previous Questions, Curriculum, Library semesters) and hides cards / rows / problems that do not match.
+   Every word typed must match (title + hidden keywords such as topic names). Bangla words are matched through BN_ALIAS. */
+function addSearch(parts) {
+  const r = parts[0], n = parts.length - 1;
+  const on = (r === "topics" && n === 0) || (r === "quizzes" && n <= 1 && parts[1] !== "mock") || (r === "mocks" && n === 0) ||
+    (r === "practice" && n <= 1) || (r === "prevq" && n === 0) || r === "curriculum" || (r === "library" && n === 1);
+  if (!on || app.querySelector("#ts, .libsearch, .ss-search")) return;
+  const BN_ALIAS = {
+    "পরিসংখ্যান": "statistics statistical", "সম্ভাব্যতা": "probability", "সম্ভাবনা": "probability", "কুইজ": "quiz", "প্র্যাকটিস": "practice", "অনুশীলন": "practice",
+    "গণিত": "mathematics math calculus", "ক্যালকুলাস": "calculus", "বীজগণিত": "algebra", "ম্যাট্রিক্স": "matrix matrices", "রৈখিক": "linear", "নমুনা": "sample sampling",
+    "বণ্টন": "distribution", "বন্টন": "distribution", "গড়": "mean average", "মধ্যক": "median", "মধ্যমা": "median", "প্রচুরক": "mode", "ভেদাঙ্ক": "variance", "বিচ্যুতি": "deviation",
+    "রিগ্রেশন": "regression", "সহ-সম্পর্ক": "correlation", "সহসম্পর্ক": "correlation", "সম্পর্ক": "correlation", "অনুমান": "estimation inference", "পরীক্ষা": "test exam mock",
+    "মক": "mock", "প্রশ্ন": "question questions", "জনমিতি": "demography", "জীব": "bio biostatistics", "ডেটা": "data", "ডাটা": "data", "সিমুলেশন": "simulation", "ইংরেজি": "english",
+    "ইতিহাস": "history", "পরীক্ষণ": "experiment experiments", "নকশা": "design", "পরিকল্পনা": "design", "সময়": "time series", "সূচক": "index", "কম্পিউটার": "computer programming",
+    "ডাটাবেজ": "database", "ডেটাবেস": "database", "গবেষণা": "research", "পদ্ধতি": "method methods", "তত্ত্ব": "theory", "ল্যাব": "lab", "ভাইভা": "viva", "বছর": "year", "সেমিস্টার": "semester",
+    "প্রথম": "1st first", "দ্বিতীয়": "2nd second", "তৃতীয়": "3rd third", "চতুর্থ": "4th fourth", "অধ্যায়": "chapter", "বিষয়": "topic", "মডেল": "model models", "চলক": "variable"
+  };
+  const fold = t => String(t || "").normalize("NFC").toLowerCase().replace(/[‌‍]/g, "").replace(/\s+/g, " ");
+  const items = [];
+  const add = (el, host, extra) => items.push({ el, host, txt: fold(el.textContent + " " + (extra || "")) });
+  const kwFor = el => {
+    const id = ((el.getAttribute("href") || "").match(/^#\/(topics|quizzes|practice|mocks)\/([\w-]+)$/) || [])[2];
+    if (!id) return "";
+    let k = "";
+    const t = typeof TOPICS !== "undefined" && TOPICS.find(x => x.id === id);
+    if (t) k += " " + t.topics.map(x => x.title + " " + (x.chapter || "")).join(" ");
+    const q = typeof QZ !== "undefined" && QZ.find(x => x.id === id); if (q) k += " " + q.topics.map(x => x.t).join(" ");
+    const c = window.CHAPTERS && window.CHAPTERS[id]; if (c) k += " " + c.map(x => x.n).join(" ");
+    const pr = typeof PRACTICE !== "undefined" && PRACTICE.find(x => x.id === id); if (pr && r === "practice") k += " " + pr.items.map(x => x.q).join(" ");
+    if (window.COURSE_SEM && COURSE_SEM[id]) { const c2 = COURSE_SEM[id]; k += " semester " + c2 + " year " + c2[0]; }
+    return k;
+  };
+  app.querySelectorAll(".card:not(.homegrid .card)").forEach(el => add(el, el.closest(".sem-group"), kwFor(el)));
+  app.querySelectorAll("tr.crow").forEach(el => add(el, el.closest(".panel.cur")));
+  app.querySelectorAll("div.q").forEach(el => add(el, null));
+  if (!items.length) return;
+  const box = document.createElement("div");
+  box.className = "ss-search";
+  box.innerHTML = `<input class="search" type="search" id="ssq" autocomplete="off" placeholder="Search… / খুঁজুন…" aria-label="Search this page"><div class="note ss-none" hidden>No match found. / কিছু পাওয়া যায়নি।</div>`;
+  const anchor = app.querySelector("h1") ? (app.querySelector("h1").nextElementSibling && app.querySelector("h1").nextElementSibling.tagName === "P" ? app.querySelector("h1").nextElementSibling : app.querySelector("h1")) : app.firstElementChild;
+  const base = anchor.closest(".title-art") || anchor;
+  base.insertAdjacentElement("afterend", box);
+  const none = box.querySelector(".ss-none"), inp = box.querySelector("input");
+  const expand = w => { let alts = [w]; Object.keys(BN_ALIAS).forEach(k => { if (w.includes(fold(k))) alts = alts.concat(BN_ALIAS[k].split(" ")); }); return alts; };
+  inp.addEventListener("input", () => {
+    const words = fold(inp.value).trim().split(" ").filter(Boolean).map(expand);
+    let shown = 0;
+    items.forEach(it => { const m = words.every(alts => alts.some(a => it.txt.includes(a))); it.el.style.display = m ? "" : "none"; if (m) shown++; });
+    const hosts = new Set(items.map(i => i.host).filter(Boolean));
+    hosts.forEach(h => { h.style.display = !words.length || [...h.querySelectorAll(".card, tr.crow")].some(c => c.style.display !== "none") ? "" : "none"; });
+    none.hidden = shown > 0 || !words.length;
+  });
+}
 
 /* ---------- HOME ---------- */
 function home() {
